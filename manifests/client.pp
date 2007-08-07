@@ -6,8 +6,8 @@ class munin::client {
 
 	$munin_port_real = $munin_port ? { '' => 4949, default => $munin_port } 
 	$munin_host_real = $munin_host ? {
-		'' => $fqdn, 
-		'fqdn' => $fqdn, 
+		'' => '*',
+		'fqdn' => '*',
 		default => $munin_host
 	}
 
@@ -46,7 +46,14 @@ class munin::client {
 
 define munin::register()
 {
-	@@file { "munin_node_${name}": path => "${NODESDIR}/$name",
+	$munin_port_real = $munin_port ? { '' => 4949, default => $munin_port } 
+	$munin_host_real = $munin_host ? {
+		'' => $fqdn,
+		'fqdn' => $fqdn,
+		default => $munin_host
+	}
+
+	@@file { "munin_node_${name}_${port}": path => "${NODESDIR}/${name}_${munin_port}",
 		ensure => present,
 		content => template("munin/defaultclient.erb"),
 	}
@@ -54,7 +61,7 @@ define munin::register()
 
 define munin::register_snmp()
 {
-	@@file { "munin_snmp_${name}": path => "${NODESDIR}/$name",
+	@@file { "munin_snmp_${name}": path => "${NODESDIR}/${name}",
 		ensure => present,
 		content => template("munin/snmpclient.erb"),
 	}
@@ -85,16 +92,19 @@ class munin::client::darwin
 
 class munin::client::debian 
 {
-	err("munin port: $munin_port_real" )
-	err("munin host: $munin_host_real" )
 
 	package { "munin-node": ensure => installed }
 
 	file {
+		"/etc/munin/":
+			ensure => directory,
+			mode => 0755, owner => root, group => root;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.${operatingsystem}.${lsbdistcodename}"),
 			mode => 0644, owner => root, group => root,
-			require => Package["munin-node"],
+			# this has to be installed before the package, so the postinst can
+			# boot the munin-node without failure!
+			before => Package["munin-node"],
 			notify => Service["munin-node"],
 	}
 
@@ -103,7 +113,7 @@ class munin::client::debian
 		hasstatus => true,
 	}
 
-	munin::register { $munin_host_real: }
+	munin::register { $fqdn: }
 
 	# workaround bug in munin_node_configure
 	plugin { "postfix_mailvolume": ensure => absent }
