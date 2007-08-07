@@ -81,9 +81,13 @@ class munin::plugins::base {
 			notify => Service[munin-node];
 	}
 
-	puppet::fact{ interfaces:
-		source => "puppet://$servername/munin/facter/interfaces.rb",
-		require => Package[iproute],
+	puppet::fact{
+		interfaces:
+			source => "puppet://$servername/munin/facter/interfaces.rb",
+			require => Package[iproute];
+		acpi_available:
+			source => "puppet://$servername/munin/facter/acpi_available.rb",
+			require => Package[acpi];
 	}
 }
 
@@ -108,6 +112,10 @@ class munin::plugins::linux inherits munin::plugins::base {
 		  vmstat
 		]:
 			ensure => present;
+	}
+
+	if $acpi_available {
+		plugin { acpi: }
 	}
 
 	include munin::plugins::interfaces
