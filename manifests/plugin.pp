@@ -112,10 +112,8 @@ class munin::plugins::linux inherits munin::plugins::base {
 		  vmstat
 		]:
 			ensure => present;
-	}
-
-	if $acpi_available {
-		plugin { acpi: }
+		acpi: 
+			ensure => $acpi_available;
 	}
 
 	include munin::plugins::interfaces

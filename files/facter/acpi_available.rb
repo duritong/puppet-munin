@@ -2,9 +2,9 @@
 Facter.add("acpi_available") do
 	setcode do
 		if `acpi -t -B -A 2>/dev/null`.match(/\d/).nil? 
-			"false"
+			"absent"
 		else
-			"true"
+			"present"
 		end
 	end
 end
