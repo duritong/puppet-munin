@@ -4,13 +4,13 @@
 
 log_level 4
 log_file /var/log/munin/munin-node.log
-port <%= munin_port_real %>
 pid_file /var/run/munin/munin-node.pid
 background 1
 setseid 1
 
-# Which port to bind to;
+# Which host/port to bind to;
 host <%= munin_host_real %>
+port <%= munin_port_real %>
 user root
 group root
 setsid yes
@@ -27,11 +27,10 @@ ignore_file \.rpm(save|new)$
 # telnetting to localhost, port 4949
 #
 #host_name localhost.localdomain
+host_name <%= fqdn %>
 
 # A list of addresses that are allowed to connect.  This must be a
 # regular expression, due to brain damage in Net::Server, which
 # doesn't understand CIDR-style network notation.  You may repeat
 # the allow line as many times as you'd like
-
-host_name <%= fqdn %>
 allow <%= munin_allow %>
