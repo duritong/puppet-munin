@@ -110,7 +110,8 @@ class munin::client::debian
 
 	service { "munin-node":
 		ensure => running, 
-		hasstatus => true,
+		# sarge's munin-node init script has no status
+		hasstatus => $lsb_release { sarge => false, default => true }
 	}
 
 	munin::register { $fqdn: }

@@ -8,6 +8,6 @@ Facter.add("interfaces") do
 				value = matches[1]
 			end
 			value
-		end.compact.join(" ")
+		end.compact.sort.join(" ")
 	end
 end
