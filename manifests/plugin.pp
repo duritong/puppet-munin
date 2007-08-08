@@ -85,9 +85,17 @@ class munin::plugins::base {
 		interfaces:
 			source => "puppet://$servername/munin/facter/interfaces.rb",
 			require => Package[iproute];
-		acpi_available:
-			source => "puppet://$servername/munin/facter/acpi_available.rb",
-			require => Package[acpi];
+	}
+	case $vserver {
+		guest: {}
+		'': {}
+		default: {
+			puppet::fact{
+				acpi_available:
+					source => "puppet://$servername/munin/facter/acpi_available.rb",
+					require => Package[acpi];
+			}
+		}
 	}
 }
 
