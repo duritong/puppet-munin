@@ -79,7 +79,7 @@ class munin::client::darwin
 		file => "/etc/hostconfig",
 		pattern => "SNMPSERVER=-NO-",
 	}
-	append_if_no_such_line{"startsnmpdyes":
+	line { "startsnmpdyes":
 		file => "/etc/hostconfig",
 		line => "SNMPSERVER=-YES-",
 		notify => Exec["/sbin/SystemStarter start SNMP"],
