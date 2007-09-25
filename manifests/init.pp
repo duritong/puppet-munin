@@ -7,7 +7,7 @@
 # Define where the individual nodes' configs are stored
 $NODESDIR="/var/lib/puppet/modules/munin/nodes"
 
-modules_dir { [ "munin", "munin/nodes", "munin/plugins" ]: }
+modules_dir { [ "munin", "munin/plugins" ]: }
 
 import "host.pp"
 import "client.pp"
