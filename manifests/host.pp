@@ -9,7 +9,7 @@ class munin::host
 	File <<||>>
 
 	concatenated_file { "/etc/munin/munin.conf":
-		dir => "/var/lib/puppet/modules/munin/nodes/",
+		dir => $NODESDIR,
 		header => "/etc/munin/munin.conf.header",
 	}
 	
