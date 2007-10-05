@@ -13,3 +13,5 @@ import "host.pp"
 import "client.pp"
 import "plugin.pp"
 
+include assert_lsbdistcodename
+
