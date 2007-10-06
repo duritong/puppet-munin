@@ -81,22 +81,6 @@ class munin::plugins::base {
 			notify => Service[munin-node];
 	}
 
-	puppet::fact{
-		interfaces:
-			source => "puppet://$servername/munin/facter/interfaces.rb",
-			require => Package[iproute];
-	}
-	case $vserver {
-		guest: {}
-		'': {}
-		default: {
-			puppet::fact{
-				acpi_available:
-					source => "puppet://$servername/munin/facter/acpi_available.rb",
-					require => Package[acpi];
-			}
-		}
-	}
 }
 
 # handle if_ and if_err_ plugins
