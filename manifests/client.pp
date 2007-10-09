@@ -53,7 +53,7 @@ define munin::register()
 		default => $munin_host
 	}
 
-	@@file { "munin_node_${name}_${port}": path => "${NODESDIR}/${name}_${munin_port}",
+	@@file { "${NODESDIR}/${name}_${munin_port_real}":
 		ensure => present,
 		content => template("munin/defaultclient.erb"),
 	}
