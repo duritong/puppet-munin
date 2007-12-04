@@ -8,8 +8,8 @@ define munin::plugin (
 	$config = '')
 {
 	case $operatingsystem {
-		debian: {	$munin_node_service = "munin-node"; }
-		gentoo: {	$munin-node_service = "munin"; }
+		debian: {	$munin_node_service = "munin-node" }
+		gentoo: {	$munin_node_service = "munin" }
 	}
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
@@ -74,19 +74,19 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 class munin::plugins::base-debian {
 
 	case $operatingsystem {
-		gentoo: {	$munin_node_service = "munin"; }
-		debian: {	$munin_node_service = "munin-node"; }
+		gentoo: {	$munin_node_service = "munin" }
+		debian: {	$munin_node_service = "munin-node" }
 	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
 				source => "puppet://$servername/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => root;
+				mode => 0755, owner => root, group => root,
 				notify => Service[$munin_node_service];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
-				mode => 0644, owner => root, group => root;
+				mode => 0644, owner => root, group => root,
 				notify => Service[$munin_node_service];
 		}
 }
