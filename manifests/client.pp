@@ -22,6 +22,11 @@ class munin::client {
 			include munin::client::debian
 			include munin::plugins::debian
 		}
+		gentoo: {
+			include munin::client::gentoo
+			include munin::plugins::gentoo
+	
+		}
 		default: { fail ("Don't know how to handle munin on $operatingsystem") }
 	}
 
@@ -118,5 +123,37 @@ class munin::client::debian
 
 	# workaround bug in munin_node_configure
 	plugin { "postfix_mailvolume": ensure => absent }
+}
+
+class munin::client::gentoo 
+{
+        package { 'munin':
+                ensure => present,
+                category => $operatingsystem ? {
+                        gentoo => 'net-analyzer',
+                        default => '',
+                },
+        }
+
+
+	file {
+		"/etc/munin/":
+			ensure => directory,
+			mode => 0755, owner => root, group => root;
+		"/etc/munin/munin-node.conf":
+			content => template("munin/munin-node.conf.Gentoo."),
+			mode => 0644, owner => root, group => root,
+			# this has to be installed before the package, so the postinst can
+			# boot the munin-node without failure!
+			before => Package["munin-node"],
+			notify => Service["munin-node"],
+	}
+
+	service { "munin":
+		ensure => running, 
+	}
+
+	munin::register { $fqdn: }
+
 }
 
