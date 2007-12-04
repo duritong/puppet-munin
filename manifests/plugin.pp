@@ -26,7 +26,7 @@ define munin::plugin (
 			file { $plugin:
 				ensure => "$script_path/${plugin_src}",
 				require => Package[$munin-node-service],
-				notify => Service[$munin-node-service],
+				#notify => Service[$munin-node-service],
 			}
 		}
 	}
@@ -82,14 +82,14 @@ class munin::plugins::base-debian {
 				source => "puppet://$servername/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => root,
+				mode => 0755, owner => root, group => root;
 				#notify => Service[$munin-node-service];
-				notify => Service[munin];
+				#notify => Service[munin];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
-				mode => 0644, owner => root, group => root,
+				mode => 0644, owner => root, group => root;
 			#	notify => Service[$munin-node-service];
-				notify => Service[munin];
+				# notify => Service[munin];
 		}
 }
 
@@ -102,8 +102,6 @@ class munin::plugins::interfaces inherits munin::plugins::base {
 		$ifs: ensure => "if_";
 		$if_errs: ensure => "if_err_";
 	}
-
-
 }
 
 class munin::plugins::linux inherits munin::plugins::base {
