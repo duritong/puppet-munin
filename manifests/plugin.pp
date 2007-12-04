@@ -74,8 +74,8 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 class munin::plugins::base-debian {
 
 	case $operatingsystem {
-		debian: {	$munin-node-service = "munin-node"; }
 		gentoo: {	$munin-node-service = "munin"; }
+		debian: {	$munin-node-service = "munin-node"; }
 	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
@@ -83,11 +83,13 @@ class munin::plugins::base-debian {
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => root,
-				notify => Service[$munin-node-service];
+				#notify => Service[$munin-node-service];
+				notify => Service[munin];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
 				mode => 0644, owner => root, group => root,
-				notify => Service[$munin-node-service];
+			#	notify => Service[$munin-node-service];
+				notify => Service[munin];
 		}
 }
 
