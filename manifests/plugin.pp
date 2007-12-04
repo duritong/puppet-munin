@@ -7,6 +7,15 @@ define munin::plugin (
 	$script_path = "/usr/share/munin/plugins",
 	$config = '')
 {
+	case $operatingsystem {
+		debian: {	
+			$munin-node-service = "munin-node";
+		}
+		gentoo: {	
+			$munin-node-service = "munin";
+		}
+	}
+					$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
@@ -16,16 +25,12 @@ define munin::plugin (
 			file { $plugin: ensure => absent, } 
 		}
 		default: {
-			case $operatingsystem {
-				debian: {	
-					$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-					debug ( "munin_plugin: making $plugin using src: $plugin_src" )
-					file { $plugin:
-						ensure => "$script_path/${plugin_src}",
-						require => Package["munin-node"],
-						notify => Service["munin-node"],
-				}
-				}
+			$plugin_src = $ensure ? { "present" => $name, default => $ensure }
+			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
+			file { $plugin:
+				ensure => "$script_path/${plugin_src}",
+				require => Package[$munin-node-service],
+				notify => Service[$munin-node-service],
 			}
 		}
 	}
@@ -70,21 +75,20 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 	}
 }
 
-class munin::plugins::base {
+class munin::plugins::base-debian {
 
-	file {
-		[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-			source => "puppet://$servername/munin/empty",
-			ensure => directory, checksum => mtime,
-			recurse => true, purge => true, force => true, 
-			mode => 0755, owner => root, group => root,
-			notify => Service[munin-node];
-		"/etc/munin/plugin-conf.d/munin-node":
-			ensure => present, 
-			mode => 0644, owner => root, group => root,
-			notify => Service[munin-node];
-	}
-
+		file {
+			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
+				source => "puppet://$servername/munin/empty",
+				ensure => directory, checksum => mtime,
+				recurse => true, purge => true, force => true, 
+				mode => 0755, owner => root, group => root,
+				notify => Service[$munin-node-service];
+			"/etc/munin/plugin-conf.d/munin-node":
+				ensure => present, 
+				mode => 0644, owner => root, group => root,
+				notify => Service[$munin-node-service];
+		}
 }
 
 # handle if_ and if_err_ plugins
