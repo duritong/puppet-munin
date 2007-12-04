@@ -16,12 +16,16 @@ define munin::plugin (
 			file { $plugin: ensure => absent, } 
 		}
 		default: {
-			$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
-			file { $plugin:
-				ensure => "$script_path/${plugin_src}",
-				require => Package["munin-node"],
-				notify => Service["munin-node"],
+			case $operatingsystem {
+				debian: {	
+					$plugin_src = $ensure ? { "present" => $name, default => $ensure }
+					debug ( "munin_plugin: making $plugin using src: $plugin_src" )
+					file { $plugin:
+						ensure => "$script_path/${plugin_src}",
+						require => Package["munin-node"],
+						notify => Service["munin-node"],
+				}
+				}
 			}
 		}
 	}
