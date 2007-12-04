@@ -8,8 +8,8 @@ define munin::plugin (
 	$config = '')
 {
 	case $operatingsystem {
-		debian: {	$munin-node-service = "munin-node"; }
-		gentoo: {	$munin-node-service = "munin"; }
+		debian: {	$munin_node_service = "munin-node"; }
+		gentoo: {	$munin-node_service = "munin"; }
 	}
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
@@ -25,8 +25,8 @@ define munin::plugin (
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			file { $plugin:
 				ensure => "$script_path/${plugin_src}",
-				require => Package[$munin-node-service],
-				#notify => Service[$munin-node-service],
+				require => Package[$munin_node_service],
+				notify => Service[$munin_node_service],
 			}
 		}
 	}
@@ -74,8 +74,8 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 class munin::plugins::base-debian {
 
 	case $operatingsystem {
-		gentoo: {	$munin-node-service = "munin"; }
-		debian: {	$munin-node-service = "munin-node"; }
+		gentoo: {	$munin_node_service = "munin"; }
+		debian: {	$munin_node_service = "munin-node"; }
 	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
@@ -83,13 +83,11 @@ class munin::plugins::base-debian {
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => root;
-				#notify => Service[$munin-node-service];
-				#notify => Service[munin];
+				notify => Service[$munin_node_service];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
 				mode => 0644, owner => root, group => root;
-			#	notify => Service[$munin-node-service];
-				# notify => Service[munin];
+				notify => Service[$munin_node_service];
 		}
 }
 
