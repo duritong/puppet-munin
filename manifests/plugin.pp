@@ -71,7 +71,7 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 	}
 }
 
-class munin::plugins::base-debian {
+class munin::plugins::base {
 
 	case $operatingsystem {
 		gentoo: {	$munin_node_service = "munin" }
