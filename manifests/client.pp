@@ -145,8 +145,8 @@ class munin::client::gentoo
 			mode => 0644, owner => root, group => root,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
-			before => Package["munin-node"],
-			notify => Service["munin-node"],
+			before => Package["munin"],
+			notify => Service["munin"],
 	}
 
 	service { "munin":
