@@ -8,14 +8,10 @@ define munin::plugin (
 	$config = '')
 {
 	case $operatingsystem {
-		debian: {	
-			$munin-node-service = "$operatingsystem/munin-node";
-		}
-		gentoo: {	
-			$munin-node-service = "$operatingsystem/munin";
-		}
+		debian: {	$munin-node-service = "munin-node"; }
+		gentoo: {	$munin-node-service = "munin"; }
 	}
-					$plugin_src = $ensure ? { "present" => $name, default => $ensure }
+	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
@@ -77,6 +73,10 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 
 class munin::plugins::base-debian {
 
+	case $operatingsystem {
+		debian: {	$munin-node-service = "munin-node"; }
+		gentoo: {	$munin-node-service = "munin"; }
+	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
 				source => "puppet://$servername/munin/empty",
