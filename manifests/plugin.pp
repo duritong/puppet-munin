@@ -9,10 +9,10 @@ define munin::plugin (
 {
 	case $operatingsystem {
 		debian: {	
-			$munin-node-service = "munin-node";
+			$munin-node-service = "$operatingsystem/munin-node";
 		}
 		gentoo: {	
-			$munin-node-service = "munin";
+			$munin-node-service = "$operatingsystem/munin";
 		}
 	}
 					$plugin_src = $ensure ? { "present" => $name, default => $ensure }
