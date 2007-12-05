@@ -9,11 +9,11 @@ define munin::plugin (
 {
 	case $operatingsystem {
 		debian: {	
-			$munin_node_service = "munin-node"; 
+			$munin_node_service = "munin-node" 
 		}
 		Gentoo: {	
-			$munin_node_service = "munin",
-			$script_path = "/usr/libexec/munin/plugins";
+			$munin_node_service = "munin"
+			$script_path = "/usr/libexec/munin/plugins"
 		}
 	}
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
