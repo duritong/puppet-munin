@@ -11,7 +11,7 @@ define munin::plugin (
 		debian: {	
 			$munin_node_service = "munin-node" 
 		}
-		Gentoo: {	
+		gentoo: {	
 			$munin_node_service = "munin"
 			$script_path = "/usr/libexec/munin/plugins"
 		}
