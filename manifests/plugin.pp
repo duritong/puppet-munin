@@ -4,20 +4,24 @@
 
 define munin::plugin (
 	$ensure = "present",
-	$script_path = "/usr/share/munin/plugins",
+	$script_path,
 	$config = '')
 {
+	$script_path_default = "/usr/share/munin/plugins"
 	case $operatingsystem {
 		debian: {	
 			$munin_node_service = "munin-node" 
+			$script_path_default = "/usr/share/munin/plugins"
 		}
 		gentoo: {	
 			$munin_node_service = "munin"
-			$script_path = "/usr/libexec/munin/plugins"
+			$script_path_default = "/usr/libexec/munin/plugins"
 		}
 	}
+	$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path }
+
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
+	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path_correct" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 	case $ensure {
@@ -29,7 +33,7 @@ define munin::plugin (
 			#$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			file { $plugin:
-				ensure => "$script_path/${plugin_src}",
+				ensure => "$script_path_correct/${plugin_src}",
 				require => Package[$munin_node_service],
 				notify => Service[$munin_node_service],
 			}
