@@ -83,7 +83,7 @@ class munin::plugins::base {
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => root,
-				notify => Service[$munin_node_service];
+				notify => Service["$munin_node_service-$operatingsystem"];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
 				mode => 0644, owner => root, group => root,
