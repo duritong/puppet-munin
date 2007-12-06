@@ -4,28 +4,30 @@
 
 define munin::plugin (
 	$ensure = "present",
-	$script_path = '',
+	$script_path = $script_path_default,
 	$config = '')
 {
-	#$script_path_default = "/usr/share/munin/plugins"
 	case $operatingsystem {
 		debian: {	
 			$munin_node_service = "munin-node" 
-			$script_path_default = "/usr/share/munin/plugins"
+			$munin_node_package = "munin-node" 
+			#$script_path_default = "/usr/share/munin/plugins"
 		}
 		gentoo: {	
-			$munin_node_service = "munin"
-			$script_path_default = "/usr/libexec/munin/plugins"
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin" 
+			#$script_path_default = "/usr/libexec/munin/plugins"
 		}
 		default: {
-			$munin_node_service = "munin"
-			$script_path_default = "/usr/libexec/munin/plugins"
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin" 
+			#$script_path_default = "/usr/libexec/munin/plugins"
 		}
 	}
-	$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path_default }
+	#$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path_default }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path_correct" )
+	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 	case $ensure {
@@ -37,8 +39,8 @@ define munin::plugin (
 			#$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			file { $plugin:
-				ensure => "$script_path_correct/${plugin_src}",
-				require => Package[$munin_node_service],
+				ensure => "$script_path/${plugin_src}",
+				require => Package[$munin_node_package],
 				notify => Service[$munin_node_service],
 			}
 		}
@@ -87,8 +89,14 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 class munin::plugins::base {
 
 	case $operatingsystem {
-		gentoo: {	$munin_node_service = "munin" }
-		debian: {	$munin_node_service = "munin-node" }
+		gentoo: {	
+			$munin_node_package = "munin" 
+			$munin_node_service = "munin-node" 
+			}
+		debian: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+			}
 	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
