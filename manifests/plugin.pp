@@ -4,7 +4,7 @@
 
 define munin::plugin (
 	$ensure = "present",
-	$script_path,
+	$script_path = '',
 	$config = '')
 {
 	$script_path_default = "/usr/share/munin/plugins"
