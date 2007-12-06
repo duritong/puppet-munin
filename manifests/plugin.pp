@@ -7,13 +7,17 @@ define munin::plugin (
 	$script_path = '',
 	$config = '')
 {
-	$script_path_default = "/usr/share/munin/plugins"
+	#$script_path_default = "/usr/share/munin/plugins"
 	case $operatingsystem {
 		debian: {	
 			$munin_node_service = "munin-node" 
 			$script_path_default = "/usr/share/munin/plugins"
 		}
 		gentoo: {	
+			$munin_node_service = "munin"
+			$script_path_default = "/usr/libexec/munin/plugins"
+		}
+		default: {
 			$munin_node_service = "munin"
 			$script_path_default = "/usr/libexec/munin/plugins"
 		}
