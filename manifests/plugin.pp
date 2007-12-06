@@ -22,7 +22,7 @@ define munin::plugin (
 			$script_path_default = "/usr/libexec/munin/plugins"
 		}
 	}
-	$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path }
+	$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path_default }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path_correct" )
