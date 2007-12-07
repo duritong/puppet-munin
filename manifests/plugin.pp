@@ -78,7 +78,7 @@ class munin::plugins::base {
 		"/etc/munin/plugin-conf.d/munin-node":
 			ensure => present, 
 			mode => 0644, owner => root, group => root,
-			notify => Service[munin-node];
+			notify => Service[munin-node],
 			before => Package[munin-node];
 	}
 
