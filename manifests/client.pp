@@ -25,7 +25,10 @@ class munin::client {
 		gentoo: {
 			include munin::client::gentoo
 			include munin::plugins::gentoo
-	
+		}
+		centos: {
+			include munin::client::centos
+			include munin::plugins::centos
 		}
 		default: { fail ("Don't know how to handle munin on $operatingsystem") }
 	}
@@ -142,6 +145,38 @@ class munin::client::gentoo
 			mode => 0755, owner => root, group => root;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.Gentoo."),
+			mode => 0644, owner => root, group => root,
+			# this has to be installed before the package, so the postinst can
+			# boot the munin-node without failure!
+			before => Package["munin"],
+			notify => Service["munin"],
+	}
+
+	service { "munin":
+		ensure => running, 
+	}
+
+	munin::register { $fqdn: }
+
+}
+
+class munin::client::centos 
+{
+        package { 'munin-node':
+                ensure => present,
+                category => $operatingsystem ? {
+                        gentoo => 'net-analyzer',
+                        default => '',
+                },
+        }
+
+
+	file {
+		"/etc/munin/":
+			ensure => directory,
+			mode => 0755, owner => root, group => root;
+		"/etc/munin/munin-node.conf":
+			content => template("munin/munin-node.conf.CentOS."),
 			mode => 0644, owner => root, group => root,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
