@@ -116,7 +116,21 @@ class munin::plugins::base {
 			$munin_node_package = "munin-node" 
 		}
 	}
-		file {
+	case $operatingsystem {
+		centos: {		
+		    file {
+			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
+				source => "puppet://$servername/munin/empty",
+				ensure => directory, checksum => mtime,
+				recurse => true, purge => true, force => true, 
+				mode => 0755, owner => root, group => root;
+			"/etc/munin/plugin-conf.d/munin-node":
+				ensure => present, 
+				mode => 0644, owner => root, group => root;
+		    }
+			}
+		default: {
+		    file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
 				source => "puppet://$servername/munin/empty",
 				ensure => directory, checksum => mtime,
@@ -127,6 +141,7 @@ class munin::plugins::base {
 				ensure => present, 
 				mode => 0644, owner => root, group => root,
 				notify => Service[$munin_node_service];
+		    }
 		}
 }
 
