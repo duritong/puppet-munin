@@ -41,7 +41,14 @@ define munin::plugin (
 			file { $plugin:
 				ensure => "$script_path/${plugin_src}",
 				require => Package[$munin_node_package],
-				notify => Service[$munin_node_service],
+				case $operatingsystem {
+					centos: {	
+						# do nothing
+					}
+					default: {
+						notify => Service[$munin_node_service],
+					}
+				}
 			}
 		}
 	}
