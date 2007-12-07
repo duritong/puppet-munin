@@ -38,15 +38,18 @@ define munin::plugin (
 		}
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
-			file { $plugin:
-				ensure => "$script_path/${plugin_src}",
-				require => Package[$munin_node_package],
-				case $operatingsystem {
-					centos: {	
-						# do nothing
+			case $operatingsystem {
+				centos: {	
+					file { $plugin:
+						ensure => "$script_path/${plugin_src}",
+						require => Package[$munin_node_package];
 					}
-					default: {
-						notify => Service[$munin_node_service],
+				}
+				default: {
+					file { $plugin:
+						ensure => "$script_path/${plugin_src}",
+						require => Package[$munin_node_package],
+						notify => Service[$munin_node_service];
 					}
 				}
 			}
