@@ -14,12 +14,13 @@ define munin::plugin (
 			#$script_path_default = "/usr/share/munin/plugins"
 		}
 		gentoo: {	
-			$munin_node_service = "munin-node"
+			#$munin_node_service = "munin-node"
+			$munin_node_service = "munin"
 			$munin_node_package = "munin" 
 			#$script_path_default = "/usr/libexec/munin/plugins"
 		}
 		default: {
-			$munin_node_service = "munin-node"
+			$munin_node_service = "munin"
 			$munin_node_package = "munin" 
 			#$script_path_default = "/usr/libexec/munin/plugins"
 		}
@@ -91,7 +92,7 @@ class munin::plugins::base {
 	case $operatingsystem {
 		gentoo: {	
 			$munin_node_package = "munin" 
-			$munin_node_service = "munin-node" 
+			$munin_node_service = "munin" 
 			}
 		debian: {		
 			$munin_node_service = "munin-node" 
