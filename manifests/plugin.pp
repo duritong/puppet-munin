@@ -79,6 +79,7 @@ class munin::plugins::base {
 			ensure => present, 
 			mode => 0644, owner => root, group => root,
 			notify => Service[munin-node];
+			before => Package[munin-node];
 	}
 
 }
