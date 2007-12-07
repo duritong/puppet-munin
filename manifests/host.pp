@@ -13,7 +13,8 @@ class munin::host
 		header => "/etc/munin/munin.conf.header",
 	}
 	
-	file { ["/var/log/munin-update.log", "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
+	file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
+	        "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
     ensure => present,
     mode => 640, owner => munin, group => root;
   }
