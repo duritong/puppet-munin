@@ -11,21 +11,21 @@ define munin::plugin (
 		debian: {	
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
-			#$script_path_default = "/usr/share/munin/plugins"
+		}
+		centos: {	
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
 		}
 		gentoo: {	
 			#$munin_node_service = "munin-node"
 			$munin_node_service = "munin"
 			$munin_node_package = "munin" 
-			#$script_path_default = "/usr/libexec/munin/plugins"
 		}
 		default: {
-			$munin_node_service = "munin"
-			$munin_node_package = "munin" 
-			#$script_path_default = "/usr/libexec/munin/plugins"
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin-node" 
 		}
 	}
-	#$script_path_correct = $script_path ? { '' => $script_path_default, default => $script_path_default }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
@@ -37,7 +37,6 @@ define munin::plugin (
 			file { $plugin: ensure => absent, } 
 		}
 		default: {
-			#$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			file { $plugin:
 				ensure => "$script_path/${plugin_src}",
@@ -98,6 +97,14 @@ class munin::plugins::base {
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
 			}
+		centos: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+			}
+		default: {
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin-node" 
+		}
 	}
 		file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
@@ -155,5 +162,8 @@ class munin::plugins::vserver inherits munin::plugins::base {
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
-
 }
+
+class munin::plugins::centos inherits munin::plugins::base {
+}
+
