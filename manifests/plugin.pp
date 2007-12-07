@@ -128,7 +128,8 @@ class munin::plugins::base {
 				ensure => present, 
 				mode => 0644, owner => root, group => root;
 		    }
-			}
+		}
+
 		default: {
 		    file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
@@ -143,6 +144,7 @@ class munin::plugins::base {
 				notify => Service[$munin_node_service];
 		    }
 		}
+	}
 }
 
 # handle if_ and if_err_ plugins
