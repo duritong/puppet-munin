@@ -80,7 +80,7 @@ class munin::client::darwin
 	file { "/usr/share/snmp/snmpd.conf": 
 		mode => 744,
 		content => template("munin/darwin_snmpd.conf.erb"),
-		group  => staff,
+		group  => 0,
 		owner  => root,
 	}
 	delete_matching_line{"startsnmpdno":
@@ -106,10 +106,10 @@ class munin::client::debian
 	file {
 		"/etc/munin/":
 			ensure => directory,
-			mode => 0755, owner => root, group => root;
+			mode => 0755, owner => root, group => 0;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.${operatingsystem}.${lsbdistcodename}"),
-			mode => 0644, owner => root, group => root,
+			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin-node"],
@@ -142,10 +142,10 @@ class munin::client::gentoo
 	file {
 		"/etc/munin/":
 			ensure => directory,
-			mode => 0755, owner => root, group => root;
+			mode => 0755, owner => root, group => 0;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.Gentoo."),
-			mode => 0644, owner => root, group => root,
+			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin"],
@@ -174,10 +174,10 @@ class munin::client::centos
 	file {
 		"/etc/munin/":
 			ensure => directory,
-			mode => 0755, owner => root, group => root;
+			mode => 0755, owner => root, group =>0;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.CentOS."),
-			mode => 0644, owner => root, group => root,
+			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin"],

@@ -21,7 +21,7 @@ class munin::snmp_collector
 	file { 
 		"/var/lib/puppet/modules/munin/create_snmp_links":
 			source => "puppet://$servername/munin/create_snmp_links.sh",
-			mode => 755, owner => root, group => root;
+			mode => 755, owner => root, group => 0;
 	}
 
 	exec { "create_snmp_links":
