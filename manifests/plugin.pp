@@ -70,7 +70,7 @@ define munin::plugin (
 					debug("creating $plugin_conf")
 					file { $plugin_conf:
 						content => "[${name}]\n$config\n",
-						mode => 0644, owner => root, group => root,
+						mode => 0644, owner => root, group => 0,
 					}
 				}
 			}
@@ -85,7 +85,7 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 			file {
 				"/var/lib/puppet/modules/munin/plugins/${name}":
 					source => $source,
-					mode => 0755, owner => root, group => root;
+					mode => 0755, owner => root, group => 0;
 			}
 			munin::plugin { $name:
 				ensure => $ensure,
@@ -123,10 +123,10 @@ class munin::plugins::base {
 				source => "puppet://$servername/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => root;
+				mode => 0755, owner => root, group => 0;
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
-				mode => 0644, owner => root, group => root;
+				mode => 0644, owner => root, group => 0;
 		    }
 		}
 
@@ -136,11 +136,11 @@ class munin::plugins::base {
 				source => "puppet://$servername/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => root,
+				mode => 0755, owner => root, group => 0,
 				notify => Service["$munin_node_service"];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
-				mode => 0644, owner => root, group => root,
+				mode => 0644, owner => root, group => 0,
 				notify => Service[$munin_node_service];
 		    }
 		}
