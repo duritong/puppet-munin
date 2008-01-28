@@ -6,7 +6,7 @@ class munin::host
 {
 	package { [ "munin", "nmap"]: ensure => installed, }
 
-	File <<||>>
+	File <<| tag == 'munin' |>>
 
 	concatenated_file { "/etc/munin/munin.conf":
 		dir => $NODESDIR,

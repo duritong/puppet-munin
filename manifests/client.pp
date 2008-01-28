@@ -56,6 +56,7 @@ define munin::register()
 	@@file { "${NODESDIR}/${name}_${munin_port_real}":
 		ensure => present,
 		content => template("munin/defaultclient.erb"),
+		tag => 'munin',
 	}
 }
 
@@ -64,6 +65,7 @@ define munin::register_snmp()
 	@@file { "munin_snmp_${name}": path => "${NODESDIR}/${name}",
 		ensure => present,
 		content => template("munin/snmpclient.erb"),
+		tag => 'munin',
 	}
 }
 
