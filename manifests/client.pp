@@ -40,7 +40,7 @@ class munin::client {
 				default: {
 					include munin::plugins::linux
 					case $virtual {
-						xen0: { include munin::plugins::xen }
+						xen0: { include munin::plugins::dom0 }
 					}
 				}
 			}
@@ -100,6 +100,7 @@ class munin::client::darwin
 
 class munin::client::debian 
 {
+    $script_path_default =  "/usr/share/munin/plugins"
 
 	package { "munin-node": ensure => installed }
 
@@ -130,13 +131,15 @@ class munin::client::debian
 
 class munin::client::gentoo 
 {
-        package { 'munin':
+    $script_path_default =  "/usr/libexec/munin/plugins"
+    $acpi_available = "absent"
+    package { 'munin':
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
                         default => '',
                 },
-        }
+    }
 
 
 	file {
@@ -157,18 +160,18 @@ class munin::client::gentoo
 	}
 
 	munin::register { $fqdn: }
-
 }
 
 class munin::client::centos 
 {
-        package { 'munin-node':
+    $script_path_default =  "/usr/share/munin/plugins"
+    package { 'munin-node':
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
                         default => '',
                 },
-        }
+    }
 
 
 	file {
