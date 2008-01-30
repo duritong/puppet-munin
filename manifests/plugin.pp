@@ -145,6 +145,11 @@ class munin::plugins::base {
 		    }
 		}
 	}
+
+    case $operatingsystem {
+        gentoo: { $script_path_default =  "/usr/libexec/munin/plugins" }
+        default: { $script_path_default =  "/usr/share/munin/plugins" }
+    }
 }
 
 # handle if_ and if_err_ plugins
@@ -189,8 +194,51 @@ class munin::plugins::vserver inherits munin::plugins::base {
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
+    file { "$script_path_default/gentoo_lastupdated":
+            source => "puppet://$servername/munin/plugins/gentoo_lastupdated",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+
+    plugin{"gentoo_lastupdated": ensure => present;}
 }
 
 class munin::plugins::centos inherits munin::plugins::base {
+}
+
+class munin::plugins::selinux inherits munin::plugins::base {
+    file { "$script_path_default/selinuxenforced":
+            source => "puppet://$servername/munin/plugins/selinuxenforced",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+
+    plugin{"selinuxenforced": ensure => present;}
+}
+
+class munin::plugins::dom0 inherits munin::plugins::base {
+    file {
+        [ "$script_path_default/xen" ]:
+            source => "puppet://$servername/munin/plugins/xen",
+            ensure => file, 
+            mode => 0755, owner => root, group => 0;
+        [ "$script_path_default/xen-cpu" ]:
+            source => "puppet://$servername/munin/plugins/xen-cpu",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+        [ "$script_path_default/xen_memory" ]:
+            source => "puppet://$servername/munin/plugins/xen_memory",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+        [ "$script_path_default/xen_vbd" ]:
+            source => "puppet://$servername/munin/plugins/xen_vbd",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+
+    plugin {
+        [ xen, xen-cpu, xen_memory, xen_vbd ]:
+            ensure => present;
+    }
 }
 
