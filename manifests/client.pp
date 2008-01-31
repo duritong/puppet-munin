@@ -165,7 +165,7 @@ class munin::client::gentoo
 class munin::client::centos 
 {
     $script_path_default =  "/usr/share/munin/plugins"
-    package { 'munin-node':
+    package { 'munin':
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
@@ -187,7 +187,7 @@ class munin::client::centos
 			notify => Service["munin"],
 	}
 
-	service { "munin":
+	service { "munin-node":
 		ensure => running, 
 	}
 
