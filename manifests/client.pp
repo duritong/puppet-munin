@@ -155,7 +155,7 @@ class munin::client::gentoo
 			notify => Service["munin"],
 	}
 
-	service { "munin":
+	service { "munin-node":
 		ensure => running, 
 	}
 
