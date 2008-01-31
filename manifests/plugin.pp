@@ -17,8 +17,8 @@ define munin::plugin (
 			$munin_node_package = "munin-node" 
 		}
 		gentoo: {	
-			$munin_node_service = "munin-node"
-			#$munin_node_service = "munin"
+			#$munin_node_service = "munin-node"
+			$munin_node_service = "munin"
 			$munin_node_package = "munin" 
 		}
 		default: {
