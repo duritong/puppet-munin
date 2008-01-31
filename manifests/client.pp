@@ -142,10 +142,11 @@ class munin::client::gentoo
     }
 
     # link
-    file{
-        "/etc/init.d/munin":
-            ensure => "/etc/init.d/munin-node",
-    }
+    # mh: really needed?
+#    file{
+#        "/etc/init.d/munin":
+#            ensure => "/etc/init.d/munin-node",
+#    }
 
 
 
