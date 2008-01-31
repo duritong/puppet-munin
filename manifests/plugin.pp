@@ -242,3 +242,16 @@ class munin::plugins::dom0 inherits munin::plugins::base {
     }
 }
 
+class munin::plugins::djbdns inherits munin::plugins::base {
+    file {
+        [ "$script_path_default/tinydns" ]:
+            source => "puppet://$servername/munin/plugins/tinydns",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+    plugin {
+        [ tinydns ]:
+            ensure => present;
+    }
+}
+
