@@ -141,6 +141,13 @@ class munin::client::gentoo
                 },
     }
 
+    # link
+    file{
+        "/etc/init.d/munin":
+            ensure => "/etc/init.d/munin-node",
+    }
+
+
 
 	file {
 		"/etc/munin/":
@@ -152,7 +159,7 @@ class munin::client::gentoo
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin"],
-			notify => Service["munin"],
+	    #		notify => Service["munin"],
 	}
 
 	service { "munin":
