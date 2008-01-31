@@ -187,7 +187,7 @@ class munin::client::centos
 			notify => Service["munin"],
 	}
 
-	service { "munin":
+	service { "munin-node":
 		ensure => running, 
 	}
 
