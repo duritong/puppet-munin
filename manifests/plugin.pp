@@ -242,6 +242,10 @@ class munin::plugins::dom0 inherits munin::plugins::base {
     }
 }
 
+class munin::plugins::domU inherits munin::plugins::base {
+    plugin { if_eth0: ensure => "if_" }
+}
+
 class munin::plugins::djbdns inherits munin::plugins::base {
     file {
         [ "$script_path_default/tinydns" ]:
