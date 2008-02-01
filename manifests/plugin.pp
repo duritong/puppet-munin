@@ -129,7 +129,29 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 }
 
 class munin::plugins::base {
-    include munin::plugin::paths
+
+    case $operatingsystem {
+        gentoo: {
+            $munin_node_package = "munin"
+            $munin_node_service = "munin"
+            $script_path =  "/usr/libexec/munin/plugins"
+            }
+        debian: {
+            $munin_node_service = "munin-node"
+            $munin_node_package = "munin-node"
+            $script_path =  "/usr/share/munin/plugins"
+            }
+        centos: {
+            $munin_node_service = "munin-node"
+            $munin_node_package = "munin-node"
+            $script_path =  "/usr/share/munin/plugins"
+            }
+        default: {
+            $munin_node_service = "munin-node"
+            $munin_node_package = "munin-node"
+            $script_path =  "/usr/share/munin/plugins"
+        }
+    }
 
 	case $operatingsystem {
 		centos: {		
