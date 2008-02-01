@@ -27,7 +27,7 @@ class munin::plugin::paths
 		}
 	}
     
-{
+}
 
 define munin::plugin (
 	$ensure = "present",
