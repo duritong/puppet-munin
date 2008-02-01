@@ -10,7 +10,7 @@ define munin::plugin (
 	case $operatingsystem {
 		gentoo: {	
 			$munin_node_package = "munin" 
-			$munin_node_service = "munin" 
+			$munin_node_service = "munin-munin" 
             $script_path =  "/usr/libexec/munin/plugins"
 			}
 		debian: {		
