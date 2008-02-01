@@ -31,10 +31,12 @@ class munin::plugin::paths
 
 define munin::plugin (
 	$ensure = "present",
-	$script_path = '/usr/libexec/munin/plugins',
+	$script_path_in = '',
 	$config = '')
 {
     include munin::plugin::paths
+
+	$script_path = $script_path_in ? { '' => $script_path, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
