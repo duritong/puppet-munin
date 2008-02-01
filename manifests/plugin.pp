@@ -2,31 +2,39 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
+class munin::plugin::paths 
+{
+	case $operatingsystem {
+		gentoo: {	
+			$munin_node_package = "munin" 
+			$munin_node_service = "munin" 
+            $script_path_default =  "/usr/libexec/munin/plugins"
+			}
+		debian: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/share/munin/plugins"
+			}
+		centos: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/share/munin/plugins"
+			}
+		default: {
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/share/munin/plugins"
+		}
+	}
+    
+{
+
 define munin::plugin (
 	$ensure = "present",
 	$script_path = '/usr/libexec/munin/plugins',
 	$config = '')
 {
-	case $operatingsystem {
-		debian: {	
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
-		}
-		centos: {	
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
-		}
-		gentoo: {	
-			#$munin_node_service = "munin-node"
-			$munin_node_service = "munin"
-			$munin_node_package = "munin" 
-	        $script_path = $script_path_default,
-		}
-		default: {
-			$munin_node_service = "munin-node"
-			$munin_node_package = "munin-node" 
-		}
-	}
+    include munin::plugin::paths
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
 	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
@@ -98,29 +106,8 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 }
 
 class munin::plugins::base {
+    include munin::plugin::paths
 
-	case $operatingsystem {
-		gentoo: {	
-			$munin_node_package = "munin" 
-			$munin_node_service = "munin" 
-            $script_path_default =  "/usr/libexec/munin/plugins"
-			}
-		debian: {		
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/libexec/munin/plugins"
-			}
-		centos: {		
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/libexec/munin/plugins"
-			}
-		default: {
-			$munin_node_service = "munin-node"
-			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/libexec/munin/plugins"
-		}
-	}
 	case $operatingsystem {
 		centos: {		
 		    file {
