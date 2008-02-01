@@ -134,7 +134,7 @@ class munin::client::gentoo
     $script_path_default =  "/usr/libexec/munin/plugins"
     $acpi_available = "absent"
     package { 'munin':
-                alias => 'munin-node'
+                alias => 'munin-node',
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
