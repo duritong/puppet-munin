@@ -203,7 +203,7 @@ class munin::client::centos
 
 }
 
-define munin::client::immertest($domU_number = '0') {
+define munin::immertest($domU_number = '0') {
     $munin_port = $domU_number ? {
        '4949' => 4949,
        default => muninport($domU_number);
@@ -211,3 +211,4 @@ define munin::client::immertest($domU_number = '0') {
 
     include munin::client
 }
+
