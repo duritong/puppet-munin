@@ -8,22 +8,22 @@ class munin::plugin::paths
 		gentoo: {	
 			$munin_node_package = "munin" 
 			$munin_node_service = "munin" 
-            $script_path_default =  "/usr/libexec/munin/plugins"
+            $script_path =  "/usr/libexec/munin/plugins"
 			}
 		debian: {		
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/share/munin/plugins"
+            $script_path =  "/usr/share/munin/plugins"
 			}
 		centos: {		
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/share/munin/plugins"
+            $script_path =  "/usr/share/munin/plugins"
 			}
 		default: {
 			$munin_node_service = "munin-node"
 			$munin_node_package = "munin-node" 
-            $script_path_default =  "/usr/share/munin/plugins"
+            $script_path =  "/usr/share/munin/plugins"
 		}
 	}
     
@@ -181,7 +181,7 @@ class munin::plugins::vserver inherits munin::plugins::base {
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
-    file { "$script_path_default/gentoo_lastupdated":
+    file { "$script_path/gentoo_lastupdated":
             source => "puppet://$servername/munin/plugins/gentoo_lastupdated",
             ensure => file,
             mode => 0755, owner => root, group => 0;
@@ -194,7 +194,7 @@ class munin::plugins::centos inherits munin::plugins::base {
 }
 
 class munin::plugins::selinux inherits munin::plugins::base {
-    file { "$script_path_default/selinuxenforced":
+    file { "$script_path/selinuxenforced":
             source => "puppet://$servername/munin/plugins/selinuxenforced",
             ensure => file,
             mode => 0755, owner => root, group => 0;
@@ -205,19 +205,19 @@ class munin::plugins::selinux inherits munin::plugins::base {
 
 class munin::plugins::dom0 inherits munin::plugins::base {
     file {
-        [ "$script_path_default/xen" ]:
+        [ "$script_path/xen" ]:
             source => "puppet://$servername/munin/plugins/xen",
             ensure => file, 
             mode => 0755, owner => root, group => 0;
-        [ "$script_path_default/xen-cpu" ]:
+        [ "$script_path/xen-cpu" ]:
             source => "puppet://$servername/munin/plugins/xen-cpu",
             ensure => file,
             mode => 0755, owner => root, group => 0;
-        [ "$script_path_default/xen_memory" ]:
+        [ "$script_path/xen_memory" ]:
             source => "puppet://$servername/munin/plugins/xen_memory",
             ensure => file,
             mode => 0755, owner => root, group => 0;
-        [ "$script_path_default/xen_vbd" ]:
+        [ "$script_path/xen_vbd" ]:
             source => "puppet://$servername/munin/plugins/xen_vbd",
             ensure => file,
             mode => 0755, owner => root, group => 0;
@@ -235,7 +235,7 @@ class munin::plugins::domU inherits munin::plugins::base {
 
 class munin::plugins::djbdns inherits munin::plugins::base {
     file {
-        [ "$script_path_default/tinydns" ]:
+        [ "$script_path/tinydns" ]:
             source => "puppet://$servername/munin/plugins/tinydns",
             ensure => file,
             mode => 0755, owner => root, group => 0;
@@ -248,15 +248,15 @@ class munin::plugins::djbdns inherits munin::plugins::base {
 
 class munin::plugins::postgres inherits munin::plugins::base {
     file {
-        [ "$script_path_default/pg_conn" ]:
+        [ "$script_path/pg_conn" ]:
             source => "puppet://$servername/munin/plugins/pg_conn",
             ensure => file, 
             mode => 0755, owner => root, group => 0;
-        [ "$script_path_default/pg__connections" ]:
+        [ "$script_path/pg__connections" ]:
             source => "puppet://$servername/munin/plugins/pg__connections",
             ensure => file,
             mode => 0755, owner => root, group => 0;
-        [ "$script_path_default/pg__locks" ]:
+        [ "$script_path/pg__locks" ]:
             source => "puppet://$servername/munin/plugins/pg__locks",
             ensure => file,
             mode => 0755, owner => root, group => 0;
