@@ -4,7 +4,7 @@
 
 define munin::plugin (
 	$ensure = "present",
-	$script_path = $script_path_default,
+	$script_path = '/usr/libexec/munin/plugins',
 	$config = '')
 {
 	case $operatingsystem {
@@ -20,6 +20,7 @@ define munin::plugin (
 			#$munin_node_service = "munin-node"
 			$munin_node_service = "munin"
 			$munin_node_package = "munin" 
+	        $script_path = $script_path_default,
 		}
 		default: {
 			$munin_node_service = "munin-node"
@@ -102,18 +103,22 @@ class munin::plugins::base {
 		gentoo: {	
 			$munin_node_package = "munin" 
 			$munin_node_service = "munin" 
+            $script_path_default =  "/usr/libexec/munin/plugins"
 			}
 		debian: {		
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/libexec/munin/plugins"
 			}
 		centos: {		
 			$munin_node_service = "munin-node" 
 			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/libexec/munin/plugins"
 			}
 		default: {
 			$munin_node_service = "munin-node"
 			$munin_node_package = "munin-node" 
+            $script_path_default =  "/usr/libexec/munin/plugins"
 		}
 	}
 	case $operatingsystem {
@@ -145,11 +150,6 @@ class munin::plugins::base {
 		    }
 		}
 	}
-
-    case $operatingsystem {
-        gentoo: { $script_path_default =  "/usr/libexec/munin/plugins" }
-        default: { $script_path_default =  "/usr/share/munin/plugins" }
-    }
 }
 
 # handle if_ and if_err_ plugins
