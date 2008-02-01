@@ -34,7 +34,28 @@ define munin::plugin (
 	$script_path_in = '',
 	$config = '')
 {
-    include munin::plugin::paths
+	case $operatingsystem {
+		gentoo: {	
+			$munin_node_package = "munin" 
+			$munin_node_service = "munin" 
+            $script_path =  "/usr/libexec/munin/plugins"
+			}
+		debian: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+            $script_path =  "/usr/share/munin/plugins"
+			}
+		centos: {		
+			$munin_node_service = "munin-node" 
+			$munin_node_package = "munin-node" 
+            $script_path =  "/usr/share/munin/plugins"
+			}
+		default: {
+			$munin_node_service = "munin-node"
+			$munin_node_package = "munin-node" 
+            $script_path =  "/usr/share/munin/plugins"
+		}
+	}
 
 	#$script_path = $script_path_in ? { '' => $script_path, default => $script_path_in }
 
