@@ -71,7 +71,7 @@ define munin::plugin (
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			case $operatingsystem {
-				centos: {	
+				centos, gentoo: {	
 					file { $plugin:
 						ensure => "$script_path/${plugin_src}",
 						require => Package[$munin_node_package];
