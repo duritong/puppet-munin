@@ -164,7 +164,7 @@ class munin::client::gentoo
 	    #		notify => Service["munin"],
 	}
 
-	service { "munin":
+	service { "munin-node":
 		ensure => running, 
 	}
 
@@ -189,7 +189,7 @@ class munin::client::centos
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin-node"],
-			notify => Service["munin"],
+			notify => Service["munin-node"],
 	}
 
 	service { "munin-node":
