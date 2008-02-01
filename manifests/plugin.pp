@@ -259,3 +259,19 @@ class munin::plugins::djbdns inherits munin::plugins::base {
     }
 }
 
+class munin::plugins::postgres inherits munin::plugins::base {
+    file {
+        [ "$script_path_default/pg_conn" ]:
+            source => "puppet://$servername/munin/plugins/pg_conn",
+            ensure => file, 
+            mode => 0755, owner => root, group => 0;
+        [ "$script_path_default/pg__connections" ]:
+            source => "puppet://$servername/munin/plugins/pg__connections",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+        [ "$script_path_default/pg__locks" ]:
+            source => "puppet://$servername/munin/plugins/pg__locks",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+}
