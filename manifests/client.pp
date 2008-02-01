@@ -203,3 +203,11 @@ class munin::client::centos
 
 }
 
+define munin::client::immer1-5($domU_number = '0') {
+    $munin_port = $domU_number ? {
+       '4949' => 4949,
+       default => muninport($domU_number);
+    }
+
+    include munin::client
+}
