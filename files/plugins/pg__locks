@@ -1,0 +1,119 @@
+#!/usr/bin/perl -w
+# Plugin for monitor postgres connections.
+#
+# Licenced under GPL v2.
+#
+# Usage:
+#
+#       Symlink into /etc/munin/plugins/ and add the monitored
+#       database to the filename. e.g.:
+#
+#       ln -s /usr/share/munin/plugins/pg__locks \
+#         /etc/munin/plugins/pg_<databasename>_locks
+#       This should, however, be given through autoconf and suggest.
+#
+#       If required, give username, password and/or Postgresql server
+#       host through environment variables.
+#
+#       You must also activate Postgresql statistics. See
+#	http://www.postgresql.org/docs/8.1/interactive/monitoring-locks.html
+#       for how to enable this. Specifically, the following lines must
+#       exist in your postgresql.conf:
+#
+#           stats_start_collector = true
+#           stats_block_level = true
+#
+#
+# Parameters:
+#
+#       config   (required)
+#
+# Config variables:
+#
+#       dbhost     - Which database server to use. Defaults to
+#                    'localhost'.
+#       dbname     - Which database to use. Defaults to template1
+#       dbuser     - A Postgresql user account with read permission to
+#                    the given database. Defaults to
+#                    'postgres'. Anyway, Munin must be told which user
+#                    this plugin should be run as.
+#       dbpass     - The corresponding password, if
+#                    applicable. Default to undef. Remember that
+#                    pg_hba.conf must be configured accordingly.
+#
+# Magic markers
+#%# family=auto
+#%# capabilities=autoconf
+
+use strict;
+use DBI;
+
+my $dbhost = $ENV{'dbhost'} || '127.0.0.1';
+my $dbname = $ENV{'dbname'} || 'template1';
+my $dbuser = $ENV{'dbuser'} || 'postgres';
+my $dbport = $ENV{'dbport'} || '5432';
+my $dbpass = $ENV{'dbpass'} || '';
+
+# Check for DBD::Pg
+if (! eval "require DBD::Pg;") {
+     exit 1;
+}
+
+my $dsn = "DBI:Pg:dbname=$dbname;host=$dbhost;port=$dbport";
+#print "$dsn\n";
+my $dbh = DBI->connect ($dsn, $dbuser,
+			$dbpass,
+			{RaiseError =>1}) || die "";
+
+
+
+if (exists $ARGV[0]) {
+    if ($ARGV[0] eq 'autoconf') {
+	# Check for DBD::Pg
+	if (! eval "require DBD::Pg;") {
+	     print "no (DBD::Pg not found)";
+	     exit 1;
+	}
+        if ($dbh) {
+            print "yes\n";
+            exit 0;
+        } else {
+            print "no Unable to access Database $dbname on host $dbhost as user $dbuser.\nError returned was: ". $DBI::errstr;
+            exit 1;
+	}
+    }
+
+    if ($ARGV[0] eq "config") {
+	print "graph_title PostgresSQL locks\n";
+	print "graph_args --base 1000\n";
+	print "graph_vlabel Locks\n";
+	print "graph_category Postgresql\n";
+	print "graph_info Shows Postgresql locks\n";
+	print "locks.label Locks\n";
+	print "locks.info Locks (more info here, please... :)\n";
+	print "locks.type GAUGE\n";
+	print "locks.warning 5\n";
+	print "locks.critical 10\n";
+	print "exlocks.label Exclusive locks\n";
+	print "exlocks.info Exclusive locks (here too, please... :)\n";
+	print "exlocks.type GAUGE\n";
+	print "exlocks.warning 5\n";
+	print "exlocks.critical 10\n";
+	exit 0;
+    }
+}
+
+my $sql="SELECT mode,COUNT(mode) FROM pg_locks GROUP BY mode ORDER BY mode;";
+my $sth = $dbh->prepare ($sql);
+$sth->execute ();
+my $locks = 0;
+my $exlocks = 0;
+while (my ($mode, $count) = $sth->fetchrow ()) {
+    if ($mode =~ /exclusive/i) {
+        $exlocks = $exlocks + $count;
+    }
+    $locks = $locks+$count;
+}
+print "locks.value $locks\n";
+print "exlocks.value $exlocks\n";
+
