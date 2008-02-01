@@ -1,6 +1,6 @@
 # immerda 
 module Puppet::Parser::Functions
-    newfunction(:muninport) do |args|
+    newfunction(:muninport, :type => :rvalue) do |args|
         args[0]+65400
     end
 end
