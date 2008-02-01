@@ -174,7 +174,7 @@ class munin::client::gentoo
 class munin::client::centos 
 {
     $script_path_default =  "/usr/share/munin/plugins"
-    package { 'munin':
+    package { 'munin-node':
                 ensure => present,
     }
 
