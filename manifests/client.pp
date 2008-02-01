@@ -134,6 +134,7 @@ class munin::client::gentoo
     $script_path_default =  "/usr/libexec/munin/plugins"
     $acpi_available = "absent"
     package { 'munin':
+                alias => 'munin-node'
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
@@ -159,7 +160,7 @@ class munin::client::gentoo
 			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
-			before => Package["munin"],
+			before => Package["munin-node"],
 	    #		notify => Service["munin"],
 	}
 
@@ -175,10 +176,6 @@ class munin::client::centos
     $script_path_default =  "/usr/share/munin/plugins"
     package { 'munin':
                 ensure => present,
-                category => $operatingsystem ? {
-                        gentoo => 'net-analyzer',
-                        default => '',
-                },
     }
 
 
@@ -191,7 +188,7 @@ class munin::client::centos
 			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
-			before => Package["munin"],
+			before => Package["munin-node"],
 			notify => Service["munin"],
 	}
 
