@@ -103,6 +103,8 @@ class munin::client::debian
     $script_path_default =  "/usr/share/munin/plugins"
 
 	package { "munin-node": ensure => installed }
+    # the plugin will need that
+	package { "iproute": ensure => installed }
 
 	file {
 		"/etc/munin/":
