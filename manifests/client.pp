@@ -100,8 +100,6 @@ class munin::client::darwin
 
 class munin::client::debian 
 {
-    $script_path_default =  "/usr/share/munin/plugins"
-
 	package { "munin-node": ensure => installed }
     # the plugin will need that
 	package { "iproute": ensure => installed }
@@ -133,25 +131,16 @@ class munin::client::debian
 
 class munin::client::gentoo 
 {
-    $script_path_default =  "/usr/libexec/munin/plugins"
     $acpi_available = "absent"
-    package { 'munin':
-                alias => munin-node,
+    package { 'munin-node':
+                name => 'munin',
+                alias => 'munin-node',
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
                         default => '',
                 },
     }
-
-    # link
-    # mh: really needed?
-#    file{
-#        "/etc/init.d/munin":
-#            ensure => "/etc/init.d/munin-node",
-#    }
-
-
 
 	file {
 		"/etc/munin/":
@@ -175,7 +164,6 @@ class munin::client::gentoo
 
 class munin::client::centos 
 {
-    $script_path_default =  "/usr/share/munin/plugins"
     package { 'munin-node':
                 ensure => present,
     }

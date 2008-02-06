@@ -9,23 +9,15 @@ define munin::plugin (
 {
 	case $operatingsystem {
 		gentoo: {	
-			$munin_node_package = "munin" 
-			$munin_node_service = "munin-node" 
             $script_path =  "/usr/libexec/munin/plugins"
 			}
 		debian: {		
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
             $script_path =  "/usr/share/munin/plugins"
 			}
 		centos: {		
-			$munin_node_service = "munin-node" 
-			$munin_node_package = "munin-node" 
             $script_path =  "/usr/share/munin/plugins"
 			}
 		default: {
-			$munin_node_service = "munin-node"
-			$munin_node_package = "munin-node" 
             $script_path =  "/usr/share/munin/plugins"
 		}
 	}
@@ -47,14 +39,14 @@ define munin::plugin (
 				centos, gentoo: {	
 					file { $plugin:
 						ensure => "$script_path/${plugin_src}",
-						require => Package[$munin_node_package];
+						require => Package['munin-node'];
 					}
 				}
 				default: {
 					file { $plugin:
 						ensure => "$script_path/${plugin_src}",
-						require => Package[$munin_node_package],
-						notify => Service[$munin_node_service];
+						require => Package['munin-node'],
+						notify => Service['munin-node'];
 					}
 				}
 			}
@@ -123,11 +115,12 @@ class munin::plugins::base {
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => 0,
-				notify => Service["$munin_node_service"];
+				notify => Service['munin-node'];
 			"/etc/munin/plugin-conf.d/munin-node":
 				ensure => present, 
 				mode => 0644, owner => root, group => 0,
-				notify => Service[$munin_node_service];
+				notify => Service['munin-node'],
+                before => Package['munin-node'];
 		    }
 		}
 	}
