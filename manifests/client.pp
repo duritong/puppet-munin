@@ -134,7 +134,6 @@ class munin::client::gentoo
     $acpi_available = "absent"
     package { 'munin-node':
                 name => 'munin',
-                alias => 'munin-node',
                 ensure => present,
                 category => $operatingsystem ? {
                         gentoo => 'net-analyzer',
