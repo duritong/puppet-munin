@@ -26,11 +26,10 @@ define munin::plugin (
 	$config = '')
 {
 
-    include munin::plugin::scriptpaths
-	$real_script_path = $script_path_in ? { '' => ${munin::plugin::scriptpaths::script_path}, default => $script_path_in }
+	$real_script_path = $script_path_in ? { '' => $munin::plugin::scriptpaths::script_path, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=${munin::plugin::scriptpaths::script_path}" )
+	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$munin::plugin::scriptpaths::script_path" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 	case $ensure {
@@ -89,8 +88,6 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 }
 
 class munin::plugins::base {
-    include munin::plugin::scriptpaths
-
 	case $operatingsystem {
 		centos: {		
 		    file {
@@ -192,9 +189,9 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
         ''  =>  "munin/plugins/$name",
         default => $source
     }
-	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=${munin::plugin::scriptpaths::script_path}" )
+	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
     file { "munin_plugin_${name}":
-            path => "${munin::plugin::scriptpaths::script_path}/${name}",
+            path => "$munin::plugin::scriptpaths::script_path/${name}",
             source => "puppet://$servername/$real_source",
             ensure => file,
             mode => 0755, owner => root, group => 0;
