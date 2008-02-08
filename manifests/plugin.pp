@@ -2,11 +2,7 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-define munin::plugin (
-	$ensure = "present",
-	$script_path_in = '',
-	$config = '')
-{
+class munin::plugin::scriptpaths {
 	case $operatingsystem {
 		gentoo: {	
             $script_path =  "/usr/libexec/munin/plugins"
@@ -21,7 +17,16 @@ define munin::plugin (
             $script_path =  "/usr/share/munin/plugins"
 		}
 	}
+}
 
+
+define munin::plugin (
+	$ensure = "present",
+	$script_path_in = '',
+	$config = '')
+{
+
+    include munin::plugin::scriptpaths
 	#$script_path = $script_path_in ? { '' => $script_path, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
@@ -94,6 +99,8 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 }
 
 class munin::plugins::base {
+    include munin::plugin::scriptpaths
+
 	case $operatingsystem {
 		centos: {		
 		    file {
