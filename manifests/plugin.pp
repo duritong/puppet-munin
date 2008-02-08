@@ -187,12 +187,12 @@ class munin::plugins::selinux inherits munin::plugins::base {
     plugin{"selinuxenforced": ensure => present;}
 }
 
-define munin::plugins::deploy ($source = '', $enabled = 'true') {
+define munin::plugin::deploy ($source = '', $enabled = 'true') {
     $real_source = $source ? {
         ''  =>  "munin/plugins/$name",
         default => $source
     }
-    include munin::plugins::scriptpaths
+    include munin::plugin::scriptpaths
     file { "munin_plugin_${name}":
             path => "${script_path}/${name}",
             source => "puppet://$servername/$real_source",
@@ -206,10 +206,10 @@ define munin::plugins::deploy ($source = '', $enabled = 'true') {
 }
 
 class munin::plugins::dom0 inherits munin::plugins::base {
-    munin::plugins::deploy { "xen": }
-    munin::plugins::deploy { "xen-cpu": }
-    munin::plugins::deploy { "xen_memory": }
-    munin::plugins::deploy { "xen_vbd": }
+    munin::plugin::deploy { "xen": }
+    munin::plugin::deploy { "xen-cpu": }
+    munin::plugin::deploy { "xen_memory": }
+    munin::plugin::deploy { "xen_vbd": }
 }
 
 class munin::plugins::domU inherits munin::plugins::base {
@@ -217,11 +217,11 @@ class munin::plugins::domU inherits munin::plugins::base {
 }
 
 class munin::plugins::djbdns inherits munin::plugins::base {
-    munin::plugins::deploy { "tinydns": }
+    munin::plugin::deploy { "tinydns": }
 }
 
 class munin::plugins::postgres inherits munin::plugins::base {
-    munin::plugins::deploy { "pg_conn": }
-    munin::plugins::deploy { "pg__connections": enabled => false }
-    munin::plugins::deploy { "pg__locks": enabled => false }
+    munin::plugin::deploy { "pg_conn": }
+    munin::plugin::deploy { "pg__connections": enabled => false }
+    munin::plugin::deploy { "pg__locks": enabled => false }
 }
