@@ -163,26 +163,14 @@ class munin::plugins::vserver inherits munin::plugins::base {
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
-    file { "$script_path/gentoo_lastupdated":
-            source => "puppet://$servername/munin/plugins/gentoo_lastupdated",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
-
-    plugin{"gentoo_lastupdated": ensure => present;}
+    munin::plugin::deploy { "gentoo_lastupdated": }
 }
 
 class munin::plugins::centos inherits munin::plugins::base {
 }
 
 class munin::plugins::selinux inherits munin::plugins::base {
-    file { "$script_path/selinuxenforced":
-            source => "puppet://$servername/munin/plugins/selinuxenforced",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
-
-    plugin{"selinuxenforced": ensure => present;}
+    munin::plugin::deploy { "selinuxenforced": }
 }
 
 define munin::plugin::deploy ($source = '', $enabled = 'true') {
