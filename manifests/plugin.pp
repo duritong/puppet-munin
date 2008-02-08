@@ -27,10 +27,10 @@ define munin::plugin (
 {
 
     include munin::plugin::scriptpaths
-	#$script_path = $script_path_in ? { '' => $script_path, default => $script_path_in }
+	$real_script_path = $script_path_in ? { '' => ${munin::plugin::scriptpaths::script_path}, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$script_path" )
+	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=${munin::plugin::scriptpaths::script_path}" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 	case $ensure {
@@ -41,7 +41,7 @@ define munin::plugin (
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
 			file { $plugin:
-			    ensure => "$script_path/${plugin_src}",
+			    ensure => "${real_script_path}/${plugin_src}",
 				require => Package['munin-node'],
 				notify => Service['munin-node'];
 			}
@@ -82,7 +82,7 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 			munin::plugin { $name:
 				ensure => $ensure,
 				config => $config,
-				script_path => "/var/lib/puppet/modules/munin/plugins",
+				script_path_in => "/var/lib/puppet/modules/munin/plugins",
 			}
 		}
 	}
@@ -192,9 +192,8 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
         ''  =>  "munin/plugins/$name",
         default => $source
     }
-    include munin::plugin::scriptpaths
     file { "munin_plugin_${name}":
-            path => "${script_path}/${name}",
+            path => "${munin::plugin::scriptpaths::script_path}/${name}",
             source => "puppet://$servername/$real_source",
             ensure => file,
             mode => 0755, owner => root, group => 0;
