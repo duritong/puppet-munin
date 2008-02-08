@@ -26,6 +26,7 @@ define munin::plugin (
 	$config = '')
 {
 
+    include munin::plugin::scriptpaths
 	$real_script_path = $script_path_in ? { '' => $munin::plugin::scriptpaths::script_path, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
@@ -189,6 +190,7 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
         ''  =>  "munin/plugins/$name",
         default => $source
     }
+    include munin::plugin::scriptpaths
 	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
