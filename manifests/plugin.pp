@@ -192,6 +192,7 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
         ''  =>  "munin/plugins/$name",
         default => $source
     }
+	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=${munin::plugin::scriptpaths::script_path}" )
     file { "munin_plugin_${name}":
             path => "${munin::plugin::scriptpaths::script_path}/${name}",
             source => "puppet://$servername/$real_source",
