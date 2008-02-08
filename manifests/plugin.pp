@@ -187,7 +187,7 @@ class munin::plugins::selinux inherits munin::plugins::base {
     plugin{"selinuxenforced": ensure => present;}
 }
 
-define munin::plugins::deploy ($source = '') {
+define munin::plugins::deploy ($source = '', $enabled = 'true') {
     $real_source = $source ? {
         ''  =>  "munin/plugins/$name",
         default => $source
@@ -198,36 +198,18 @@ define munin::plugins::deploy ($source = '') {
             source => "puppet://$servername/$real_source",
             ensure => file,
             mode => 0755, owner => root, group => 0;
-   }
+    }
 
-    plugin{$name: ensure => present }
-
+    if $enabled {
+        plugin{$name: ensure => present }
+    }
 }
 
 class munin::plugins::dom0 inherits munin::plugins::base {
-    file {
-        [ "$script_path/xen" ]:
-            source => "puppet://$servername/munin/plugins/xen",
-            ensure => file, 
-            mode => 0755, owner => root, group => 0;
-        [ "$script_path/xen-cpu" ]:
-            source => "puppet://$servername/munin/plugins/xen-cpu",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-        [ "$script_path/xen_memory" ]:
-            source => "puppet://$servername/munin/plugins/xen_memory",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-        [ "$script_path/xen_vbd" ]:
-            source => "puppet://$servername/munin/plugins/xen_vbd",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
-
-    plugin {
-        [ xen, xen-cpu, xen_memory, xen_vbd ]:
-            ensure => present;
-    }
+    munin::plugins::deploy { "xen": }
+    munin::plugins::deploy { "xen-cpu": }
+    munin::plugins::deploy { "xen_memory": }
+    munin::plugins::deploy { "xen_vbd": }
 }
 
 class munin::plugins::domU inherits munin::plugins::base {
@@ -235,31 +217,11 @@ class munin::plugins::domU inherits munin::plugins::base {
 }
 
 class munin::plugins::djbdns inherits munin::plugins::base {
-    file {
-        [ "$script_path/tinydns" ]:
-            source => "puppet://$servername/munin/plugins/tinydns",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
-    plugin {
-        [ tinydns ]:
-            ensure => present;
-    }
+    munin::plugins::deploy { "tinydns": }
 }
 
 class munin::plugins::postgres inherits munin::plugins::base {
-    file {
-        [ "$script_path/pg_conn" ]:
-            source => "puppet://$servername/munin/plugins/pg_conn",
-            ensure => file, 
-            mode => 0755, owner => root, group => 0;
-        [ "$script_path/pg__connections" ]:
-            source => "puppet://$servername/munin/plugins/pg__connections",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-        [ "$script_path/pg__locks" ]:
-            source => "puppet://$servername/munin/plugins/pg__locks",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
+    munin::plugins::deploy { "pg_conn": }
+    munin::plugins::deploy { "pg__connections": enabled => false }
+    munin::plugins::deploy { "pg__locks": enabled => false }
 }
