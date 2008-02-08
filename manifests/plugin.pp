@@ -193,8 +193,8 @@ define munin::plugins::deploy ($source = '', $enabled = 'true') {
         default => $source
     }
     include munin::plugins::scriptpaths
-    file { "munin_plugin_${name}:
-            path => "$script_path/$name",
+    file { "munin_plugin_${name}":
+            path => "${script_path}/${name}",
             source => "puppet://$servername/$real_source",
             ensure => file,
             mode => 0755, owner => root, group => 0;
