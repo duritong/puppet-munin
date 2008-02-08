@@ -40,20 +40,10 @@ define munin::plugin (
 		}
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
-			case $operatingsystem {
-				centos, gentoo: {	
-					file { $plugin:
-						ensure => "$script_path/${plugin_src}",
-						require => Package['munin-node'];
-					}
-				}
-				default: {
-					file { $plugin:
-						ensure => "$script_path/${plugin_src}",
-						require => Package['munin-node'],
-						notify => Service['munin-node'];
-					}
-				}
+			file { $plugin:
+			    ensure => "$script_path/${plugin_src}",
+				require => Package['munin-node'],
+				notify => Service['munin-node'];
 			}
 		}
 	}
@@ -195,6 +185,23 @@ class munin::plugins::selinux inherits munin::plugins::base {
     }
 
     plugin{"selinuxenforced": ensure => present;}
+}
+
+define munin::plugins::deploy ($source = '') {
+    $real_source = $source ? {
+        ''  =>  "munin/plugins/$name",
+        default => $source
+    }
+    include munin::plugins::scriptpaths
+    file { "munin_plugin_${name}:
+            path => "$script_path/$name",
+            source => "puppet://$servername/$real_source",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+   }
+
+    plugin{$name: ensure => present }
+
 }
 
 class munin::plugins::dom0 inherits munin::plugins::base {
