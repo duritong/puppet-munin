@@ -13,5 +13,7 @@ import "host.pp"
 import "client.pp"
 import "plugin.pp"
 
-include assert_lsbdistcodename
+case $operatingsystem {
+    debian,ubuntu: { include assert_lsbdistcodename }
+}
 
