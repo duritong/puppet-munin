@@ -135,7 +135,7 @@ class munin::plugins::interfaces inherits munin::plugins::base {
 class munin::plugins::linux inherits munin::plugins::base {
 
 	plugin {
-		[ df_abs, forks, iostat, memory, processes, cpu, df_inode, irqstats,
+		[ df_abs, forks, memory, processes, cpu, df_inode, irqstats,
 		  netstat, open_files, swap, df, entropy, interrupts, load, open_inodes,
 		  vmstat
 		]:
