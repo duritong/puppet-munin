@@ -33,4 +33,5 @@ host_name <%= fqdn %>
 # regular expression, due to brain damage in Net::Server, which
 # doesn't understand CIDR-style network notation.  You may repeat
 # the allow line as many times as you'd like
-allow <%= munin_allow %>
+allow <%= munin_allow1 %>
+allow <%= munin_allow2 %>
