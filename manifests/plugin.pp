@@ -199,9 +199,7 @@ class munin::plugins::physical inherits munin::plugins::base {
      munin::plugin { iostat: }
 }
 
-class munin::plugins::domU inherits munin::plugins::base {
-    plugin { if_eth0: ensure => "if_" }
-}
+class munin::plugins::domU inherits munin::plugins::base { }
 
 class munin::plugins::djbdns inherits munin::plugins::base {
     munin::plugin::deploy { "tinydns": }
