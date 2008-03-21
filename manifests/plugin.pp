@@ -169,10 +169,6 @@ class munin::plugins::gentoo inherits munin::plugins::base {
 class munin::plugins::centos inherits munin::plugins::base {
 }
 
-class munin::plugins::selinux inherits munin::plugins::base {
-    munin::plugin::deploy { "selinuxenforced": }
-}
-
 define munin::plugin::deploy ($source = '', $enabled = 'true') {
     $real_source = $source ? {
         ''  =>  "munin/plugins/$name",
@@ -192,11 +188,15 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
     }
 }
 
-class munin::plugins::dom0 inherits munin::plugins::base {
+class munin::plugins::dom0 inherits munin::plugins::physical {
     munin::plugin::deploy { "xen": }
     munin::plugin::deploy { "xen-cpu": }
     munin::plugin::deploy { "xen_memory": }
     munin::plugin::deploy { "xen_vbd": }
+}
+
+class munin::plugins::physical inherits munin::plugins::base {
+     munin::plugin { iostat: }
 }
 
 class munin::plugins::domU inherits munin::plugins::base {

@@ -39,9 +39,6 @@ class munin::client {
 				guest: { include munin::plugins::vserver }
 				default: {
 					include munin::plugins::linux
-					case $virtual {
-						xen0: { include munin::plugins::dom0 }
-					}
 				}
 			}
 		}
@@ -49,6 +46,11 @@ class munin::client {
 			err( "Don't know which munin plugins to install for $kernel" )
 		}
 	}
+	case $virtual {
+        physical: { munin::plugins::physical }
+	    xen0: { include munin::plugins::dom0 }
+        xenu: { include munin::plugins::domU }
+    }
 
 }
 
