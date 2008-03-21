@@ -47,7 +47,7 @@ class munin::client {
 		}
 	}
 	case $virtual {
-        physical: { munin::plugins::physical }
+        physical: { include munin::plugins::physical }
 	    xen0: { include munin::plugins::dom0 }
         xenu: { include munin::plugins::domU }
     }
