@@ -1,14 +1,9 @@
 #!/bin/sh
 # -*- sh -*-
 #
-# Plugin to count the daily amount of Virii (qmailscan)
+# Plugin to monitor the status of selinux
 #
-# Contributed by David Obando (david@cryptix.de) - 03.12.2005
-#
-
-# define the logfiles. when you rotate them at any other time than 00:00 you have to define two logfiles:
-#LOG0=/var/spool/qmailscan/quarantine.log
-#LOG1=/var/spool/qmailscan/quarantine.log.1
+# Contributed by admin(at)immerda.ch
 
 if [ "$1" = "autoconf" ]; then
         echo yes
