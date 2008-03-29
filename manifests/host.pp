@@ -6,12 +6,19 @@ class munin::host
 {
 	package { [ "munin", "nmap"]: ensure => installed, }
 
-	File <<||>>
+	File <<| tag == 'munin' |>>
 
 	concatenated_file { "/etc/munin/munin.conf":
 		dir => $NODESDIR,
 		header => "/etc/munin/munin.conf.header",
 	}
+
+    file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
+               "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
+        ensure => present,
+        mode => 640, owner => munin, group => 0;
+    }
+
 	
 }
 
