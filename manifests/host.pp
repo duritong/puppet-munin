@@ -19,8 +19,7 @@ class munin::host
         mode => 640, owner => munin, group => 0;
     }
 
-    munin::plugins::djbdns
-	
+    include munin::plugins::muninhost
 }
 
 class munin::snmp_collector
