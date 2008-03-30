@@ -148,18 +148,14 @@ class munin::plugins::linux inherits munin::plugins::base {
 }
 
 class munin::plugins::debian inherits munin::plugins::base {
-
 	plugin { apt_all: ensure => present; }
-
 }
 
 class munin::plugins::vserver inherits munin::plugins::base {
-
 	plugin {
 		[ netstat, processes ]:
 			ensure => present;
 	}
-
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
@@ -215,6 +211,11 @@ class munin::plugins::apache inherits munin::plugins::base {
     munin::plugin::deploy { "apache_processes": }
     munin::plugin::deploy { "apache_volume": }
     munin::plugin::deploy { "apache_activity": }
+}
+
+class munin::plugins::selinux inherits munin::plugins::base {
+    munin::plugin::deploy { "selinuxenforced": }
+    munin::plugin::deploy { "selinux_avcstats": }
 }
 
 class munin::plugins::postgres inherits munin::plugins::base {
