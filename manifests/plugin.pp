@@ -199,10 +199,22 @@ class munin::plugins::physical inherits munin::plugins::base {
      munin::plugin { iostat: }
 }
 
+class munin::plugins::muninhost inherits munin::plugins::base {
+    munin::plugin { munin_update: }
+    munin::plugin { munin_graph: }
+}
+
 class munin::plugins::domU inherits munin::plugins::base { }
 
 class munin::plugins::djbdns inherits munin::plugins::base {
     munin::plugin::deploy { "tinydns": }
+}
+
+class munin::plugins::apache inherits munin::plugins::base {
+    munin::plugin::deploy { "apache_accesses": }
+    munin::plugin::deploy { "apache_processes": }
+    munin::plugin::deploy { "apache_volume": }
+    munin::plugin::deploy { "apache_activity": }
 }
 
 class munin::plugins::postgres inherits munin::plugins::base {
