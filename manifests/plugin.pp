@@ -1,6 +1,10 @@
 # plugin.pp - configure a specific munin plugin
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
+# adapted and improved by admin(at)immerda.ch
+
+
+### configpaths
 
 class munin::plugin::scriptpaths {
 	case $operatingsystem {
@@ -19,6 +23,7 @@ class munin::plugin::scriptpaths {
 	}
 }
 
+### defines
 
 define munin::plugin (
 	$ensure = "present",
@@ -87,6 +92,26 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 		}
 	}
 }
+define munin::plugin::deploy ($source = '', $enabled = 'true') {
+    $real_source = $source ? {
+        ''  =>  "munin/plugins/$name",
+        default => $source
+    }
+    include munin::plugin::scriptpaths
+	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
+    file { "munin_plugin_${name}":
+            path => "$munin::plugin::scriptpaths::script_path/${name}",
+            source => "puppet://$servername/$real_source",
+            ensure => file,
+            mode => 0755, owner => root, group => 0;
+    }
+
+    if $enabled {
+        plugin{$name: ensure => present }
+    }
+}
+
+### clases for plugins
 
 class munin::plugins::base {
 	case $operatingsystem {
@@ -148,47 +173,30 @@ class munin::plugins::linux inherits munin::plugins::base {
 }
 
 class munin::plugins::debian inherits munin::plugins::base {
-	plugin { apt_all: ensure => present; }
+	munin::plugin { apt_all: ensure => present; }
 }
 
 class munin::plugins::vserver inherits munin::plugins::base {
-	plugin {
+	munin::plugin {
 		[ netstat, processes ]:
 			ensure => present;
 	}
 }
 
 class munin::plugins::gentoo inherits munin::plugins::base {
-    munin::plugin::deploy { "gentoo_lastupdated": }
+    munin::plugin::deploy { "gentoo_lastupdated": config => "user portage\nenv.logfile /var/log/emerge.log\nenv.tail        /usr/bin/tail\nenv.grep        /bin/grep"}
 }
 
 class munin::plugins::centos inherits munin::plugins::base {
 }
 
-define munin::plugin::deploy ($source = '', $enabled = 'true') {
-    $real_source = $source ? {
-        ''  =>  "munin/plugins/$name",
-        default => $source
-    }
-    include munin::plugin::scriptpaths
-	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
-    file { "munin_plugin_${name}":
-            path => "$munin::plugin::scriptpaths::script_path/${name}",
-            source => "puppet://$servername/$real_source",
-            ensure => file,
-            mode => 0755, owner => root, group => 0;
-    }
 
-    if $enabled {
-        plugin{$name: ensure => present }
-    }
-}
 
 class munin::plugins::dom0 inherits munin::plugins::physical {
-    munin::plugin::deploy { "xen": }
-    munin::plugin::deploy { "xen-cpu": }
-    munin::plugin::deploy { "xen_memory": }
-    munin::plugin::deploy { "xen_vbd": }
+    munin::plugin::deploy { "xen": config => "user root"}
+    munin::plugin::deploy { "xen-cpu": config => "user root"}
+    munin::plugin::deploy { "xen_memory": config => "user root"}
+    munin::plugin::deploy { "xen_vbd": config => "user root"}
 }
 
 class munin::plugins::physical inherits munin::plugins::base {
