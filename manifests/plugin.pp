@@ -92,7 +92,7 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 		}
 	}
 }
-define munin::plugin::deploy ($source = '', $enabled = 'true') {
+define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
     $real_source = $source ? {
         ''  =>  "munin/plugins/$name",
         default => $source
@@ -106,9 +106,7 @@ define munin::plugin::deploy ($source = '', $enabled = 'true') {
             mode => 0755, owner => root, group => 0;
     }
 
-    if $enabled {
-        plugin{$name: ensure => present }
-    }
+    munin::plugin{$name: ensure => $ensure, config => $config }
 }
 
 ### clases for plugins
