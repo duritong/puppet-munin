@@ -227,6 +227,6 @@ class munin::plugins::selinux inherits munin::plugins::base {
 
 class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg_conn": }
-    munin::plugin::deploy { "pg__connections": enabled => false }
-    munin::plugin::deploy { "pg__locks": enabled => false }
+    munin::plugin::deploy { "pg__connections": ensure => false }
+    munin::plugin::deploy { "pg__locks": ensure => false }
 }
