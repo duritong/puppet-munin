@@ -46,7 +46,7 @@ define munin::register_snmp()
 	}
 }
 
-class munin::client:: base {
+class munin::client::base {
 	package { "munin-node": ensure => installed }
 	service { "munin-node":
 		ensure => running, 
