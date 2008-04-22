@@ -17,9 +17,8 @@ class munin::client {
         ubuntu: { include munin::client::ubuntu }
         centos: { include munin::client::centos }
         gentoo: { include munin::client::gentoo }
-        default: { include munin::client:: base }
+        default: { include munin::client::base }
     }
-
 }
 
 define munin::register()
