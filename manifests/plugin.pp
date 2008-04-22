@@ -142,6 +142,21 @@ class munin::plugins::base {
 		    }
 		}
 	}
+    case $kernel { 
+        linux: {
+            case $vserver {
+                guest: { include munin::plugins::vserver }
+                default: {
+                    include munin::plugins::linux
+                }
+            }
+        }
+    }
+    case $virtual {
+        physical: { include munin::plugins::physical }
+        xen0: { include munin::plugins::dom0 }
+        xenu: { include munin::plugins::domU }
+    }
 }
 
 # handle if_ and if_err_ plugins
