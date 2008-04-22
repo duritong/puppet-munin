@@ -95,7 +95,7 @@ class munin::client::debian inherits munin::client::base {
     # the plugin will need that
 	package { "iproute": ensure => installed }
 
-	Service["munin-node"]:
+	Service["munin-node"]{
 		# sarge's munin-node init script has no status
 		hasstatus => $lsbdistcodename ? { sarge => false, default => true }
 	}
