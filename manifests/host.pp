@@ -4,7 +4,7 @@
 
 class munin::host
 {
-	package { [ "munin", "nmap"]: ensure => installed, }
+	package {"munin": ensure => installed, }
 
 	File <<| tag == 'munin' |>>
 
