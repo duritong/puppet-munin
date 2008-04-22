@@ -101,7 +101,7 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
 	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
-            source => "puppet://$servername/$real_source",
+            source => "puppet://$server/$real_source",
             ensure => file,
             mode => 0755, owner => root, group => 0;
     }
@@ -116,7 +116,7 @@ class munin::plugins::base {
 		centos: {		
 		    file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$servername/munin/empty",
+				source => "puppet://$server/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => 0;
@@ -129,7 +129,7 @@ class munin::plugins::base {
 		default: {
 		    file {
 			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$servername/munin/empty",
+				source => "puppet://$server/munin/empty",
 				ensure => directory, checksum => mtime,
 				recurse => true, purge => true, force => true, 
 				mode => 0755, owner => root, group => 0,
