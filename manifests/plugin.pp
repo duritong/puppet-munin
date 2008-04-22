@@ -230,10 +230,10 @@ class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg__locks": ensure => false }
 }
 class munin::plugins::nagios inherits munin::plugins::base {
-    munin::plugin {
-        nagios_hosts: script_path => "/usr/local/bin", config => 'user root';
-        nagios_svc: script_path => "/usr/local/bin", config => 'user root';
-        nagios_perf_hosts: ensure => nagios_perf_, script_path => "/usr/local/bin", config => 'user root';
-        nagios_perf_svc: ensure => nagios_perf_, script_path => "/usr/local/bin", config => 'user root';
+    munin::plugin::deploy {
+        nagios_hosts: config => 'user root';
+        nagios_svc: config => 'user root';
+        nagios_perf_hosts: ensure => nagios_perf_, config => 'user root';
+        nagios_perf_svc: ensure => nagios_perf_, config => 'user root';
     }
 }
