@@ -93,8 +93,9 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 	}
 }
 define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
+    $plugin_src = $ensure ? { "present" => $name, default => $ensure }
     $real_source = $source ? {
-        ''  =>  "munin/plugins/$name",
+        ''  =>  "munin/plugins/$plugin_src",
         default => $source
     }
     include munin::plugin::scriptpaths
