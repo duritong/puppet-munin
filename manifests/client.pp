@@ -22,6 +22,14 @@ class munin::client {
 			include munin::client::debian
 			include munin::plugins::debian
 		}
+		gentoo: {
+			include munin::client::gentoo
+			include munin::plugins::gentoo
+		}
+		centos: {
+			include munin::client::centos
+			include munin::plugins::centos
+		}
 		default: { fail ("Don't know how to handle munin on $operatingsystem") }
 	}
 
@@ -31,9 +39,6 @@ class munin::client {
 				guest: { include munin::plugins::vserver }
 				default: {
 					include munin::plugins::linux
-					case $virtual {
-						xen0: { include munin::plugins::xen }
-					}
 				}
 			}
 		}
@@ -41,7 +46,11 @@ class munin::client {
 			err( "Don't know which munin plugins to install for $kernel" )
 		}
 	}
-
+	case $virtual {
+        physical: { include munin::plugins::physical }
+	    xen0: { include munin::plugins::dom0 }
+        xenu: { include munin::plugins::domU }
+    }
 }
 
 define munin::register()
@@ -74,7 +83,7 @@ class munin::client::darwin
 	file { "/usr/share/snmp/snmpd.conf": 
 		mode => 744,
 		content => template("munin/darwin_snmpd.conf.erb"),
-		group  => staff,
+		group  => 0,
 		owner  => root,
 	}
 	delete_matching_line{"startsnmpdno":
@@ -94,16 +103,17 @@ class munin::client::darwin
 
 class munin::client::debian 
 {
-
 	package { "munin-node": ensure => installed }
+    # the plugin will need that
+	package { "iproute": ensure => installed }
 
 	file {
 		"/etc/munin/":
 			ensure => directory,
-			mode => 0755, owner => root, group => root;
+			mode => 0755, owner => root, group => 0;
 		"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.${operatingsystem}.${lsbdistcodename}"),
-			mode => 0644, owner => root, group => root,
+			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin-node"],
@@ -122,3 +132,62 @@ class munin::client::debian
 	plugin { "postfix_mailvolume": ensure => absent }
 }
 
+class munin::client::gentoo 
+{
+    $acpi_available = "absent"
+    package { 'munin-node':
+                name => 'munin',
+                ensure => present,
+                category => $operatingsystem ? {
+                        gentoo => 'net-analyzer',
+                        default => '',
+                },
+    }
+
+	file {
+		"/etc/munin/":
+			ensure => directory,
+			mode => 0755, owner => root, group => 0;
+		"/etc/munin/munin-node.conf":
+			content => template("munin/munin-node.conf.Gentoo."),
+			mode => 0644, owner => root, group => 0,
+			# this has to be installed before the package, so the postinst can
+			# boot the munin-node without failure!
+			before => Package["munin-node"],
+	    #		notify => Service["munin"],
+	}
+
+	service { "munin-node":
+		ensure => running, 
+	}
+
+	munin::register { $fqdn: }
+}
+
+class munin::client::centos 
+{
+    package { 'munin-node':
+                ensure => present,
+    }
+
+
+	file {
+		"/etc/munin/":
+			ensure => directory,
+			mode => 0755, owner => root, group =>0;
+		"/etc/munin/munin-node.conf":
+			content => template("munin/munin-node.conf.CentOS."),
+			mode => 0644, owner => root, group => 0,
+			# this has to be installed before the package, so the postinst can
+			# boot the munin-node without failure!
+			before => Package["munin-node"],
+			notify => Service["munin-node"],
+	}
+
+	service { "munin-node":
+		ensure => running, 
+	}
+
+	munin::register { $fqdn: }
+
+}

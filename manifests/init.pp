@@ -1,8 +1,12 @@
 # munin.pp - everything a sitewide munin installation needs
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
+<<<<<<< HEAD:manifests/init.pp
 # adapted by Puzzle ITC - haerry+puppet(at)puzzle.ch
 #
+=======
+
+>>>>>>> immerda/master:manifests/init.pp
 # the port is a parameter so vservers can share IP addresses and still be happy
 
 # Define where the individual nodes' configs are stored
@@ -14,4 +18,6 @@ import "host.pp"
 import "client.pp"
 import "plugin.pp"
 
-include assert_lsbdistcodename
+case $operatingsystem {
+    debian,ubuntu: { include assert_lsbdistcodename }
+}

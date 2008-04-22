@@ -13,12 +13,13 @@ class munin::host
 		header => "/etc/munin/munin.conf.header",
 	}
 	
-	file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
-	        "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
-    ensure => present,
-    mode => 640, owner => munin, group => root;
-  }
-	
+    file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
+               "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
+        ensure => present,
+        mode => 640, owner => munin, group => 0;
+    }
+
+    include munin::plugins::muninhost
 }
 
 class munin::snmp_collector
@@ -27,7 +28,7 @@ class munin::snmp_collector
 	file { 
 		"/var/lib/puppet/modules/munin/create_snmp_links":
 			source => "puppet://$servername/munin/create_snmp_links.sh",
-			mode => 755, owner => root, group => root;
+			mode => 755, owner => root, group => 0;
 	}
 
 	exec { "create_snmp_links":

@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Plugin to monitor PostgreSQL connections.
+#
+# Parameters:
+#
+#       config   (required)
+#       autoconf (optional - only used by munin-config)
+# Based on netstat plugin
+# $Log$
+#  eric@ohmforce.com
+# 
+#
+# Magic markers (optional - used by munin-config and some installation
+# scripts):
+#%# family=auto
+#%# capabilities=autoconf
+
+
+
+if [ "$1" = "autoconf" ]; then
+        if ( netstat -s 2>/dev/null >/dev/null ); then
+                echo yes
+                exit 0
+        else
+                if [ $? -eq 127 ]
+                then
+                        echo "no (netstat program not found)"
+                        exit 1
+                else
+                        echo no
+                        exit 1
+                fi
+        fi
+fi
+
+if [ "$1" = "config" ]; then
+
+        echo 'graph_title PostgreSQL'
+        echo 'graph_args -l 0 '
+        echo 'graph_vlabel Number of PostgreSQL connections'
+        echo 'graph_category postgresql'
+        echo 'graph_period second'
+        echo 'graph_info This graph shows the number of opened connections on PostgreSQL.' 
+        echo 'established.label established'
+        echo 'established.type GAUGE'
+        echo 'established.max 500'
+        echo 'established.info The number of currently open connections.'
+        exit 0
+fi
+netstat -a | awk '{ print $4 }'| grep postgres | wc -l | xargs echo established.value
