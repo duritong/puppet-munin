@@ -149,7 +149,7 @@ class munin::plugins::interfaces inherits munin::plugins::base {
 
 	$ifs = gsub(split($interfaces, " "), "(.+)", "if_\\1")
 	$if_errs = gsub(split($interfaces, " "), "(.+)", "if_err_\\1")
-	plugin {
+	munin::plugin {
 		$ifs: ensure => "if_";
 		$if_errs: ensure => "if_err_";
 	}
@@ -157,7 +157,7 @@ class munin::plugins::interfaces inherits munin::plugins::base {
 
 class munin::plugins::linux inherits munin::plugins::base {
 
-	plugin {
+	munin::plugin {
 		[ df_abs, forks, memory, processes, cpu, df_inode, irqstats,
 		  netstat, open_files, swap, df, entropy, interrupts, load, open_inodes,
 		  vmstat
