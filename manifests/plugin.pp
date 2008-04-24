@@ -213,7 +213,6 @@ class munin::plugins::djbdns inherits munin::plugins::base {
 }
 
 class munin::plugins::apache inherits munin::plugins::base {
-    include apache::status
     munin::plugin{ "apache_accesses": }
     munin::plugin{ "apache_processes": }
     munin::plugin{ "apache_volume": }
