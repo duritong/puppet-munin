@@ -93,8 +93,9 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 	}
 }
 define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
+    $plugin_src = $ensure ? { "present" => $name, default => $ensure }
     $real_source = $source ? {
-        ''  =>  "munin/plugins/$name",
+        ''  =>  "munin/plugins/$plugin_src",
         default => $source
     }
     include munin::plugin::scriptpaths
@@ -142,6 +143,21 @@ class munin::plugins::base {
 		    }
 		}
 	}
+    case $kernel {
+        linux: {
+            case $vserver {
+                guest: { include munin::plugins::vserver }
+                default: {
+                    include munin::plugins::linux
+                }
+            }
+        }
+    }
+    case $virtual {
+        physical: { include munin::plugins::physical }
+        xen0: { include munin::plugins::dom0 }
+        xenu: { include munin::plugins::domU }
+    }
 }
 
 # handle if_ and if_err_ plugins
@@ -195,6 +211,7 @@ class munin::plugins::dom0 inherits munin::plugins::physical {
     munin::plugin::deploy { "xen-cpu": config => "user root"}
     munin::plugin::deploy { "xen_memory": config => "user root"}
     munin::plugin::deploy { "xen_vbd": config => "user root"}
+    munin::plugin::deploy { "xen_traffic_all": config => "user root"}
 }
 
 class munin::plugins::physical inherits munin::plugins::base {
@@ -228,4 +245,12 @@ class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg_conn": }
     munin::plugin::deploy { "pg__connections": ensure => false }
     munin::plugin::deploy { "pg__locks": ensure => false }
+}
+class munin::plugins::nagios inherits munin::plugins::base {
+    munin::plugin::deploy {
+        nagios_hosts: config => 'user root';
+        nagios_svc: config => 'user root';
+        nagios_perf_hosts: ensure => nagios_perf_, config => 'user root';
+        nagios_perf_svc: ensure => nagios_perf_, config => 'user root';
+    }
 }
