@@ -4,7 +4,7 @@
 
 class munin::host
 {
-	package { [ "munin", "nmap"]: ensure => installed, }
+	package {"munin": ensure => installed, }
 
 	File <<| tag == 'munin' |>>
 
@@ -12,7 +12,7 @@ class munin::host
 		dir => $NODESDIR,
 		header => "/etc/munin/munin.conf.header",
 	}
-
+	
     file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
                "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
         ensure => present,
