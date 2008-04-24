@@ -111,6 +111,9 @@ class munin::client::gentoo inherits munin::client::base {
         name => 'munin',
         category => 'net-analyzer',
     }
+    File["/etc/munin/munin-node.conf"]{
+			content => template("munin/munin-node.conf.$operatingsystem"),
+    }
 
 	include munin::plugins::gentoo
 }
