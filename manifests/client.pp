@@ -66,6 +66,7 @@ define munin::register()
 	@@file { "${NODESDIR}/${name}_${munin_port_real}":
 		ensure => present,
 		content => template("munin/defaultclient.erb"),
+        tag => 'munin',
 	}
 }
 
@@ -129,7 +130,7 @@ class munin::client::debian
 	munin::register { $fqdn: }
 
 	# workaround bug in munin_node_configure
-	plugin { "postfix_mailvolume": ensure => absent }
+	munin::plugin { "postfix_mailvolume": ensure => absent }
 }
 
 class munin::client::gentoo 
