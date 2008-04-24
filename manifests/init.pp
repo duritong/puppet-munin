@@ -1,7 +1,8 @@
 # munin.pp - everything a sitewide munin installation needs
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
-
+# adapted by Puzzle ITC - haerry+puppet(at)puzzle.ch
+#
 # the port is a parameter so vservers can share IP addresses and still be happy
 
 # Define where the individual nodes' configs are stored
@@ -16,4 +17,3 @@ import "plugin.pp"
 case $operatingsystem {
     debian,ubuntu: { include assert_lsbdistcodename }
 }
-
