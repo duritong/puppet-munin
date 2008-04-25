@@ -55,11 +55,11 @@ class munin::client::base {
         hasrestart => true,
         require => Package[munin-node],
 	}
-	file {
-		"/etc/munin/":
+	file {"/etc/munin/":
 			ensure => directory,
 			mode => 0755, owner => root, group => 0;
-		"/etc/munin/munin-node.conf":
+    }
+    file {"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.$operatingsystem"),
 			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
