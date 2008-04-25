@@ -59,7 +59,7 @@ class munin::client::base {
 			ensure => directory,
 			mode => 0755, owner => root, group => 0;
 		"/etc/munin/munin-node.conf":
-			content => template("munin/munin-node.conf.$operatingsystem.$lsbdistcodename"),
+			content => template("munin/munin-node.conf.$operatingsystem"),
 			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
@@ -99,6 +99,9 @@ class munin::client::debian inherits munin::client::base {
 		# sarge's munin-node init script has no status
 		hasstatus => $lsbdistcodename ? { sarge => false, default => true }
 	}
+    File["/etc/munin/munin-node.conf"]{
+			content => template("munin/munin-node.conf.$operatingsystem"),
+    }
 	# workaround bug in munin_node_configure
 	plugin { "postfix_mailvolume": ensure => absent }
 	include munin::plugins::debian
@@ -111,9 +114,7 @@ class munin::client::gentoo inherits munin::client::base {
         name => 'munin',
         category => 'net-analyzer',
     }
-    File["/etc/munin/munin-node.conf"]{
-			content => template("munin/munin-node.conf.$operatingsystem"),
-    }
+    
 
 	include munin::plugins::gentoo
 }
