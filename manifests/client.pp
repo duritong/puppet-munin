@@ -1,6 +1,7 @@
 # client.pp - configure a munin node
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
+# Adapted and improved by admin(at)immerda.ch
 
 class munin::client {
 
@@ -100,7 +101,7 @@ class munin::client::debian inherits munin::client::base {
 		hasstatus => $lsbdistcodename ? { sarge => false, default => true }
 	}
     File["/etc/munin/munin-node.conf"]{
-			content => template("munin/munin-node.conf.$operatingsystem"),
+			content => template("munin/munin-node.conf.$operatingsystem.$lsbdistcodename"),
     }
 	# workaround bug in munin_node_configure
 	plugin { "postfix_mailvolume": ensure => absent }
