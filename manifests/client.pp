@@ -1,6 +1,7 @@
 # client.pp - configure a munin node
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
+# Adapted and improved by admin(at)immerda.ch
 
 class munin::client {
 
@@ -54,12 +55,12 @@ class munin::client::base {
         hasrestart => true,
         require => Package[munin-node],
 	}
-	file {
-		"/etc/munin/":
+	file {"/etc/munin/":
 			ensure => directory,
 			mode => 0755, owner => root, group => 0;
-		"/etc/munin/munin-node.conf":
-			content => template("munin/munin-node.conf.$operatingsystem.$lsbdistrelease"),
+    }
+    file {"/etc/munin/munin-node.conf":
+			content => template("munin/munin-node.conf.$operatingsystem"),
 			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
@@ -99,6 +100,9 @@ class munin::client::debian inherits munin::client::base {
 		# sarge's munin-node init script has no status
 		hasstatus => $lsbdistcodename ? { sarge => false, default => true }
 	}
+    File["/etc/munin/munin-node.conf"]{
+			content => template("munin/munin-node.conf.$operatingsystem.$lsbdistcodename"),
+    }
 	# workaround bug in munin_node_configure
 	plugin { "postfix_mailvolume": ensure => absent }
 	include munin::plugins::debian
@@ -111,6 +115,7 @@ class munin::client::gentoo inherits munin::client::base {
         name => 'munin',
         category => 'net-analyzer',
     }
+    
 
 	include munin::plugins::gentoo
 }
