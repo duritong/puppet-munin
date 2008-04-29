@@ -51,6 +51,7 @@ class munin::client::base {
 	package { "munin-node": ensure => installed }
 	service { "munin-node":
 		ensure => running, 
+        enable => true,
         hasstatus => true,
         hasrestart => true,
         require => Package[munin-node],
