@@ -245,6 +245,13 @@ class munin::plugins::selinux inherits munin::plugins::base {
     munin::plugin::deploy { "selinux_avcstats": }
 }
 
+class munin::plugins::squid inherits munin::plugins::base {
+    munin::plugin{ 'squid_cache': config => "user root\nenv.squidhost localhost\nenv.squidport 80"}
+    munin::plugin{ 'squid_icp': }
+    munin::plugin{ 'squid_requests': }
+    munin::plugin{ 'squid_traffic': }
+}
+
 class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg_conn": }
     munin::plugin::deploy { "pg__connections": ensure => 'absent' }
