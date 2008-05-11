@@ -247,8 +247,8 @@ class munin::plugins::selinux inherits munin::plugins::base {
 
 class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg_conn": }
-    munin::plugin::deploy { "pg__connections": ensure => false }
-    munin::plugin::deploy { "pg__locks": ensure => false }
+    munin::plugin::deploy { "pg__connections": ensure => 'absent' }
+    munin::plugin::deploy { "pg__locks": ensure => 'absent' }
 }
 class munin::plugins::nagios inherits munin::plugins::base {
     munin::plugin::deploy {
