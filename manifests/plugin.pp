@@ -93,7 +93,11 @@ define munin::remoteplugin($ensure = "present", $source, $config = '') {
 	}
 }
 define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
-    $plugin_src = $ensure ? { "present" => $name, default => $ensure }
+    $plugin_src = $ensure ? { 
+        'present' => $name, 
+        'absent' => $name, 
+        default => $ensure 
+    }
     $real_source = $source ? {
         ''  =>  "munin/plugins/$plugin_src",
         default => $source
@@ -241,10 +245,17 @@ class munin::plugins::selinux inherits munin::plugins::base {
     munin::plugin::deploy { "selinux_avcstats": }
 }
 
+class munin::plugins::squid inherits munin::plugins::base {
+    munin::plugin{ 'squid_cache': config => "user root\nenv.squidhost localhost\nenv.squidport 80"}
+    munin::plugin{ 'squid_icp': }
+    munin::plugin{ 'squid_requests': }
+    munin::plugin{ 'squid_traffic': }
+}
+
 class munin::plugins::postgres inherits munin::plugins::base {
     munin::plugin::deploy { "pg_conn": }
-    munin::plugin::deploy { "pg__connections": ensure => false }
-    munin::plugin::deploy { "pg__locks": ensure => false }
+    munin::plugin::deploy { "pg__connections": ensure => 'absent' }
+    munin::plugin::deploy { "pg__locks": ensure => 'absent' }
 }
 class munin::plugins::nagios inherits munin::plugins::base {
     munin::plugin::deploy {
