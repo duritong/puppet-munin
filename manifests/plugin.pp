@@ -50,6 +50,12 @@ define munin::plugin (
 				require => Package['munin-node'],
 				notify => Service['munin-node'];
 			}
+
+            if $require {
+                File[$plugin]{
+                    require +> $require,
+                }
+            }
 		}
 	}
 	case $config {
@@ -69,6 +75,11 @@ define munin::plugin (
 						content => "[${name}]\n$config\n",
 						mode => 0644, owner => root, group => 0,
 					}
+                    if $require {
+                        File[$plugin_conf]{
+                            require +> $require,
+                        }
+                    }
 				}
 			}
 		}
@@ -107,11 +118,19 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
             source => "puppet://$server/$real_source",
-            ensure => file,
+			require => Package['munin-node'],
             mode => 0755, owner => root, group => 0;
     }
+    if $require {
+        File["munin_plugin_${name}"]{
+            require +> $require,
+        }
+        munin::plugin{$name: ensure => $ensure, config => $config, require => $require }
+    } else {
+        munin::plugin{$name: ensure => $ensure, config => $config }
+    }
 
-    munin::plugin{$name: ensure => $ensure, config => $config }
+    
 }
 
 ### clases for plugins
