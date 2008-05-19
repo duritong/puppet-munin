@@ -129,8 +129,6 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
     } else {
         munin::plugin{$name: ensure => $ensure, config => $config }
     }
-
-    
 }
 
 ### clases for plugins
