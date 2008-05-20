@@ -45,17 +45,17 @@ define munin::plugin (
 		}
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
+            if $require {
+                $real_require = [ $require, Package['munin-node'] ]
+            } else {
+                $real_require = Package['munin-node']
+            }
 			file { $plugin:
 			    ensure => "${real_script_path}/${plugin_src}",
-				require => Package['munin-node'],
+				require => $require,
 				notify => Service['munin-node'];
 			}
 
-            if $require {
-                File[$plugin]{
-                    require +> $require,
-                }
-            }
 		}
 	}
 	case $config {
