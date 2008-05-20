@@ -52,7 +52,7 @@ define munin::plugin (
             }
 			file { $plugin:
 			    ensure => "${real_script_path}/${plugin_src}",
-				require => $require,
+				require => $real_require,
 				notify => Service['munin-node'];
 			}
 
