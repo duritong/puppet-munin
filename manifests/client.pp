@@ -51,6 +51,7 @@ class munin::client::base {
 	package { "munin-node": ensure => installed }
 	service { "munin-node":
 		ensure => running, 
+        enable => true,
         hasstatus => true,
         hasrestart => true,
         require => Package[munin-node],
@@ -58,6 +59,10 @@ class munin::client::base {
 	file {"/etc/munin/":
 			ensure => directory,
 			mode => 0755, owner => root, group => 0;
+    }
+    $real_munin_allow = $munin_allow ? {
+        '' => '127.0.0.1',
+        default => $munin_allow
     }
     file {"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.$operatingsystem"),

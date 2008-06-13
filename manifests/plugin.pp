@@ -45,11 +45,17 @@ define munin::plugin (
 		}
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
+            if $require {
+                $real_require = [ $require, Package['munin-node'] ]
+            } else {
+                $real_require = Package['munin-node']
+            }
 			file { $plugin:
 			    ensure => "${real_script_path}/${plugin_src}",
-				require => Package['munin-node'],
+				require => $real_require,
 				notify => Service['munin-node'];
 			}
+
 		}
 	}
 	case $config {
@@ -69,6 +75,11 @@ define munin::plugin (
 						content => "[${name}]\n$config\n",
 						mode => 0644, owner => root, group => 0,
 					}
+                    if $require {
+                        File[$plugin_conf]{
+                            require +> $require,
+                        }
+                    }
 				}
 			}
 		}
@@ -107,11 +118,17 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
             source => "puppet://$server/$real_source",
-            ensure => file,
+			require => Package['munin-node'],
             mode => 0755, owner => root, group => 0;
     }
-
-    munin::plugin{$name: ensure => $ensure, config => $config }
+    if $require {
+        File["munin_plugin_${name}"]{
+            require +> $require,
+        }
+        munin::plugin{$name: ensure => $ensure, config => $config, require => $require }
+    } else {
+        munin::plugin{$name: ensure => $ensure, config => $config }
+    }
 }
 
 ### clases for plugins
