@@ -46,6 +46,10 @@ To use this module, follow these directions:
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
       $munin_allow = '192.168.0.1'
+      
+      If you want to define more than one host, you can seperate them by colon:
+
+      $munin_allow = '127.0.0.1:192.168.0.1'
 
    e. In the node definition in your site.pp for your main munin host, add the following:
 
