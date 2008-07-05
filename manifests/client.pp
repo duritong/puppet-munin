@@ -66,10 +66,11 @@ class munin::client::base {
     }
     file {"/etc/munin/munin-node.conf":
 			content => template("munin/munin-node.conf.$operatingsystem"),
-			mode => 0644, owner => root, group => 0,
 			# this has to be installed before the package, so the postinst can
 			# boot the munin-node without failure!
 			before => Package["munin-node"],
+            notify => Service['munin-node'],
+			mode => 0644, owner => root, group => 0,
 	}
 	munin::register { $fqdn: }
 	include munin::plugins::base
