@@ -134,35 +134,18 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
 ### clases for plugins
 
 class munin::plugins::base {
-	case $operatingsystem {
-		centos: {		
-		    file {
-			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$server/munin/empty",
-				ensure => directory, checksum => mtime,
-				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => 0;
-			"/etc/munin/plugin-conf.d/munin-node":
-				ensure => present, 
-				mode => 0644, owner => root, group => 0;
-		    }
-		}
-
-		default: {
-		    file {
-			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$server/munin/empty",
-				ensure => directory, checksum => mtime,
-				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => 0,
-				notify => Service['munin-node'];
-			"/etc/munin/plugin-conf.d/munin-node":
-				ensure => present, 
-				mode => 0644, owner => root, group => 0,
-				notify => Service['munin-node'],
-                before => Package['munin-node'];
-		    }
-		}
+    file {
+	    [ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
+	        source => "puppet://$server/common/empty",
+			ensure => directory, checksum => mtime,
+			recurse => true, purge => true, force => true, 
+			mode => 0755, owner => root, group => 0,
+			notify => Service['munin-node'];
+		"/etc/munin/plugin-conf.d/munin-node":
+			ensure => present, 
+			mode => 0644, owner => root, group => 0,
+			notify => Service['munin-node'],
+            before => Package['munin-node'];
 	}
     case $kernel {
         linux: {
