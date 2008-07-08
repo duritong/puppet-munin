@@ -72,6 +72,7 @@ class munin::plugins::base {
 		[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
 			source => "puppet://$servername/common/empty",
 			ensure => directory, checksum => mtime,
+			ignore => '.ignore',
 			recurse => true, purge => true, force => true, 
 			mode => 0755, owner => root, group => root,
 			notify => Service[munin-node];
