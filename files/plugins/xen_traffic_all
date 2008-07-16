@@ -1,6 +1,12 @@
 #!/bin/sh
 # Author: mario manno <projects@manno.name>
 # Description: measure traffic for all xen hosts
+# 
+# 16.07.2008: improved the Plugin by Puzzle ITC to
+# enable the traffic monitoring for domains
+# with more than 1 one interface
+# If there is more than one device, the domainname
+# will get the vif name appended.
 #
 #%# family=auto
 #%# capabilities=autoconf
@@ -46,18 +52,21 @@ fi
 
 DOMAINS=$(xm list | awk '{print $1}' | egrep -v "^(Name|Domain-0)")
 for dom in $DOMAINS; do
-    dev=$( xm network-list $dom |\
+    devs=$( xm network-list $dom |\
         egrep "^[0-9]+" | sed 's@^.*vif/\([0-9]*\)/\([0-9]*\).*$@vif\1.\2@')
-    name=$( echo $dom | sed -e's/-/_/g' ) 
-    #awk -v name="$name" -v interface="$dev" -F'[: \t]+' \
-    #'{ sub(/^ */,""); if ($1 == interface) \
-    #print name"DOWN.value "$2"\n"name"UP.value "$10; }' /proc/net/dev
-    awk -v name="$name" -v interface="$dev" \
-        'BEGIN { gsub(/\./, "\\.", interface) } \
-        $1 ~ "^" interface ":" {
-            split($0, a, /: */); $0 = a[2]; \
-            print name"Down.value " $1 "\n"name"Up.value " $9 \
-        }' \
-        /proc/net/dev
+    real_name=$( echo $dom | sed -e's/-/_/g' )
+    name=$real_name
+    for dev in $devs; do
+            if [ ${#devs} -gt 1 ]; then
+                name=$real_name"_"$dev
+            fi
+            awk -v name="$name" -v interface="$dev" \
+                'BEGIN { gsub(/\./, "\\.", interface) } \
+                $1 ~ "^" interface ":" {
+                split($0, a, /: */); $0 = a[2]; \
+                    print name"Down.value " $1 "\n"name"Up.value " $9 \
+                }' \
+            /proc/net/dev
+     done
 done
 
