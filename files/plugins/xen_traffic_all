@@ -58,7 +58,7 @@ for dom in $DOMAINS; do
     name=$real_name
     for dev in $devs; do
             if [ ${#devs} -gt 1 ]; then
-                name=$real_name"_"$dev
+                name=$real_name"_"`echo $dev | sed 's/\./\_/'`
             fi
             awk -v name="$name" -v interface="$dev" \
                 'BEGIN { gsub(/\./, "\\.", interface) } \
