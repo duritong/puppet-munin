@@ -1,3 +1,4 @@
+== Munin ==
 
 Munin is a performance monitoring system which creates nice RRD graphs and has
 a very easy plugin interface. The munin homepage is http://munin.projects.linpro.no/
@@ -85,3 +86,5 @@ To use this module, follow these directions:
 
       $munin_port = 4948
 
+   i. if you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
+      ToDo: implement this in puppet

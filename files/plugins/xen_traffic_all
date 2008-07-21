@@ -42,18 +42,16 @@ if [ "$1" = "config" ]; then
             if [ ${#devs} -gt 1 ]; then
                 name=$real_name"_"`echo $dev | sed 's/\./\_/'`
             fi
-            #echo $name"UP.label $name"
-	    #echo $name"DOWN.label $name"
         
             echo $name'Down.label received'
-	    echo $name'Down.type COUNTER'
+	        echo $name'Down.type COUNTER'
             echo $name'Down.graph no'
-	    echo "${name}Down.cdef ${name}Down,8,*"
+	        echo "${name}Down.cdef ${name}Down,8,*"
             echo "${name}Up.label ${name}"
-	    echo $name'Up.type COUNTER'
+	        echo $name'Up.type COUNTER'
             echo "${name}Up.negative ${name}Down"
-	    echo "${name}Up.cdef ${name}Up,8,*"
-	done
+	        echo "${name}Up.cdef ${name}Up,8,*"
+	    done
     done
     exit 0
 fi

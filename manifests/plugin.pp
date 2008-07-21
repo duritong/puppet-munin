@@ -134,35 +134,19 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
 ### clases for plugins
 
 class munin::plugins::base {
-	case $operatingsystem {
-		centos: {		
-		    file {
-			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$server/munin/empty",
-				ensure => directory, checksum => mtime,
-				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => 0;
-			"/etc/munin/plugin-conf.d/munin-node":
-				ensure => present, 
-				mode => 0644, owner => root, group => 0;
-		    }
-		}
-
-		default: {
-		    file {
-			[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-				source => "puppet://$server/munin/empty",
-				ensure => directory, checksum => mtime,
-				recurse => true, purge => true, force => true, 
-				mode => 0755, owner => root, group => 0,
-				notify => Service['munin-node'];
-			"/etc/munin/plugin-conf.d/munin-node":
-				ensure => present, 
-				mode => 0644, owner => root, group => 0,
-				notify => Service['munin-node'],
-                before => Package['munin-node'];
-		    }
-		}
+    file {
+	    [ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
+	        source => "puppet://$server/common/empty",
+            ignore => '.ignore',
+			ensure => directory, checksum => mtime,
+			recurse => true, purge => true, force => true, 
+			mode => 0755, owner => root, group => 0,
+			notify => Service['munin-node'];
+		"/etc/munin/plugin-conf.d/munin-node":
+			ensure => present, 
+			mode => 0644, owner => root, group => 0,
+			notify => Service['munin-node'],
+            before => Package['munin-node'];
 	}
     case $kernel {
         linux: {
@@ -260,13 +244,6 @@ class munin::plugins::apache inherits munin::plugins::base {
 class munin::plugins::selinux inherits munin::plugins::base {
     munin::plugin::deploy { "selinuxenforced": }
     munin::plugin::deploy { "selinux_avcstats": }
-}
-
-class munin::plugins::squid inherits munin::plugins::base {
-    munin::plugin{ 'squid_cache': config => "user root\nenv.squidhost localhost\nenv.squidport 80"}
-    munin::plugin{ 'squid_icp': }
-    munin::plugin{ 'squid_requests': }
-    munin::plugin{ 'squid_traffic': }
 }
 
 class munin::plugins::postgres inherits munin::plugins::base {
