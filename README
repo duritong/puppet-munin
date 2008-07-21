@@ -87,4 +87,4 @@ To use this module, follow these directions:
       $munin_port = 4948
 
    i. if you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
-      ToDo: implement this in puppet
+      For CentOS this is enabled in the default header config
