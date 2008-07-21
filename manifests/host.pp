@@ -43,8 +43,8 @@ class munin::host::cgi {
         subscribe => File['/etc/munin/munin.conf.header'],
     }
 
-    file{'/etc/logrotate.d/munin'
-        source => [ "puppet://$server/files/munin/config/host/${fqdn}/logrotate"
+    file{'/etc/logrotate.d/munin':
+        source => [ "puppet://$server/files/munin/config/host/${fqdn}/logrotate",
                     "puppet://$server/files/munin/config/host/logrotate.$operatingsystem",
                     "puppet://$server/files/munin/config/host/logrotate",
                     "puppet://$server/munin/config/host/logrotate.$operatingsystem",
