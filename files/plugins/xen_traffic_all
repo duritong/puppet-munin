@@ -42,8 +42,6 @@ if [ "$1" = "config" ]; then
             if [ ${#devs} -gt 1 ]; then
                 name=$real_name"_"`echo $dev | sed 's/\./\_/'`
             fi
-            #echo $name"UP.label $name"
-	        #echo $name"DOWN.label $name"
         
             echo $name'Down.label received'
 	        echo $name'Down.type COUNTER'
