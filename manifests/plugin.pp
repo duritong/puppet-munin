@@ -137,7 +137,7 @@ class munin::plugins::base {
     file {
 	    [ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
 	        source => "puppet://$server/common/empty",
-            ignore => '.ignore',
+            ignore => '\.ignore',
 			ensure => directory, checksum => mtime,
 			recurse => true, purge => true, force => true, 
 			mode => 0755, owner => root, group => 0,
