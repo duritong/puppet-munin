@@ -29,9 +29,6 @@ contacts me
 contact.me.command mail -s "Munin notification ${var:group} :: ${var:host} :: ${var:graph_title}" root
 contact.me.always_send warning critical
 
-# disable tls as we don't yet have configured it
-tls disable
-
 # a simple host tree
 #[localhost]
 #    address 127.0.0.1
