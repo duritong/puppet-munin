@@ -14,6 +14,8 @@ tmpldir /etc/munin/templates
 # Make graphs show values per minute instead of per second
 #graph_period minute
 
+graph_strategy cgi
+
 # Drop somejuser@fnord.comm and anotheruser@blibb.comm an email everytime
 # something changes (OK -> WARNING, CRITICAL -> OK, etc)
 #contact.someuser.command mail -s "Munin notification" somejuser@fnord.comm
@@ -23,7 +25,12 @@ tmpldir /etc/munin/templates
 # the services must be defined in the Nagios server as well.
 #contact.nagios.command /usr/sbin/send_nsca -H nagios.host.com -c /etc/send_nsca.cfg
 
-graph_strategy cgi
+contacts me
+contact.me.command mail -s "Munin notification ${var:group} :: ${var:host} :: ${var:graph_title}" root
+contact.me.always_send warning critical
+
+# disable tls as we don't yet have configured it
+tls disable
 
 # a simple host tree
 #[localhost]
