@@ -37,3 +37,12 @@ class munin::snmp_collector
 		schedule => daily
 	}
 }
+
+define munin::apache_site()
+{
+	apache::site {
+		$name:
+			ensure => present,
+			content => template("munin/site.conf")
+	}
+}
