@@ -148,6 +148,9 @@ class munin::plugins::base {
 			notify => Service['munin-node'],
             before => Package['munin-node'];
 	}
+
+    munin::plugin {'uptime': ensure => present, }
+
     case $kernel {
         linux: {
             case $vserver {
