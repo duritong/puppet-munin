@@ -101,7 +101,7 @@ class munin::client::openbsd inherits munin::client::base {
     }
     Service['munin-node']{
         restart => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
-        stopt => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
+        stop => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
         start => '/opt/munin/sbin/munin-node',
         hasstatus => false,
         hasrestart => false,
