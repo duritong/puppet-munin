@@ -85,7 +85,7 @@ class munin::client::openbsd inherits munin::client::base {
         before => File['/var/run/munin'],
     }
     exec{'extract_openbsd':
-        command => 'tar xzf /usr/src/munin_openbsd.tar.gz',
+        command => 'cd /;tar xzf /usr/src/munin_openbsd.tar.gz',
         unless => 'test -d /opt/munin',
         require => File['/usr/src/munin_openbsd.tar.gz'],
     }
