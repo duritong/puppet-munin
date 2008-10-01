@@ -73,7 +73,7 @@ class munin::client::base {
 
 # currently we install munin on openbsd by hand
 # :(
-class munin::openbsd inherits openbsd::base {
+class munin::client::openbsd inherits munin::client::base {
     file{'/usr/src/munin_openbsd.tar.gz':
         source => "puppet://$server/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
