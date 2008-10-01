@@ -88,16 +88,15 @@ class munin::client::openbsd inherits munin::client::base {
         command => 'tar xzf /usr/src/munin_openbsd.tar.gz',
         unless => 'test -d /opt/munin',
         require => File['/usr/src/munin_openbsd.tar.gz'],
-        before => File['/var/run/munin'],
     }
     file{'/var/run/munin':
         ensure => directory,
-        require => File['/usr/src/munin_openbsd.tar.gz'],
+        require => Exec['extract_openbsd'],
         owner => root, group  => 0, mode => 0755;
     }
     exec{'enable_munin_on_boot':
         command => 'echo "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
-        unless => 'grep -q "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
+        unless => 'grep -q "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" /etc/rc.local',
         require => File['/var/run/munin'],
     }
     Service['munin-node']{
