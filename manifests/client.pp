@@ -13,9 +13,9 @@ class munin::client {
 	}
 
     case $operatingsystem {
+        openbsd: { include munin::client::openbsd }
         darwin: { include munin::client::darwin }
-        debian: { include munin::client::debian }
-        ubuntu: { include munin::client::ubuntu }
+        debian,ubuntu: { include munin::client::debian }
         centos: { include munin::client::centos }
         gentoo: { include munin::client::gentoo }
         default: { include munin::client::base }
@@ -48,15 +48,13 @@ define munin::register_snmp()
 }
 
 class munin::client::base {
-	package { "munin-node": ensure => installed }
-	service { "munin-node":
+	service { 'munin-node':
 		ensure => running, 
         enable => true,
         hasstatus => true,
         hasrestart => true,
-        require => Package[munin-node],
 	}
-	file {"/etc/munin/":
+	file {'/etc/munin/':
 			ensure => directory,
 			mode => 0755, owner => root, group => 0;
     }
@@ -64,16 +62,51 @@ class munin::client::base {
         '' => '127.0.0.1',
         default => $munin_allow
     }
-    file {"/etc/munin/munin-node.conf":
-			content => template("munin/munin-node.conf.$operatingsystem"),
-			# this has to be installed before the package, so the postinst can
-			# boot the munin-node without failure!
-			before => Package["munin-node"],
-            notify => Service['munin-node'],
-			mode => 0644, owner => root, group => 0,
+    file {'/etc/munin/munin-node.conf':
+	    content => template("munin/munin-node.conf.$operatingsystem"),
+        notify => Service['munin-node'],
+		mode => 0644, owner => root, group => 0,
 	}
 	munin::register { $fqdn: }
 	include munin::plugins::base
+}
+
+# currently we install munin on openbsd by hand
+# :(
+class munin::openbsd inherits openbsd::base {
+    file{'/usr/src/munin_openbsd.tar.gz':
+        source => "puppet://$server/munin/openbsd/package/munin_openbsd.tar.gz",
+        owner => root, group => 0, mode => 0600;
+    }
+    package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser', 
+                'p5-HTML-Tagset', 'p5-HTTP-GHTTP', 'p5-LWP-UserAgent-Determined',
+                'p5-Net-SSLeay', 'p5-Net-Server', 'p5-URI', 'p5-libwww', 'pcre', 'curl' ]:
+        ensure => installed,
+        before => File['/var/run/munin'],
+    }
+    exec{'extract_openbsd':
+        command => 'tar xzf /usr/src/munin_openbsd.tar.gz',
+        unless => 'test -d /opt/munin',
+        require => File['/usr/src/munin_openbsd.tar.gz'],
+    }
+    file{'/var/run/munin':
+        ensure => directory,
+        require => File['/usr/src/munin_openbsd.tar.gz'],
+        owner => root, group  => 0, mode => 0755;
+    }
+    exec{'enable_munin_on_boot':
+        command => 'echo "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
+        unless => 'grep -q "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
+        require => File['/var/run/munin'],
+    }
+    Service['munin-node']{
+        restart => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
+        stopt => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
+        start => '/opt/munin/sbin/munin-node',
+        hasstatus => false,
+        hasrestart => false,
+        require => File['/var/run/munin'],
+    }
 }
 
 class munin::client::darwin {
@@ -98,7 +131,19 @@ class munin::client::darwin {
 	munin::register_snmp { $fqdn: }
 }
 
-class munin::client::debian inherits munin::client::base {
+class munin::client::package inherits munin::client::base {
+	package { 'munin-node': ensure => installed }
+    Service['munin-node']{
+        require => Package[munin-node],
+    }
+    File['/etc/munin/munin-node.conf']{
+    	# this has to be installed before the package, so the postinst can
+    	# boot the munin-node without failure!
+	    before => Package['munin-node'],
+    }
+}
+
+class munin::client::debian inherits munin::client::package {
     # the plugin will need that
 	package { "iproute": ensure => installed }
 
@@ -114,9 +159,7 @@ class munin::client::debian inherits munin::client::base {
 	include munin::plugins::debian
 }
 
-class munin::client::ubuntu inherits munin::client::debian {}
-
-class munin::client::gentoo inherits munin::client::base {
+class munin::client::gentoo inherits munin::client::package {
     Package['munin-node'] {
         name => 'munin',
         category => 'net-analyzer',
@@ -126,6 +169,6 @@ class munin::client::gentoo inherits munin::client::base {
 	include munin::plugins::gentoo
 }
 
-class munin::client::centos inherits munin::client::base {
+class munin::client::centos inherits munin::client::package {
 	include munin::plugins::centos
 }

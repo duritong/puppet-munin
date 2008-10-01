@@ -8,18 +8,11 @@
 
 class munin::plugin::scriptpaths {
 	case $operatingsystem {
-		gentoo: {	
-            $script_path =  "/usr/libexec/munin/plugins"
-			}
-		debian: {		
-            $script_path =  "/usr/share/munin/plugins"
-			}
-		centos: {		
-            $script_path =  "/usr/share/munin/plugins"
-			}
-		default: {
-            $script_path =  "/usr/share/munin/plugins"
-		}
+		gentoo: { $script_path =  "/usr/libexec/munin/plugins" }
+		debian: { $script_path =  "/usr/share/munin/plugins" }
+		centos: { $script_path =  "/usr/share/munin/plugins" }
+		openbsd: { $script_path =  "/opt/munin/lib/plugins/" }
+		default: { $script_path =  "/usr/share/munin/plugins" }
 	}
 }
 
@@ -45,10 +38,14 @@ define munin::plugin (
 		}
 		default: {
 			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
+            case $kernel {
+                openbsd: { $basic_require = File['/var/run/munin'] }
+                default: { $basic_require = Package['munin-node'] }
+            }
             if $require {
-                $real_require = [ $require, Package['munin-node'] ]
+                $real_require = [ $require, $basic_require ]
             } else {
-                $real_require = Package['munin-node']
+                $real_require = $basic_require
             }
 			file { $plugin:
 			    ensure => "${real_script_path}/${plugin_src}",
@@ -118,13 +115,24 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
             source => "puppet://$server/$real_source",
-			require => Package['munin-node'],
             mode => 0755, owner => root, group => 0;
+    }
+
+    case $kernel {
+        openbsd: { $basic_require = File['/var/run/munin'] }
+        default: { $basic_require = Package['munin-node'] }
     }
     if $require {
         File["munin_plugin_${name}"]{
-            require +> $require,
+	        require => [ $basic_require, $require ],
         }
+    } else {
+        File["munin_plugin_${name}"]{
+	        require => $basic_require,
+        }
+    }
+    # register the plugin
+    if $require {
         munin::plugin{$name: ensure => $ensure, config => $config, require => $require }
     } else {
         munin::plugin{$name: ensure => $ensure, config => $config }
@@ -135,19 +143,30 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
 
 class munin::plugins::base {
     file {
-	    [ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
+	    [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
 	        source => "puppet://$server/common/empty",
             ignore => '\.ignore',
 			ensure => directory, checksum => mtime,
 			recurse => true, purge => true, force => true, 
 			mode => 0755, owner => root, group => 0,
 			notify => Service['munin-node'];
-		"/etc/munin/plugin-conf.d/munin-node":
+		'/etc/munin/plugin-conf.d/munin-node':
 			ensure => present, 
 			mode => 0644, owner => root, group => 0,
 			notify => Service['munin-node'],
-            before => Package['munin-node'];
 	}
+    case $kernel {
+        openbsd: { 
+            File['/etc/munin/plugin-conf.d/munin-node']{
+                before => File['/var/run/munin'],
+            }
+        }
+        default: {
+            File['/etc/munin/plugin-conf.d/munin-node']{
+                before => Package['munin-node'],
+            }
+        }
+    }
     case $kernel {
         linux: {
             case $vserver {
