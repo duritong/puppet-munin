@@ -71,7 +71,7 @@ class munin::client::base {
 	include munin::plugins::base
 }
 
-# currently we install munin on openbsd by hand
+# currently we install munin on openbsd by targz
 # :(
 class munin::client::openbsd inherits munin::client::base {
     file{'/usr/src/munin_openbsd.tar.gz':
@@ -94,9 +94,8 @@ class munin::client::openbsd inherits munin::client::base {
         require => Exec['extract_openbsd'],
         owner => root, group  => 0, mode => 0755;
     }
-    exec{'enable_munin_on_boot':
-        command => 'echo "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
-        unless => 'grep -q "munin-node" /etc/rc.local',
+    openbsd::add_to_rc_local{'munin-node':
+        binary => '/opt/munin/sbin/munin-node',
         require => File['/var/run/munin'],
     }
     Service['munin-node']{
