@@ -156,7 +156,13 @@ class munin::plugins::base {
 			notify => Service['munin-node'],
 	}
 
-    munin::plugin {'uptime': ensure => present, }
+    munin::plugin {
+        [ df, cpu, interrupts, load, memory, netstat, open_files, 
+            processes, swap, uptime, users, vmstat 
+        ]:
+            ensure => present,
+    }
+	include munin::plugins::interfaces
 
     case $kernel {
         openbsd: { 
@@ -201,20 +207,29 @@ class munin::plugins::interfaces inherits munin::plugins::base {
 class munin::plugins::linux inherits munin::plugins::base {
 
 	munin::plugin {
-		[ df_abs, forks, memory, processes, cpu, df_inode, irqstats,
-		  netstat, open_files, swap, df, entropy, interrupts, load, open_inodes,
-		  vmstat
-		]:
+		[ df_abs, forks, df_inode, irqstats, entropy, open_inodes ]:
 			ensure => present;
 		acpi: 
 			ensure => $acpi_available;
 	}
-
-	include munin::plugins::interfaces
 }
 
 class munin::plugins::debian inherits munin::plugins::base {
 	munin::plugin { apt_all: ensure => present; }
+}
+
+class munin::plugins::openbsd inherits munin::plugins::base {
+    munin::plugin {
+        [ df, cpu, interrupts, load, memory, netstat, open_files, 
+            processes, swap, users, vmstat 
+        ]:
+            ensure => present,
+    }
+    munin::plugin {
+        [ memory_pools, memory_types ]:
+            ensure => present,
+    }
+
 }
 
 class munin::plugins::vserver inherits munin::plugins::base {
@@ -242,7 +257,9 @@ class munin::plugins::dom0 inherits munin::plugins::physical {
 }
 
 class munin::plugins::physical inherits munin::plugins::base {
-     munin::plugin { iostat: }
+    case $kernel {
+        linux: { munin::plugin { iostat: } }
+    }
 }
 
 class munin::plugins::muninhost inherits munin::plugins::base {
