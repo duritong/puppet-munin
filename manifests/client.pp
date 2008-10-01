@@ -89,7 +89,7 @@ class munin::client::openbsd inherits munin::client::base {
         unless => 'test -d /opt/munin',
         require => File['/usr/src/munin_openbsd.tar.gz'],
     }
-    file{'/var/run/munin':
+    file{[ '/var/run/munin', '/var/log/munin' ]:
         ensure => directory,
         require => Exec['extract_openbsd'],
         owner => root, group  => 0, mode => 0755;
@@ -105,7 +105,7 @@ class munin::client::openbsd inherits munin::client::base {
         start => '/opt/munin/sbin/munin-node',
         hasstatus => false,
         hasrestart => false,
-        require => File['/var/run/munin'],
+        require => [ File['/var/run/munin'], File['/var/log/munin'] ],
     }
 }
 
