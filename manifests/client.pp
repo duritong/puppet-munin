@@ -96,7 +96,7 @@ class munin::client::openbsd inherits munin::client::base {
     }
     exec{'enable_munin_on_boot':
         command => 'echo "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" >> /etc/rc.local',
-        unless => 'grep -q "if [ -x /opt/munin/sbin/munin-node ]; then echo -n \' munin\'; /opt/munin/sbin/munin-node; fi" /etc/rc.local',
+        unless => 'grep -q "munin-node" /etc/rc.local',
         require => File['/var/run/munin'],
     }
     Service['munin-node']{
