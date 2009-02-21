@@ -28,16 +28,13 @@ define munin::plugin (
 	$real_script_path = $script_path_in ? { '' => $munin::plugin::scriptpaths::script_path, default => $script_path_in }
 
 	$plugin_src = $ensure ? { "present" => $name, default => $ensure }
-	debug ( "munin_plugin: name=$name, ensure=$ensure, script_path=$munin::plugin::scriptpaths::script_path" )
 	$plugin = "/etc/munin/plugins/$name"
 	$plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 	case $ensure {
 		"absent": {
-			debug ( "munin_plugin: suppressing $plugin" )
 			file { $plugin: ensure => absent, } 
 		}
 		default: {
-			debug ( "munin_plugin: making $plugin using src: $plugin_src" )
             case $kernel {
                 openbsd: { $basic_require = File['/var/run/munin'] }
                 default: { $basic_require = Package['munin-node'] }
@@ -57,17 +54,14 @@ define munin::plugin (
 	}
 	case $config {
 		'': {
-			debug("no config for $name")
 			file { $plugin_conf: ensure => absent }
 		}
 		default: {
 			case $ensure {
 				absent: {
-					debug("removing config for $name")
 					file { $plugin_conf: ensure => absent }
 				}
 				default: {
-					debug("creating $plugin_conf")
 					file { $plugin_conf:
 						content => "[${name}]\n$config\n",
 						mode => 0644, owner => root, group => 0,
@@ -111,7 +105,6 @@ define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
         default => $source
     }
     include munin::plugin::scriptpaths
-	debug ( "munin_plugin_${name}: name=$name, source=$source, script_path=$munin::plugin::scriptpaths::script_path" )
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
             source => "puppet://$server/$real_source",
