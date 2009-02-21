@@ -196,15 +196,15 @@ class munin::plugins::interfaces inherits munin::plugins::base {
     case $operatingsystem {
         openbsd: {
     	    $if_errs = gsub(split($interfaces, " |,"), "(.+)", "if_errcoll_\\1")
-		    munin::plugin{
-                $if_errs: ensure => "if_errcoll_";
-            }
+		      munin::plugin{
+            $if_errs: ensure => "if_errcoll_";
+          }
         }
         default: {
     	    $if_errs = gsub(split($interfaces, " |,"), "(.+)", "if_err_\\1")
-		    munin::plugin{
+		      munin::plugin{
 		        $if_errs: ensure => "if_err_";
-            }
+          }
         }
     }
 }
