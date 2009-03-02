@@ -106,6 +106,13 @@ class munin::client::openbsd inherits munin::client::base {
         hasrestart => false,
         require => [ File['/var/run/munin'], File['/var/log/munin'] ],
     }
+
+    cron{'clean_munin_logfile':
+        command => 'rm /var/log/munin/munin-node.log; kill -HUP `cat /var/run/munin/munin-node.pid`',
+        minute => 0,
+        hour => 2,
+        weekday => 0,
+    }
 }
 
 class munin::client::darwin {
