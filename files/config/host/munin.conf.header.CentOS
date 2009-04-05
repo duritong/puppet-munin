@@ -25,9 +25,9 @@ graph_strategy cgi
 # the services must be defined in the Nagios server as well.
 #contact.nagios.command /usr/sbin/send_nsca -H nagios.host.com -c /etc/send_nsca.cfg
 
-contacts me
-contact.me.command mail -s "Munin notification ${var:group} :: ${var:host} :: ${var:graph_title}" root
-contact.me.always_send warning critical
+#contacts me
+#contact.me.command mail -s "Munin notification ${var:group} :: ${var:host} :: ${var:graph_title}" root
+#contact.me.always_send warning critical
 
 # a simple host tree
 #[localhost]
