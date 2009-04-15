@@ -38,13 +38,27 @@ define munin::register()
 	}
 }
 
-define munin::register_snmp()
+# snmp_testplugin: the plugin we use to test if it's set
+define munin::register_snmp(
+    $snmpd_testplugin = 'load'
+)
 {
-	@@file { "munin_snmp_${name}": path => "${NODESDIR}/${name}",
-		ensure => present,
-		content => template("munin/snmpclient.erb"),
-		tag => 'munin',
-	}
+	$munin_port_real = $munin_port ? { '' => 4949, default => $munin_port } 
+	$munin_host_real = $munin_host ? {
+		'' => '*',
+		'fqdn' => '*',
+		default => $munin_host
+    }
+    exec{"register_snmp_munin_for_${name}":
+        command => "munin-node-configure-snmp ${name} | sh",
+        unless => "test -e /etc/munin/plugins/snmp_${name}_${snmpd_testplugin}",
+    }
+    @@file { "munin_snmp_${name}": path => "${NODESDIR}/${name}",
+        ensure => present,
+        content => template("munin/snmpclient.erb"),
+        require => Exec["register_snmp_munin_for_${name}"],
+        tag => 'munin',
+    }
 }
 
 class munin::client::base {
