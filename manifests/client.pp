@@ -56,7 +56,6 @@ define munin::register_snmp(
     @@file { "munin_snmp_${name}": path => "${NODESDIR}/${name}",
         ensure => present,
         content => template("munin/snmpclient.erb"),
-        require => Exec["register_snmp_munin_for_${name}"],
         tag => 'munin',
     }
 }
