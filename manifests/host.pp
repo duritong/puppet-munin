@@ -25,13 +25,13 @@ class munin::snmp_collector
 {
 
 	file { 
-		"/var/lib/puppet/modules/munin/create_snmp_links":
+		"${module_dir_path}/munin/create_snmp_links":
 			source => "puppet://$servername/munin/create_snmp_links.sh",
 			mode => 755, owner => root, group => root;
 	}
 
 	exec { "create_snmp_links":
-		command => "/var/lib/puppet/modules/munin/create_snmp_links $NODESDIR",
+		command => "${module_dir_path}/munin/create_snmp_links $NODESDIR",
 		require => File["snmp_links"],
 		timeout => "2048",
 		schedule => daily

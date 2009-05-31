@@ -37,9 +37,9 @@ To use this module, follow these directions:
    c. you will also need to create the following empty directories:
 
       mkdir /etc/puppet/modules/munin/files/empty
-      mkdir /etc/puppet/modules/munin/files/modules_dir
-      mkdir -p /etc/puppet/modules/munin/files/nodes/modules_dir
-      mkdir -p /etc/puppet/modules/munin/files/plugins/modules_dir
+      mkdir /etc/puppet/modules/munin/files/module_dir
+      mkdir -p /etc/puppet/modules/munin/files/nodes/module_dir
+      mkdir -p /etc/puppet/modules/munin/files/plugins/module_dir
 
    d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
