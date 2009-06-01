@@ -34,6 +34,12 @@ class munin::host
     case $operatingsystem {
         centos: { include munin::host::cgi }
     }
+
+  # from time to time we cleanup hanging munin-runs
+  file{'/etc/cront.d/munin_kill':
+    content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
+    owner => root, group => 0, mode => 0644;
+  }
 }
 
 class munin::host::cgi {
