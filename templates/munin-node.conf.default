@@ -10,7 +10,7 @@ background 1
 setseid 1
 
 user root
-group root
+group 0
 setsid yes
 
 # Regexps for files to ignore
