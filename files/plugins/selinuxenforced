@@ -23,5 +23,8 @@ if [ "$1" = "config" ]; then
         exit 0
 fi
 
-echo -n "enforced.value " && cat /selinux/enforce
-
+if [ -r /selinux/enforce ]; then
+  echo -n "enforced.value " && cat /selinux/enforce
+else
+  echo "enforced.value 0"
+fi
