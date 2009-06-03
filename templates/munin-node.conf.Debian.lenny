@@ -1,1 +1,43 @@
-munin-node.conf.Debian.etch
+##########
+########## Managed by puppet
+##########
+
+log_level 4
+log_file /var/log/munin/munin-node.log
+pid_file /var/run/munin/munin-node.pid
+background 1
+setseid 1
+
+# Which host/port to bind to;
+host <%= munin_host_real %>
+port <%= munin_port_real %>
+user root
+group root
+setsid yes
+
+# Regexps for files to ignore
+
+ignore_file ~$
+ignore_file \.bak$
+ignore_file %$
+ignore_file \.dpkg-(tmp|new|old|dist)$
+ignore_file \.rpm(save|new)$
+
+# Set this if the client doesn't report the correct hostname when
+# telnetting to localhost, port 4949
+#
+#host_name localhost.localdomain
+host_name <%= fqdn %>
+
+# A list of addresses that are allowed to connect.
+<%
+if ! munin_cidr_allow.is_a?(Array) then
+	allows = [ munin_cidr_allow ]
+else
+	allows = munin_cidr_allow
+end
+
+allows.each do |cidr|
+-%>
+cidr_allow <%= cidr %>
+<% end -%>
