@@ -87,3 +87,6 @@ To use this module, follow these directions:
 
       $munin_port = 4948
 
+4. Cleanup: If you need any manual configuration or had already nodes defined
+	in your munin.conf, you can add/remove them from
+	/etc/munin/munin.conf.header on the munin::host.

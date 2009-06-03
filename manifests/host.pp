@@ -12,11 +12,19 @@ class munin::host
 		dir => $NODESDIR,
 		header => "/etc/munin/munin.conf.header",
 	}
+
+	file {
+		"/etc/munin/munin.conf.header":
+			source => "/etc/munin/munin.conf",
+			replace => no, # only initialise
+			mode => 0644, owner => root, group => 0,
+			before => File["/etc/munin/munin.conf"];
+	}
 	
 	file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
 	        "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
-    ensure => present,
-    mode => 640, owner => munin, group => root;
+		ensure => present,
+		mode => 640, owner => munin, group => root;
   }
 	
 }
