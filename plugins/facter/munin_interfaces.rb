@@ -1,5 +1,5 @@
 # return the set of active interfaces as an array
-Facter.add("interfaces") do
+Facter.add("munin_interfaces") do
 	setcode do
 		`ip -o link show`.split(/\n/).collect do |line|
 			value = nil
