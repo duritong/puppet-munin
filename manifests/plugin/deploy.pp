@@ -1,4 +1,4 @@
-define munin::plugin::deploy ($source = '', $ensure = 'present', $config = '') {
+define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
     $plugin_src = $ensure ? {
         'present' => $name,
         'absent' => $name,
