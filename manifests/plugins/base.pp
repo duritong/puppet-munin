@@ -47,3 +47,4 @@ class munin::plugins::base {
         physical: { include munin::plugins::physical }
         xen0: { include munin::plugins::dom0 }
     }
+}
