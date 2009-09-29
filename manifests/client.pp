@@ -20,6 +20,9 @@ class munin::client {
         gentoo: { include munin::client::gentoo }
         default: { include munin::client::base }
     }
+    if $use_shorewall {
+        include shorewall::rules::munin
+    }
 }
 
 define munin::register()

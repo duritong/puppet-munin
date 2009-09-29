@@ -40,6 +40,9 @@ class munin::host
     content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
     owner => root, group => 0, mode => 0644;
   }
+  if $use_shorewall {
+    include shorewall::rules::out::munin
+  }
 }
 
 class munin::host::cgi {
