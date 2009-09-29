@@ -17,6 +17,7 @@ class munin::client {
         darwin: { include munin::client::darwin }
         debian,ubuntu: { include munin::client::debian }
         gentoo: { include munin::client::gentoo }
+        centos: { include munin::client::package }
         default: { include munin::client::base }
     }
     if $use_shorewall {
