@@ -19,7 +19,7 @@ class munin::host
     }
 
 	concatenated_file { "/etc/munin/munin.conf":
-		dir => $NODESDIR,
+		dir => '/var/lib/puppet/modules/munin/nodes',
 		header => "/etc/munin/munin.conf.header",
 	}
 	
@@ -43,38 +43,4 @@ class munin::host
   if $use_shorewall {
     include shorewall::rules::out::munin
   }
-}
-
-class munin::host::cgi {
-    exec{'set_modes_for_cgi':
-        command => 'chgrp apache /var/log/munin /var/log/munin/munin-graph.log && chmod g+w /var/log/munin /var/log/munin/munin-graph.log && find /var/www/html/munin/* -maxdepth 1 -type d -exec chgrp -R apache {} \; && find /var/www/html/munin/* -maxdepth 1 -type d -exec chmod -R g+w {} \;',
-        refreshonly => true,
-        subscribe => File['/etc/munin/munin.conf.header'],
-    }
-
-    file{'/etc/logrotate.d/munin':
-        source => [ "puppet://$server/files/munin/config/host/${fqdn}/logrotate",
-                    "puppet://$server/files/munin/config/host/logrotate.$operatingsystem",
-                    "puppet://$server/files/munin/config/host/logrotate",
-                    "puppet://$server/munin/config/host/logrotate.$operatingsystem",
-                    "puppet://$server/munin/config/host/logrotate" ],
-        owner => root, group => 0, mode => 0644;
-    }
-}
-
-class munin::snmp_collector
-{
-
-	file { 
-		"/var/lib/puppet/modules/munin/create_snmp_links":
-			source => "puppet://$server/munin/create_snmp_links.sh",
-			mode => 755, owner => root, group => 0;
-	}
-
-	exec { "create_snmp_links":
-		command => "/var/lib/puppet/modules/munin/create_snmp_links $NODESDIR",
-		require => File["snmp_links"],
-		timeout => "2048",
-		schedule => daily
-	}
 }
