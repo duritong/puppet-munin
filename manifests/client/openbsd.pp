@@ -21,7 +21,7 @@ class munin::client::openbsd inherits munin::client::base {
         require => Exec['extract_openbsd'],
         owner => root, group  => 0, mode => 0755;
     }
-    openbsd::add_to_rc_local{'munin-node':
+    openbsd::rc_local{'munin-node':
         binary => '/opt/munin/sbin/munin-node',
         require => File['/var/run/munin'],
     }
