@@ -16,7 +16,3 @@
 # IP addresses and still be happy
 
 modules_dir { [ "munin", "munin/nodes", "munin/plugins" ]: }
-
-case $operatingsystem {
-    debian,ubuntu: { include assert_lsbdistcodename }
-}
