@@ -12,8 +12,8 @@ class munin::host
         source => [ "puppet://$server/files/munin/config/host/${fqdn}/munin.conf.header",
                     "puppet://$server/files/munin/config/host/munin.conf.header.$operatingsystem",
                     "puppet://$server/files/munin/config/host/munin.conf.header",
-                    "puppet://$server/munin/config/host/munin.conf.header.$operatingsystem",
-                    "puppet://$server/munin/config/host/munin.conf.header" ],
+                    "puppet://$server/modules/munin/config/host/munin.conf.header.$operatingsystem",
+                    "puppet://$server/modules/munin/config/host/munin.conf.header" ],
         notify => Exec['concat_/etc/munin/munin.conf'],
         owner => root, group => 0, mode => 0644;
     }

@@ -9,8 +9,8 @@ class munin::host::cgi {
         source => [ "puppet://$server/files/munin/config/host/${fqdn}/logrotate",
                     "puppet://$server/files/munin/config/host/logrotate.$operatingsystem",
                     "puppet://$server/files/munin/config/host/logrotate",
-                    "puppet://$server/munin/config/host/logrotate.$operatingsystem",
-                    "puppet://$server/munin/config/host/logrotate" ],
+                    "puppet://$server/modules/munin/config/host/logrotate.$operatingsystem",
+                    "puppet://$server/modules/munin/config/host/logrotate" ],
         owner => root, group => 0, mode => 0644;
     }
 }
