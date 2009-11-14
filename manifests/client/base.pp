@@ -5,7 +5,7 @@ class munin::client::base {
         hasstatus => true,
         hasrestart => true,
     }
-    file {'/etc/munin/':
+    file {'/etc/munin':
         ensure => directory,
         mode => 0755, owner => root, group => 0;
     }
