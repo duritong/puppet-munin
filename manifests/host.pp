@@ -9,9 +9,9 @@ class munin::host
 	File <<| tag == 'munin' |>>
 
     file{'/etc/munin/munin.conf.header':
-        source => [ "puppet://$server/files/munin/config/host/${fqdn}/munin.conf.header",
-                    "puppet://$server/files/munin/config/host/munin.conf.header.$operatingsystem",
-                    "puppet://$server/files/munin/config/host/munin.conf.header",
+        source => [ "puppet://$server/modules/site-munin/config/host/${fqdn}/munin.conf.header",
+                    "puppet://$server/modules/site-munin/config/host/munin.conf.header.$operatingsystem",
+                    "puppet://$server/modules/site-munin/config/host/munin.conf.header",
                     "puppet://$server/modules/munin/config/host/munin.conf.header.$operatingsystem",
                     "puppet://$server/modules/munin/config/host/munin.conf.header" ],
         notify => Exec['concat_/etc/munin/munin.conf'],
