@@ -34,27 +34,28 @@ To use this module, follow these directions:
       "modules.pp" in your site.pp, if you do not have that, then you will need to add the 
       import line to your site.pp)
 
-   c. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
+   c. you will also need to create the following empty directories:
+
+      mkdir /etc/puppet/modules/munin/files/empty
+      mkdir /etc/puppet/modules/munin/files/modules_dir
+      mkdir -p /etc/puppet/modules/munin/files/nodes/modules_dir
+      mkdir -p /etc/puppet/modules/munin/files/plugins/modules_dir
+
+   d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
-      $munin_cidr_allow = '192.168.0.1/32'
+      $munin_allow = '192.168.0.1'
 
-		You can also put an array there.
-
-		On pre-lenny systems, you have to use the older Regexp-variant:
-
-      $munin_allow = '^192\.168\.0\.1$'
-
-   d. In the node definition in your site.pp for your main munin host, add the following:
+   e. In the node definition in your site.pp for your main munin host, add the following:
 
       include munin::host
    
-   e. On each node that will gather munin statistics, add this line to that node's entry 
+   f. On each node that will gather munin statistics, add this line to that node's entry 
       in site.pp (you may want to also add this to your main munin host):
       
       include munin::client
 
-   f. If there are particular munin plugins you want to enable or configure, you define them
+   g. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
 
       # Enable monitoring of disk stats in bytes
@@ -74,12 +75,9 @@ To use this module, follow these directions:
       }
 
 
-   g. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
+   h. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
       to run on by putting something similar to the following in the node definition:
 
       $munin_port = 4948
 
-4. Cleanup: If you need any manual configuration or had already nodes defined
-	in your munin.conf, you can add/remove them from
-	/etc/munin/munin.conf.header on the munin::host.
