@@ -1,4 +1,3 @@
-
 Munin is a performance monitoring system which creates nice RRD graphs and has
 a very easy plugin interface. The munin homepage is http://munin.projects.linpro.no/
 
@@ -44,7 +43,7 @@ To use this module, follow these directions:
    d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
-      $munin_allow = '192.168.0.1'
+      $munin_cidr_allow = '192.168.0.1'
 
    e. In the node definition in your site.pp for your main munin host, add the following:
 
