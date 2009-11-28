@@ -70,7 +70,7 @@ class munin::plugins::base {
 
 	file {
 		[ "/etc/munin/plugins", "/etc/munin/plugin-conf.d" ]:
-			source => "puppet://$server/common/empty",
+			source => "puppet://$server/modules/common/empty",
 			ensure => directory, checksum => mtime,
 			ignore => '.ignore',
 			recurse => true, purge => true, force => true, 
