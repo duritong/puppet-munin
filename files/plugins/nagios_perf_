@@ -30,6 +30,6 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-echo "act_lat_$TYPE_ABBR.value " $(nagios2stats --mrtg --data AVGACT${TYPE_ABBR}LAT)
-echo "act_ext_$TYPE_ABBR.value " $(nagios2stats --mrtg --data AVGACT${TYPE_ABBR}EXT)
+echo "act_lat_$TYPE_ABBR.value " $(nagiostats --mrtg --data AVGACT${TYPE_ABBR}LAT)
+echo "act_ext_$TYPE_ABBR.value " $(nagiostats --mrtg --data AVGACT${TYPE_ABBR}EXT)
 
