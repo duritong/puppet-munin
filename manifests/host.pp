@@ -2,7 +2,7 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class munin::host
+class munin::host inherits munin
 {
 	package {"munin": ensure => installed, }
 
