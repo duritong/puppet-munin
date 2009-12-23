@@ -15,7 +15,7 @@ class munin::plugins::base {
 
     munin::plugin {
         [ df, cpu, interrupts, load, memory, netstat, open_files,
-            processes, swap, uptime, users, vmstat
+            processes, swap, uptime, vmstat
         ]:
             ensure => present,
     }
