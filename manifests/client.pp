@@ -17,7 +17,7 @@ class munin::client inherits munin {
         darwin: { include munin::client::darwin }
         debian,ubuntu: { include munin::client::debian }
         gentoo: { include munin::client::gentoo }
-        centos: { include munin::client::package }
+        centos: { include munin::client::centos }
         default: { include munin::client::base }
     }
     if $use_shorewall {

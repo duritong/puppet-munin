@@ -8,5 +8,4 @@ class munin::client::package inherits munin::client::base {
     # boot the munin-node without failure!
     before => Package['munin-node'],
   }
-  include munin::plugins::centos
 }
