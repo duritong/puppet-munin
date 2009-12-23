@@ -1,3 +1,5 @@
+== Munin ==
+
 Munin is a performance monitoring system which creates nice RRD graphs and has
 a very easy plugin interface. The munin homepage is http://munin.projects.linpro.no/
 
@@ -86,3 +88,7 @@ To use this module, follow these directions:
 
       $munin_port = 4948
 
+   i. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
+      For CentOS this is enabled in the default header config
+
+   j. Per default (on CentOS) munin will send warnings and critical messages to root
