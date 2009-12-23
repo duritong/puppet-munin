@@ -32,14 +32,15 @@ class munin::host inherits munin
     include munin::plugins::muninhost
 
     case $operatingsystem {
-        centos: { include munin::host::cgi }
+      centos: {
+        include munin::host::cgi
+        # from time to time we cleanup hanging munin-runs
+        file{'/etc/cron.d/munin_kill':
+          content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
+          owner => root, group => 0, mode => 0644;
+        }
+      }
     }
-
-  # from time to time we cleanup hanging munin-runs
-  file{'/etc/cron.d/munin_kill':
-    content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
-    owner => root, group => 0, mode => 0644;
-  }
   if $use_shorewall {
     include shorewall::rules::out::munin
   }
