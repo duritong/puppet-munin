@@ -9,7 +9,5 @@ class munin::client::debian inherits munin::client::package {
     File["/etc/munin/munin-node.conf"]{
 			content => template("munin/munin-node.conf.$operatingsystem.$lsbdistcodename"),
     }
-	# workaround bug in munin_node_configure
-	plugin { "postfix_mailvolume": ensure => absent }
 	include munin::plugins::debian
 }
