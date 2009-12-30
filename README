@@ -69,10 +69,10 @@ To use this module, follow these directions:
       include munin::client
 
       If you want to specify a particular package version for the munin
-      client, you can set the $munin_ensure_version variable _before_ the
+      client, you can set the $munin_node_ensure_version variable _before_ the
       above include, like this
 
-      $munin-node_ensure_version = "1.2.6-17"
+      $munin_node_ensure_version = "1.2.6-17"
 
    g. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
