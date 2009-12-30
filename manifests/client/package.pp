@@ -1,5 +1,10 @@
 class munin::client::package inherits munin::client::base {
-  package { 'munin-node': ensure => installed }
+
+  case $munin-node_ensure_version {
+    '': { $munin-node_ensure_version = "installed" }
+  }
+
+  package { 'munin-node': ensure => $munin-node_ensure_version }
   Service['munin-node']{
     require => Package[munin-node],
   }

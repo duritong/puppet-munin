@@ -4,7 +4,12 @@
 
 class munin::host inherits munin
 {
-  package {"munin": ensure => installed, }
+
+  case $munin_ensure_version {
+    '': { $munin_ensure_version = "installed" }
+  }
+
+  package {"munin": ensure => $munin_ensure_version, }
   
   File <<| tag == 'munin' |>>
   
