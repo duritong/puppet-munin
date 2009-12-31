@@ -5,9 +5,7 @@
 class munin::host inherits munin
 {
 
-  case $munin_ensure_version {
-    '': { $munin_ensure_version = "installed" }
-  }
+  if $munin_ensure_version == '' { $munin_ensure_version = 'installed' }
 
   package {"munin": ensure => $munin_ensure_version, }
   
