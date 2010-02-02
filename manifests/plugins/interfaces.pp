@@ -1,6 +1,7 @@
 # handle if_ and if_err_ plugins
 class munin::plugins::interfaces inherits munin::plugins::base {
 
+    # replaced gsub with regsubst
     $ifs = regsubst(split($interfaces, " |,"), "(.+)", "if_\\1")
     munin::plugin {
     $ifs: ensure => "if_";
