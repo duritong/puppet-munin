@@ -3,8 +3,6 @@
 # See LICENSE for the full license granted to you.
 # adapted and improved by admin(at)immerda.ch
 
-### defines
-
 define munin::plugin (
     $ensure = "present",
     $script_path_in = '',
