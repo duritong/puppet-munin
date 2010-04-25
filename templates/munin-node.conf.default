@@ -10,7 +10,7 @@ log_file /var/log/munin/munin-node.log
 pid_file /var/run/munin/munin-node.pid
 
 background 1
-setid 1
+setsid 1
 
 user root
 group 0
