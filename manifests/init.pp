@@ -16,5 +16,6 @@
 # IP addresses and still be happy
 
 class munin {
+    include common::moduledir
     module_dir { [ "munin", "munin/nodes", "munin/plugins" ]: }
 }
