@@ -3,7 +3,7 @@ define munin::register(
   $port = 'absent'
 )
 {
-	$munin_port_real = $port ? {
+    $munin_port_real = $port ? {
     'absent' => $munin_port ? {
                   '' => 4949,
                   default => $munin_port
@@ -11,20 +11,20 @@ define munin::register(
     default => $port
   }
 
-	$munin_host_real = $host ? {
+    $munin_host_real = $host ? {
     'absent' => $munin_host ? {
                   '' => $fqdn,
                   'fqdn' => $fqdn,
                   default => $munin_host
                 },
     default => $host
-	}
+    }
 
-	@@file { "/var/lib/puppet/modules/munin/nodes/${name}_${munin_port_real}":
-		ensure => present,
-		content => template("munin/defaultclient.erb"),
-		tag => 'munin',
-	}
+    @@file { "/var/lib/puppet/modules/munin/nodes/${name}_${munin_port_real}":
+        ensure => present,
+        content => template("munin/defaultclient.erb"),
+        tag => 'munin',
+    }
 }
 
 

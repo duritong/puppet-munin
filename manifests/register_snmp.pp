@@ -3,11 +3,11 @@ define munin::register_snmp(
     $snmpd_testplugin = 'load'
 )
 {
-	$munin_port_real = $munin_port ? { '' => 4949, default => $munin_port } 
-	$munin_host_real = $munin_host ? {
-		'' => '*',
-		'fqdn' => '*',
-		default => $munin_host
+    $munin_port_real = $munin_port ? { '' => 4949, default => $munin_port }
+    $munin_host_real = $munin_host ? {
+        '' => '*',
+        'fqdn' => '*',
+        default => $munin_host
     }
     exec{"register_snmp_munin_for_${name}":
         command => "munin-node-configure-snmp ${name} | sh",

@@ -5,7 +5,7 @@ class munin::client::openbsd inherits munin::client::base {
         source => "puppet://$server/modules/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
     }
-    package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser', 
+    package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser',
                 'p5-HTML-Tagset', 'p5-HTTP-GHTTP', 'p5-LWP-UserAgent-Determined',
                 'p5-Net-SSLeay', 'p5-Net-Server', 'p5-URI', 'p5-libwww', 'pcre', 'curl' ]:
         ensure => installed,

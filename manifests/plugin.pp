@@ -17,10 +17,10 @@ define munin::plugin (
     $plugin = "/etc/munin/plugins/$name"
     $plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
     case $ensure {
-    	"absent": {
-    		file { $plugin: ensure => absent, }
-    	}
-    	default: {
+        "absent": {
+            file { $plugin: ensure => absent, }
+        }
+        default: {
             case $kernel {
                 openbsd: { $basic_require = File['/var/run/munin'] }
                 default: { $basic_require = Package['munin-node'] }
@@ -30,35 +30,35 @@ define munin::plugin (
             } else {
                 $real_require = $basic_require
             }
-    		file { $plugin:
-    		    ensure => "${real_script_path}/${plugin_src}",
-    			require => $real_require,
-    			notify => Service['munin-node'];
-    		}
+            file { $plugin:
+                ensure => "${real_script_path}/${plugin_src}",
+                require => $real_require,
+                notify => Service['munin-node'];
+            }
 
-    	}
+        }
     }
     case $config {
-    	'': {
-    		file { $plugin_conf: ensure => absent }
-    	}
-    	default: {
-    		case $ensure {
-    			absent: {
-    				file { $plugin_conf: ensure => absent }
-    			}
-    			default: {
-    				file { $plugin_conf:
-    					content => "[${name}]\n$config\n",
-    					mode => 0644, owner => root, group => 0,
-    				}
+        '': {
+            file { $plugin_conf: ensure => absent }
+        }
+        default: {
+            case $ensure {
+                absent: {
+                    file { $plugin_conf: ensure => absent }
+                }
+                default: {
+                    file { $plugin_conf:
+                        content => "[${name}]\n$config\n",
+                        mode => 0644, owner => root, group => 0,
+                    }
                     if $require {
                         File[$plugin_conf]{
                             require +> $require,
                         }
                     }
-    			}
-    		}
-    	}
+                }
+            }
+        }
     }
 }
