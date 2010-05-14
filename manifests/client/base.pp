@@ -18,6 +18,8 @@ class munin::client::base {
         notify => Service['munin-node'],
         mode => 0644, owner => root, group => 0,
     }
-    munin::register { $fqdn: }
+    munin::register { $fqdn:
+        config => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
+    }
     include munin::plugins::base
 }
