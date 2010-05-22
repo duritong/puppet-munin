@@ -1,9 +1,21 @@
 # currently we install munin on openbsd by targz
 # :(
 class munin::client::openbsd inherits munin::client::base {
-    file{'/usr/src/munin_openbsd.tar.gz':
+    if $operatingsystemrelease == '4.3' {
+      file{'/usr/src/munin_openbsd.tar.gz':
         source => "puppet://$server/modules/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
+      }
+      exec{'extract_openbsd':
+        command => 'cd /;tar xzf /usr/src/munin_openbsd.tar.gz',
+        unless => 'test -d /opt/munin',
+        require => File['/usr/src/munin_openbsd.tar.gz'],
+        before => Exec['extract_openbsd'],
+      }
+    } else {
+      package{'munin-node':
+        ensure => installed,
+      }
     }
     package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser', 
                 'p5-HTML-Tagset', 'p5-HTTP-GHTTP', 'p5-LWP-UserAgent-Determined',
@@ -11,29 +23,28 @@ class munin::client::openbsd inherits munin::client::base {
         ensure => installed,
         before => File['/var/run/munin'],
     }
-    exec{'extract_openbsd':
-        command => 'cd /;tar xzf /usr/src/munin_openbsd.tar.gz',
-        unless => 'test -d /opt/munin',
-        require => File['/usr/src/munin_openbsd.tar.gz'],
-    }
     file{[ '/var/run/munin', '/var/log/munin' ]:
-        ensure => directory,
-        require => Exec['extract_openbsd'],
-        owner => root, group  => 0, mode => 0755;
+      ensure => directory,
+      owner => root, group  => 0, mode => 0755;
     }
     openbsd::rc_local{'munin-node':
-        binary => '/opt/munin/sbin/munin-node',
+        binary => $operatingsystemrelease ? {
+          '4.3' => '/opt/munin/sbin/munin-node',
+          default => '/usr/local/sbin/munin-node'
+        },
         require => File['/var/run/munin'],
     }
     Service['munin-node']{
         restart => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
         stop => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
-        start => '/opt/munin/sbin/munin-node',
+        start => $operatingsystemrelease ? {
+          '4.3' => '/opt/munin/sbin/munin-node',
+          default => '/usr/local/sbin/munin-node'
+        },
         hasstatus => false,
         hasrestart => false,
         require => [ File['/var/run/munin'], File['/var/log/munin'] ],
     }
-
     cron{'clean_munin_logfile':
         command => 'rm /var/log/munin/munin-node.log; kill -HUP `cat /var/run/munin/munin-node.pid`',
         minute => 0,
