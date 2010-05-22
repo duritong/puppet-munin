@@ -45,8 +45,9 @@ class munin::client::openbsd inherits munin::client::base {
           '4.3' => '/opt/munin/sbin/munin-node',
           default => '/usr/local/sbin/munin-node'
         },
-        hasstatus => false,
-        hasrestart => false,
+        status => 'test -e /var/run/munin/munin-node.pid && (ps ax | egrep -q "^$(cat /var/run/munin/munin-node.pid).*munin-node")',
+        hasstatus => true,
+        hasrestart => true,
         require => [ File['/var/run/munin'], File['/var/log/munin'] ],
     }
     cron{'clean_munin_logfile':
