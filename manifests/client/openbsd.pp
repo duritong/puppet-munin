@@ -12,14 +12,18 @@ class munin::client::openbsd inherits munin::client::base {
         require => File['/usr/src/munin_openbsd.tar.gz'],
         before => Exec['extract_openbsd'],
       }
+      package{'p5-Compress-Zlib':
+        ensure => installed,
+        before => File['/var/run/munin'],
+      }
     } else {
       package{'munin-node':
         ensure => installed,
       }
     }
-    package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser', 
-                'p5-HTML-Tagset', 'p5-HTTP-GHTTP', 'p5-LWP-UserAgent-Determined',
-                'p5-Net-SSLeay', 'p5-Net-Server', 'p5-URI', 'p5-libwww', 'pcre', 'curl' ]:
+    package{ [  'p5-Crypt-SSLeay', 'p5-HTML-Parser', 'p5-HTML-Tagset', 'p5-HTTP-GHTTP',
+                'p5-LWP-UserAgent-Determined', 'p5-Net-SSLeay', 'p5-Net-Server',
+                'p5-URI', 'p5-libwww', 'pcre', 'curl' ]:
         ensure => installed,
         before => File['/var/run/munin'],
     }
