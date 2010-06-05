@@ -10,7 +10,7 @@ class munin::client::openbsd inherits munin::client::base {
         command => 'cd /;tar xzf /usr/src/munin_openbsd.tar.gz',
         unless => 'test -d /opt/munin',
         require => File['/usr/src/munin_openbsd.tar.gz'],
-        before => Exec['extract_openbsd'],
+        before => File['/var/run/munin'],
       }
       package{'p5-Compress-Zlib':
         ensure => installed,
