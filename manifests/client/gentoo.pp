@@ -3,6 +3,6 @@ class munin::client::gentoo inherits munin::client::package {
     name => 'munin',
     category => 'net-analyzer',
   }
-    
-	include munin::plugins::gentoo
+
+    include munin::plugins::gentoo
 }
