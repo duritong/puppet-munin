@@ -6,11 +6,11 @@ class munin::host::cgi {
     }
 
     file{'/etc/logrotate.d/munin':
-        source => [ "puppet://$server/files/munin/config/host/${fqdn}/logrotate",
-                    "puppet://$server/files/munin/config/host/logrotate.$operatingsystem",
-                    "puppet://$server/files/munin/config/host/logrotate",
-                    "puppet://$server/munin/config/host/logrotate.$operatingsystem",
-                    "puppet://$server/munin/config/host/logrotate" ],
+        source => [ "puppet:///modules/site-munin/config/host/${fqdn}/logrotate",
+                    "puppet:///modules/site-munin/config/host/logrotate.$operatingsystem",
+                    "puppet:///modules/site-munin/config/host/logrotate",
+                    "puppet:///modules/munin/config/host/logrotate.$operatingsystem",
+                    "puppet:///modules/munin/config/host/logrotate" ],
         owner => root, group => 0, mode => 0644;
     }
 }

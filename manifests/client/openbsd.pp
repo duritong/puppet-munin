@@ -2,7 +2,7 @@
 # :(
 class munin::client::openbsd inherits munin::client::base {
     file{'/usr/src/munin_openbsd.tar.gz':
-        source => "puppet://$server/munin/openbsd/package/munin_openbsd.tar.gz",
+        source => "puppet:///modules/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
     }
     package{ [ 'p5-Compress-Zlib', 'p5-Crypt-SSLeay', 'p5-HTML-Parser', 
