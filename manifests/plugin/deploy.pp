@@ -11,7 +11,7 @@ define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
     include munin::plugin::scriptpaths
     file { "munin_plugin_${name}":
             path => "$munin::plugin::scriptpaths::script_path/${name}",
-            source => "puppet:///$real_source",
+            source => "puppet:///modules/$real_source",
             mode => 0755, owner => root, group => 0;
     }
 
