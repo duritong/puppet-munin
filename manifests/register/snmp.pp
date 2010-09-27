@@ -9,7 +9,7 @@ define munin::register::snmp (
     $config = [ 'use_node_name no' ]
 
     exec { "munin_register_snmp_${fhost}":
-        command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} | sh",
+        command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} --shell | sh",
         unless => "ls /etc/munin/plugins/snmp_${fhost}_* &> /dev/null",
     }
 
