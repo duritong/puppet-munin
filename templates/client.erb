@@ -1,0 +1,18 @@
+<%
+        # Downcase all information
+        dom = domain.downcase
+        host = hostname.downcase
+%>
+
+### Munin client from Puppet template
+# Domain: <%= dom %>
+# Registered on: <%= host %>
+# Type: <%= client_type %>
+<% if description != 'absent' -%>
+# Description: <%= description.gsub!(/\n/, ' ') %>
+<% end -%>
+[<%= fhost.downcase %>]
+    address <%= munin_host_real -%>
+<% if config -%><% config.each do |val| -%>
+    <%= val -%>
+<% end -%><% end -%>
