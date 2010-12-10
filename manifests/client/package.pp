@@ -2,10 +2,24 @@ class munin::client::package inherits munin::client::base {
 
   if $munin_node_ensure_version == '' { $munin_node_ensure_version = 'installed' }
 
+  if $operatingsystem == "Debian" and $lsbdistcodename != "lenny" {
+    package { 'munin-common':
+      before => Package['munin-node'],
+      ensure => $munin_node_ensure_version;
+    }
+      
+    Package['munin-node']{
+      require => Package['munin-common'],
+    }
+  }
+  
+
   package { 'munin-node': ensure => $munin_node_ensure_version }
+  
   Service['munin-node']{
     require => Package[munin-node],
   }
+  
   File['/etc/munin/munin-node.conf']{
     # this has to be installed before the package, so the postinst can
     # boot the munin-node without failure!
