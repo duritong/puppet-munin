@@ -32,7 +32,7 @@ define munin::plugin::deploy( $source = '', $ensure = 'present', $config = '' )
   }
 
   # register the plugin
-  if $require { munin::plugin{$name: ensure => $ensure, config => $config, require => $require } } }
+  if $require { munin::plugin{$name: ensure => $ensure, config => $config, require => $require } }
   else {
     munin::plugin{$name: ensure => $ensure, config => $config }
   }
