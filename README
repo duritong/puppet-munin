@@ -37,8 +37,6 @@ To use this module, follow these directions:
 
    c. you will also need to create the following empty directories:
 
-      mkdir /etc/puppet/modules/munin/files/empty
-      mkdir /etc/puppet/modules/munin/files/modules_dir
       mkdir -p /etc/puppet/modules/munin/files/nodes/modules_dir
       mkdir -p /etc/puppet/modules/munin/files/plugins/modules_dir
 
