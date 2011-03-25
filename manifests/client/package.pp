@@ -7,7 +7,7 @@ class munin::client::package inherits munin::client::base {
       before => Package['munin-node'],
       ensure => $munin_node_ensure_version;
     }
-      
+  }      
     package { 'munin-node': ensure => $munin_node_ensure_version }
     Service['munin-node']{
       require => Package[munin-node],
@@ -17,5 +17,5 @@ class munin::client::package inherits munin::client::base {
       # boot the munin-node without failure!
       before => Package['munin-node'],
     }
-  }
 }
+
