@@ -17,6 +17,7 @@ define munin::plugin (
     $plugin = "/etc/munin/plugins/$name"
     $plugin_conf = "/etc/munin/plugin-conf.d/$name.conf"
 
+    include munin::plugins::setup
     case $ensure {
         "absent": {
             file { $plugin: ensure => absent, }

@@ -1,3 +1,3 @@
-class munin::plugins::djbdns inherits munin::plugins::base {
+class munin::plugins::djbdns { 
     munin::plugin::deploy { "tinydns": }
 }

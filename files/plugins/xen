@@ -8,8 +8,6 @@
 #     autoconf  (optinal - used by munin-config)
 #
 
-MAXDOMAINS=16
-
 if [ "$1" = "autoconf" ]; then
         if which xm > /dev/null ; then
                 echo yes
@@ -19,6 +17,11 @@ if [ "$1" = "autoconf" ]; then
         exit 1
 fi
 
+# we cache xm list for 5 min for perfomance reasons
+((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE '^\/var\/lib\/munin\/plugin-state\/xm_list\.state$') && \
+    [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || \
+    /usr/sbin/xm list | grep -v "^Name .* Console$" > /var/lib/munin/plugin-state/xm_list.state
+
 if [ "$1" = "config" ]; then
 
         echo 'graph_title Xen Domain Utilerisation'
@@ -27,7 +30,7 @@ if [ "$1" = "config" ]; then
         echo 'graph_vlabel mS'
         echo 'graph_category xen'
         echo 'graph_info This graph shows of many mS wall time where used by a domain'
-        /usr/sbin/xm list | grep -v "^Name .* Console$" | \
+        cat /var/lib/munin/plugin-state/xm_list.state | \
         while read name domid mem cpu state time console; do
                 name=`echo $name | sed -e"s/-/_/"`
                 echo "$name.label $name"
@@ -43,7 +46,7 @@ if [ "$1" = "config" ]; then
         exit 0
 fi
 
-/usr/sbin/xm list | grep -v "^Name" | grep -v "^Name .* Console$" | \
+cat /var/lib/munin/plugin-state/xm_list.state | \
 while read name domid mem cpu state time console; do
         name=`echo $name | sed -e"s/-/_/"`
         time=`echo $time | sed -e "s/\.//"`

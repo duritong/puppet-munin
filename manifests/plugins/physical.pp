@@ -1,7 +1,5 @@
-class munin::plugins::physical inherits munin::plugins::base {
-
+class munin::plugins::physical  { 
   case $kernel {
     linux: { munin::plugin { iostat: } }
   }
-  
 }

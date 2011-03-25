@@ -5,7 +5,7 @@ class munin::client::openbsd inherits munin::client::base {
 
     if $operatingsystemrelease == '4.3' {
       file{'/usr/src/munin_openbsd.tar.gz':
-        source => "puppet://$server/modules/munin/openbsd/package/munin_openbsd.tar.gz",
+        source => "puppet:///modules/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
       }
       exec{'extract_openbsd':
