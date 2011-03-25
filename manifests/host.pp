@@ -7,6 +7,8 @@ class munin::host inherits munin
 
   if $munin_ensure_version == '' { $munin_ensure_version = 'installed' }
 
+  File <<| tag == 'munin' |>>
+
   package {"munin": ensure => $munin_ensure_version, }
   
   File <<| tag == 'munin' |>>
