@@ -18,6 +18,8 @@ class munin::host inherits munin
                 "puppet:///modules/munin/config/host/munin.conf.header.$operatingsystem",
                 "puppet:///modules/munin/config/host/munin.conf.header" ],
     notify => Exec['concat_/etc/munin/munin.conf'],
+    owner => root, group => 0, mode => 0644;
+  }
       
   concatenated_file { "/etc/munin/munin.conf":
     dir => '/var/lib/puppet/modules/munin/nodes',
