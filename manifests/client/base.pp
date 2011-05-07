@@ -1,4 +1,5 @@
 class munin::client::base {
+
     service { 'munin-node':
         ensure => running,
         enable => true,

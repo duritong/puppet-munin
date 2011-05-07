@@ -1,4 +1,5 @@
 class munin::client::darwin {
+
     file { "/usr/share/snmp/snmpd.conf":
         mode => 744,
         content => template("munin/darwin_snmpd.conf.erb"),

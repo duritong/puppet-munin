@@ -43,20 +43,34 @@ To use this module, follow these directions:
    d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
-      $munin_allow = '192.168.0.1'
-      
-      If you want to define more than one host, you can seperate them by colon:
+      $munin_cidr_allow = '192.168.0.1/32'
 
-      $munin_allow = '127.0.0.1:192.168.0.1'
+		You can also put an array there.
+
+		On pre-lenny systems, you have to use the older Regexp-variant:
+
+      $munin_allow = '^192\.168\.0\.1$'
 
    e. In the node definition in your site.pp for your main munin host, add the following:
 
       include munin::host
+
+      If you want to specify a particular package version for the main munin
+      host, you can set the $munin_ensure_version variable _before_ the above
+      include, like this
+
+      $munin_ensure_version = "1.2.6-17"
    
    f. On each node that will gather munin statistics, add this line to that node's entry 
       in site.pp (you may want to also add this to your main munin host):
       
       include munin::client
+
+      If you want to specify a particular package version for the munin
+      client, you can set the $munin_node_ensure_version variable _before_ the
+      above include, like this
+
+      $munin_node_ensure_version = "1.2.6-17"
 
    g. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
@@ -67,7 +81,7 @@ To use this module, follow these directions:
       # Use a non-standard plugin path to use custom plugins
       munin::plugin { "spamassassin":
          ensure => "spamassassin",
-         script_path => "/usr/local/share/munin-plugins",
+         script_path_in => "/usr/local/share/munin-plugins",
       }
 
       # Use a special config to pass parameters to the plugin

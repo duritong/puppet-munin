@@ -8,7 +8,7 @@
 define munin::plugin (
     $ensure = "present",
     $script_path_in = '',
-    $config = '')
+    $config = '' )
 {
     include munin::plugin::scriptpaths
     $real_script_path = $script_path_in ? { '' => $munin::plugin::scriptpaths::script_path, default => $script_path_in }
@@ -64,3 +64,4 @@ define munin::plugin (
         }
     }
 }
+

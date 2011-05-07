@@ -1,4 +1,5 @@
 class munin::client::debian inherits munin::client::package {
+
     # the plugin will need that
     if !defined(Package['iproute']) {
         package { "iproute": ensure => installed }
