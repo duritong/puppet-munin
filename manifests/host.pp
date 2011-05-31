@@ -25,8 +25,8 @@ class munin::host inherits munin
 
     include munin::plugins::muninhost
 
-    case $operatingsystem {
-        centos: { include munin::host::cgi }
+    if $munin_do_cgi_graphing {
+        include munin::host::cgi
     }
 
   # from time to time we cleanup hanging munin-runs
