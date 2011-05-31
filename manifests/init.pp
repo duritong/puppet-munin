@@ -14,8 +14,8 @@
 #
 # the port is a parameter so vservers can share
 # IP addresses and still be happy
+include 'common'
 
 class munin {
-    include common::moduledir
     module_dir { [ "munin", "munin/nodes", "munin/plugins" ]: }
 }
