@@ -23,12 +23,6 @@ class munin::host inherits munin
         header => "/etc/munin/munin.conf.header",
     }
 
-    file { ["/var/log/munin-update.log", "/var/log/munin-limits.log",
-               "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
-        ensure => present,
-        mode => 640, owner => munin, group => 0;
-    }
-
     include munin::plugins::muninhost
 
     case $operatingsystem {
