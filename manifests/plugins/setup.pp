@@ -1,8 +1,7 @@
 class munin::plugins::setup {
   file {
     [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
-      source => "puppet:///modules/common/empty",
-      ignore => [ '.ignore', 'snmp_*' ],
+      ignore => 'snmp_*',
       ensure => directory, checksum => mtime,
       recurse => true, purge => true, force => true,
       mode => 0755, owner => root, group => 0,
