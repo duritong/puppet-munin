@@ -1,12 +1,21 @@
 define munin::register::snmp (
   $community = 'public',
-  $description = 'absent'
+  $description = 'absent',
+  $port = 'absent'
 )
 {
     $fhost = $name
     $munin_host_real = $fqdn
     $client_type = 'snmp'
     $config = [ 'use_node_name no' ]
+
+    $munin_port_real = $port ? {
+      'absent' => $munin_port ? {
+                    '' => 4949,
+                    default => $munin_port
+                  },
+      default => $port
+    }
 
     exec { "munin_register_snmp_${fhost}":
         command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} --shell | sh",
