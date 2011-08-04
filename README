@@ -36,14 +36,7 @@ To use this module, follow these directions:
       "modules.pp" in your site.pp, if you do not have that, then you will need to add the 
       import line to your site.pp)
 
-   c. you will also need to create the following empty directories:
-
-      mkdir /etc/puppet/modules/munin/files/empty
-      mkdir /etc/puppet/modules/munin/files/modules_dir
-      mkdir -p /etc/puppet/modules/munin/files/nodes/modules_dir
-      mkdir -p /etc/puppet/modules/munin/files/plugins/modules_dir
-
-   d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
+   c. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
       $munin_allow = '192.168.0.1'
@@ -52,16 +45,16 @@ To use this module, follow these directions:
 
       $munin_allow = '127.0.0.1:192.168.0.1'
 
-   e. In the node definition in your site.pp for your main munin host, add the following:
+   d. In the node definition in your site.pp for your main munin host, add the following:
 
       include munin::host
    
-   f. On each node that will gather munin statistics, add this line to that node's entry 
+   e. On each node that will gather munin statistics, add this line to that node's entry 
       in site.pp (you may want to also add this to your main munin host):
       
       include munin::client
 
-   g. If there are particular munin plugins you want to enable or configure, you define them
+   f. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
 
       # Enable monitoring of disk stats in bytes
@@ -81,13 +74,13 @@ To use this module, follow these directions:
       }
 
 
-   h. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
+   g. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
       to run on by putting something similar to the following in the node definition:
 
       $munin_port = 4948
 
-   i. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
+   h. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
       For CentOS this is enabled in the default header config
 
-   j. Per default (on CentOS) munin will send warnings and critical messages to root
+   i. Per default (on CentOS) munin will send warnings and critical messages to root
