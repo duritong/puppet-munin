@@ -13,9 +13,8 @@ define munin::register::snmp (
         unless => "ls /etc/munin/plugins/snmp_${fhost}_* &> /dev/null",
     }
 
-    @@file { "munin_snmp_${fhost}":
-        ensure => present,
-        path => "/var/lib/puppet/modules/munin/nodes/${fhost}",
+    @@concat::fragment{ "munin_snmp_${fhost}":
+        target => '/etc/munin/munin.conf',
         content => template("munin/client.erb"),
         tag => 'munin',
     }

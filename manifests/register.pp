@@ -25,9 +25,8 @@ define munin::register (
         default => $host
     }
 
-    @@file { "munin_client_${fhost}_${munin_port_real}":
-        ensure => present,
-        path => "/var/lib/puppet/modules/munin/nodes/${fhost}_${munin_port_real}",
+    @@concat::fragment{ "munin_client_${fhost}_${munin_port_real}":
+        target => '/etc/munin/munin.conf',
         content => template("munin/client.erb"),
         tag => 'munin',
     }

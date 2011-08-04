@@ -3,7 +3,7 @@
 # See LICENSE for the full license granted to you.
 # Adapted and improved by admin(at)immerda.ch
 
-class munin::client inherits munin {
+class munin::client {
 
     $munin_port_real = $munin_port ? { '' => 4949, default => $munin_port }
     $munin_host_real = $munin_host ? {

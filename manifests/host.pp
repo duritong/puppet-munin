@@ -2,32 +2,30 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class munin::host inherits munin
-{
-    package {"munin": ensure => installed, }
+class munin::host {
+  package {"munin": ensure => installed, }
 
-    File <<| tag == 'munin' |>>
+  Concat::Fragment <<| tag == 'munin' |>>
 
-    file{'/etc/munin/munin.conf.header':
-        source => [ "puppet:///modules/site-munin/config/host/${fqdn}/munin.conf.header",
-                    "puppet:///modules/site-munin/config/host/munin.conf.header.$operatingsystem",
-                    "puppet:///modules/site-munin/config/host/munin.conf.header",
-                    "puppet:///modules/munin/config/host/munin.conf.header.$operatingsystem",
-                    "puppet:///modules/munin/config/host/munin.conf.header" ],
-        notify => Exec['concat_/etc/munin/munin.conf'],
-        owner => root, group => 0, mode => 0644;
-    }
+  concat::fragment{'munin.conf.header':
+    target => '/etc/munin/munin.conf',
+    source => [ "puppet:///modules/site-munin/config/host/${fqdn}/munin.conf.header",
+                "puppet:///modules/site-munin/config/host/munin.conf.header.$operatingsystem",
+                "puppet:///modules/site-munin/config/host/munin.conf.header",
+                "puppet:///modules/munin/config/host/munin.conf.header.$operatingsystem",
+                "puppet:///modules/munin/config/host/munin.conf.header" ],
+    order => 05,
+  }
 
-    concatenated_file { "/etc/munin/munin.conf":
-        dir => '/var/lib/puppet/modules/munin/nodes',
-        header => "/etc/munin/munin.conf.header",
-    }
+  concat{ "/etc/munin/munin.conf":
+    owner => root, group => 0, mode => 0644;
+  }
 
-    include munin::plugins::muninhost
+  include munin::plugins::muninhost
 
-    if $munin_do_cgi_graphing {
-        include munin::host::cgi
-    }
+  if $munin_do_cgi_graphing {
+    include munin::host::cgi
+  }
 
   # from time to time we cleanup hanging munin-runs
   file{'/etc/cron.d/munin_kill':
