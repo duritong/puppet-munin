@@ -3,14 +3,14 @@
 # See LICENSE for the full license granted to you.
 # Adapted and improved by admin(at)immerda.ch
 
-class munin::client {
+class munin::client inherits munin {
 
-	$munin_port_real = $munin_port ? { '' => 4949, default => $munin_port } 
-	$munin_host_real = $munin_host ? {
-		'' => '*',
-		'fqdn' => '*',
-		default => $munin_host
-	}
+    $munin_port_real = $munin_port ? { '' => 4949, default => $munin_port }
+    $munin_host_real = $munin_host ? {
+        '' => '*',
+        'fqdn' => '*',
+        default => $munin_host
+    }
 
     case $operatingsystem {
         openbsd: { include munin::client::openbsd }

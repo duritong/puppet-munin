@@ -2,11 +2,11 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class munin::host
+class munin::host inherits munin
 {
-	package {"munin": ensure => installed, }
+    package {"munin": ensure => installed, }
 
-	File <<| tag == 'munin' |>>
+    File <<| tag == 'munin' |>>
 
     file{'/etc/munin/munin.conf.header':
         source => [ "puppet:///modules/site-munin/config/host/${fqdn}/munin.conf.header",
@@ -18,21 +18,15 @@ class munin::host
         owner => root, group => 0, mode => 0644;
     }
 
-	concatenated_file { "/etc/munin/munin.conf":
-		dir => '/var/lib/puppet/modules/munin/nodes',
-		header => "/etc/munin/munin.conf.header",
-	}
-	
-    file { ["/var/log/munin-update.log", "/var/log/munin-limits.log", 
-               "/var/log/munin-graph.log", "/var/log/munin-html.log"]:
-        ensure => present,
-        mode => 640, owner => munin, group => 0;
+    concatenated_file { "/etc/munin/munin.conf":
+        dir => '/var/lib/puppet/modules/munin/nodes',
+        header => "/etc/munin/munin.conf.header",
     }
 
     include munin::plugins::muninhost
 
-    case $operatingsystem {
-        centos: { include munin::host::cgi }
+    if $munin_do_cgi_graphing {
+        include munin::host::cgi
     }
 
   # from time to time we cleanup hanging munin-runs

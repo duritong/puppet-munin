@@ -1,6 +1,4 @@
-class munin::plugins::apache inherits munin::plugins::base {
-    munin::plugin{ "apache_accesses": }
-    munin::plugin{ "apache_processes": }
-    munin::plugin{ "apache_volume": }
-    munin::plugin::deploy { "apache_activity": }
+class munin::plugins::apache {
+  munin::plugin{ [ 'apache_accesses', 'apache_processes', 'apache_volume' ]: }
+  munin::plugin::deploy { 'apache_activity': }
 }

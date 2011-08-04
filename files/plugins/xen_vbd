@@ -16,6 +16,10 @@
 $XM = '/usr/sbin/xm';
 $XMTOP = '/usr/sbin/xentop';
 
+# we cache xm list for 5 min for perfomance reasons
+system('((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE \'^\/var\/lib\/munin\/plugin-state\/xm_list\.state$\') && [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || /usr/sbin/xm list | grep -v "^Name .* Console$" > /var/lib/munin/plugin-state/xm_list.state');
+system('((find /var/lib/munin/plugin-state/xm_top.state -mmin -5 2>&1 | grep -qE \'^\/var\/lib\/munin\/plugin-state\/xm_top\.state$\') && [ `cat /var/lib/munin/plugin-state/xm_top.state | wc -l` -gt 1 ]) || /usr/sbin/xentop -b -i1 > /var/lib/munin/plugin-state/xm_top.state');
+
 # ah, parameters coming in
 if ( defined($ARGV[0]))
 {
@@ -46,7 +50,7 @@ if ( defined($ARGV[0]))
                         'graph_info' => 'Display the I/O operations for each domain',
                 );
 
-                @domains = `$XM list`;
+                @domains = `cat /var/lib/munin/plugin-state/xm_list.state`;
                 shift(@domains); # we don't need the header line
 
                 foreach $domain ( @domains )
@@ -82,16 +86,24 @@ if ( defined($ARGV[0]))
 
 
 # No args, get rolling
-# NAME  STATE   CPU(sec) CPU(%)     MEM(k) MEM(%)  MAXMEM(k) MAXMEM(%) VCPUS NETS NETTX(k) NETRX(k) VBDS   VBD_OO   VBD_RD   VBD_WR SSID
-$tmpfile = "/tmp/munin_xen_vbd_tmp";
+my @stats = `cat /var/lib/munin/plugin-state/xm_top.state`;
 
-system("$XMTOP -b -i1 > $tmpfile");
-open(I,"$tmpfile");
-while(<I>){
-        chomp;
-        s/^\s*//g;
-        @tmp=split(/\s+/, $_);
-        next if $tmp[0] eq "NAME";
+# remove the first 4 items that are junk that we don't need.
+shift(@stats);
+shift(@stats);
+shift(@stats);
+shift(@stats);
+
+my %vals; undef(%vals);
+
+foreach my $domain (@stats) {
+	# trim the leading whitespace
+        $domain =~ s/^\s+//;
+        my @tmp = split(/\s+/, $domain);
+
+        # we need to change - and . to _ or things get weird with the graphs
+        # some decent quoting would probably fix this, but this works for now
+        $tmp[0] =~ s/[-.]/_/g;
 
         $domname = $tmp[0];
         $domname =~ s/[-.]/_/g;

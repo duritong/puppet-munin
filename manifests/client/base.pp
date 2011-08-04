@@ -1,11 +1,11 @@
 class munin::client::base {
     service { 'munin-node':
-        ensure => running, 
+        ensure => running,
         enable => true,
         hasstatus => true,
         hasrestart => true,
     }
-    file {'/etc/munin/':
+    file {'/etc/munin':
         ensure => directory,
         mode => 0755, owner => root, group => 0;
     }
@@ -14,10 +14,12 @@ class munin::client::base {
         default => $munin_allow
     }
     file {'/etc/munin/munin-node.conf':
-	    content => template("munin/munin-node.conf.$operatingsystem"),
+        content => template("munin/munin-node.conf.$operatingsystem"),
         notify => Service['munin-node'],
-		mode => 0644, owner => root, group => 0,
-	}
-	munin::register { $fqdn: }
-	include munin::plugins::base
+        mode => 0644, owner => root, group => 0,
+    }
+    munin::register { $fqdn:
+        config => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
+    }
+    include munin::plugins::base
 }
