@@ -5,9 +5,10 @@ class munin::client::darwin {
     group  => 0,
     owner  => root,
   }
-  delete_matching_line{"startsnmpdno":
+  line{"startsnmpdno":
     file => "/etc/hostconfig",
-    pattern => "SNMPSERVER=-NO-",
+    line => "SNMPSERVER=-NO-",
+    ensure => 'absent',
   }
   line { "startsnmpdyes":
     file => "/etc/hostconfig",
