@@ -1,6 +1,6 @@
-#
-# Example config-file for munin-node
-#
+##########
+########## Managed by puppet
+##########
 
 log_level 4
 log_file /var/log/munin/munin-node.log
