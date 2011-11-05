@@ -10,10 +10,7 @@ define munin::register::snmp (
     $config = [ 'use_node_name no' ]
 
     $munin_port_real = $port ? {
-      'absent' => $munin_port ? {
-                    '' => 4949,
-                    default => $munin_port
-                  },
+      'absent' => hiera('munin_port','4949'),
       default => $port
     }
 

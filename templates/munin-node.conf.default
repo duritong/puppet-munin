@@ -37,8 +37,8 @@ host_name <%= fqdn %>
 # network notation unless the perl module Net::CIDR is installed.  You
 # may repeat the allow line as many times as you'd like
 
-<% real_munin_allow.split(':').each do |val| -%>
-allow <%= '^'+val.gsub(/\./, '\.')+'$' %>
+<% scope.function_hiera('munin_allow',['127.0.0.1']).each do |allow| -%>
+allow <%= "^#{Regexp.escape(allow)}$" %>
 <% end -%>
 
 # If you have installed the Net::CIDR perl module, you can use
@@ -51,9 +51,9 @@ allow <%= '^'+val.gsub(/\./, '\.')+'$' %>
 # cidr_deny  192.0.2.42/32
 
 # Which address to bind to;
-host <%= munin_host_real %>
+host <%= scope.function_hiera('munin_host','*') %>
 # host 127.0.0.1
 
 # And which port
-port <%= munin_port_real %>
+port <%= scope.function_hiera('munin_port','4949') %>
 
