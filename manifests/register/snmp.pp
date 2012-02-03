@@ -5,7 +5,7 @@ define munin::register::snmp (
 )
 {
     $fhost = $name
-    $munin_host_real = $fqdn
+    $munin_host_real = $::fqdn
     $client_type = 'snmp'
     $config = [ 'use_node_name no' ]
 
