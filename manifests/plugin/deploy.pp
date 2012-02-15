@@ -18,7 +18,7 @@ define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
 
     if $::selinux == 'true' {
       File["munin_plugin_${name}"]{
-        setype =>  'munin_services_plugin_exec_t',
+        seltype =>  'munin_services_plugin_exec_t',
       }
     }
 
