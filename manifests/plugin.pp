@@ -21,7 +21,7 @@ define munin::plugin (
             file { $plugin: ensure => absent, }
         }
         default: {
-            case $kernel {
+            case $::kernel {
                 openbsd: { $basic_require = File['/var/run/munin'] }
                 default: { $basic_require = Package['munin-node'] }
             }
@@ -35,7 +35,11 @@ define munin::plugin (
                 require => $real_require,
                 notify => Service['munin-node'];
             }
-
+            if $::selinux == 'true' {
+              File[$plugin]{
+                setype => 'munin_services_plugin_exec_t',
+              }
+            }
         }
     }
     case $config {
