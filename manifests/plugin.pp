@@ -37,7 +37,7 @@ define munin::plugin (
             }
             if $::selinux == 'true' {
               File[$plugin]{
-                seltype => 'munin_services_plugin_exec_t',
+                seltype => 'munin_etc_t',
               }
             }
         }
