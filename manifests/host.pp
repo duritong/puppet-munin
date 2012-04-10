@@ -9,10 +9,10 @@ class munin::host {
 
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
-    source => [ "puppet:///modules/site-munin/config/host/${fqdn}/munin.conf.header",
-                "puppet:///modules/site-munin/config/host/munin.conf.header.$operatingsystem",
+    source => [ "puppet:///modules/site-munin/config/host/${::fqdn}/munin.conf.header",
+                "puppet:///modules/site-munin/config/host/munin.conf.header.${::operatingsystem}",
                 "puppet:///modules/site-munin/config/host/munin.conf.header",
-                "puppet:///modules/munin/config/host/munin.conf.header.$operatingsystem",
+                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
                 "puppet:///modules/munin/config/host/munin.conf.header" ],
     order => 05,
   }

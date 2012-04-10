@@ -1,7 +1,7 @@
 # currently we install munin on openbsd by targz
 # :(
 class munin::client::openbsd inherits munin::client::base {
-    if $operatingsystemrelease == '4.3' {
+    if $::operatingsystemrelease == '4.3' {
       file{'/usr/src/munin_openbsd.tar.gz':
         source => "puppet:///modules/munin/openbsd/package/munin_openbsd.tar.gz",
         owner => root, group => 0, mode => 0600;
@@ -32,7 +32,7 @@ class munin::client::openbsd inherits munin::client::base {
       owner => root, group  => 0, mode => 0755;
     }
     openbsd::rc_local{'munin-node':
-        binary => $operatingsystemrelease ? {
+        binary => $::operatingsystemrelease ? {
           '4.3' => '/opt/munin/sbin/munin-node',
           default => '/usr/local/sbin/munin-node'
         },
@@ -41,7 +41,7 @@ class munin::client::openbsd inherits munin::client::base {
     Service['munin-node']{
         restart => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
         stop => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
-        start => $operatingsystemrelease ? {
+        start => $::operatingsystemrelease ? {
           '4.3' => '/opt/munin/sbin/munin-node',
           default => '/usr/local/sbin/munin-node'
         },

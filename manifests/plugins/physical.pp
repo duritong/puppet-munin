@@ -1,5 +1,5 @@
 class munin::plugins::physical  { 
-  case $kernel {
+  case $::kernel {
     linux: { munin::plugin { iostat: } }
   }
 }

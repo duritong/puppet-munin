@@ -15,7 +15,6 @@ define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
             mode => 0755, owner => root, group => 0;
     }
 
-
     if ($::selinux == 'true') and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
       File["munin_plugin_${name}"]{
         seltype =>  'munin_exec_t',
