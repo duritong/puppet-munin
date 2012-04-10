@@ -15,7 +15,7 @@ define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
             mode => 0755, owner => root, group => 0;
     }
 
-    case $kernel {
+    case $::kernel {
         openbsd: { $basic_require = File['/var/run/munin'] }
         default: { $basic_require = Package['munin-node'] }
     }

@@ -5,7 +5,7 @@ class munin::plugins::interfaces  {
   munin::plugin {
     $ifs: ensure => "if_";
   }
-  case $operatingsystem {
+  case $::operatingsystem {
     openbsd: {
       $if_errs = regsubst(split($interfaces, " |,"), "(.+)", "if_errcoll_\\1")
       munin::plugin{
