@@ -4,6 +4,7 @@
 
 class munin::host {
   package {"munin": ensure => installed, }
+  include concat::setup
 
   Concat::Fragment <<| tag == 'munin' |>>
 
