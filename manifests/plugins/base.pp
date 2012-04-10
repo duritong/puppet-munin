@@ -7,7 +7,7 @@ class munin::plugins::base {
   }
   include munin::plugins::interfaces
 
-  case $kernel {
+  case $::kernel {
     openbsd: { include munin::plugins::openbsd }
     linux: {
       case $vserver {

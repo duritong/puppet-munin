@@ -1,7 +1,7 @@
 <%
 	# Downcase all information
-	dom = domain.downcase
-	host = hostname.downcase
+	dom = scope.lookupvar('::domain').downcase
+	host = scope.lookupvar('::hostname').downcase
 %>
 
 ### Munin client from Puppet template

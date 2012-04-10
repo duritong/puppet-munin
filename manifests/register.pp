@@ -16,8 +16,8 @@ define munin::register (
     $hiera_munin_host = hiera('munin_host','')
     $munin_host_real = $host ? {
         'absent' =>  $hiera_munin_host ? {
-                        '' => $fqdn,
-                        'fqdn' => $fqdn,
+                        '' => $::fqdn,
+                        'fqdn' => $::fqdn,
                         default => $hiera_munin_host
                     },
         default => $host
