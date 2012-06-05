@@ -17,7 +17,7 @@ class munin::plugins::base {
     }
   }
         
-  case $virtual {
+  case $::virtual {
     physical: { include munin::plugins::physical }
     xen0: { include munin::plugins::dom0 }
   }

@@ -2,7 +2,9 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 
-class munin::host {
+class munin::host(
+  $cgi_graphing = false
+) {
   package {"munin": ensure => installed, }
   include concat::setup
 
@@ -10,10 +12,10 @@ class munin::host {
 
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
-    source => [ "puppet:///modules/site-munin/config/host/${::fqdn}/munin.conf.header",
-                "puppet:///modules/site-munin/config/host/munin.conf.header.${::operatingsystem}.${::lsbdistcodename}",
-                "puppet:///modules/site-munin/config/host/munin.conf.header.${::operatingsystem}",
-                "puppet:///modules/site-munin/config/host/munin.conf.header",
+    source => [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
+                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::lsbdistcodename}",
+                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
+                "puppet:///modules/site_munin/config/host/munin.conf.header",
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::lsbdistcodename}",
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
                 "puppet:///modules/munin/config/host/munin.conf.header" ],
@@ -26,7 +28,7 @@ class munin::host {
 
   include munin::plugins::muninhost
 
-  if $munin_do_cgi_graphing {
+  if $munin::host::cgi_graphing {
     include munin::host::cgi
   }
 
@@ -35,7 +37,7 @@ class munin::host {
     content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
     owner => root, group => 0, mode => 0644;
   }
-  if $use_shorewall {
+  if hiera('use_shorewall',false) {
     include shorewall::rules::out::munin
   }
 }
