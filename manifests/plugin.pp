@@ -21,18 +21,12 @@ define munin::plugin (
       file { $plugin: ensure => absent, }
     }
     default: {
-      case $::kernel {
-        openbsd: { $basic_require = File['/var/run/munin'] }
-        default: { $basic_require = Package['munin-node'] }
-      }
-      if $require {
-        $real_require = [ $require, $basic_require ]
-      } else {
-        $real_require = $basic_require
-      }
       file { $plugin:
         ensure => "${real_script_path}/${plugin_src}",
-        require => $real_require,
+        require => $::kernel ? {
+          OpenBSD => File['/var/run/munin'],
+          default => Package['munin-node']
+        },
         notify => Service['munin-node'];
       }
       if ($::selinux == 'true') and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
@@ -55,11 +49,6 @@ define munin::plugin (
           file { $plugin_conf:
             content => "[${name}]\n$config\n",
             mode => 0644, owner => root, group => 0,
-          }
-          if $require {
-            File[$plugin_conf]{
-              require +> $require,
-            }
           }
         }
       }
