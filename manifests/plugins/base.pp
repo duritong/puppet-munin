@@ -5,6 +5,11 @@ class munin::plugins::base {
       processes, swap, uptime, users, vmstat ]:
             ensure => present,
   }
+  file{'/etc/munin/plugin-conf.d/df':
+    content => "[df*]\nenv.exclude none unknown iso9660 squashfs udf romfs ramfs debugfs binfmt_misc rpc_pipefs fuse.gvfs-fuse-daemon\n",
+    require => Munin::Plugin[df],
+    owner => root, group => 0, mode => 0644;
+  }
   include munin::plugins::interfaces
 
   case $::kernel {
