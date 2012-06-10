@@ -3,7 +3,11 @@
 # See LICENSE for the full license granted to you.
 # Adapted and improved by admin(at)immerda.ch
 
-class munin::client {
+class munin::client(
+  $allow = hiera('munin_client_allow',['127.0.0.1']),
+  $host = hiera('munin_host','*'),
+  $port = hiera('munin_port','4949')
+) {
   case $::operatingsystem {
     openbsd: { include munin::client::openbsd }
     darwin: { include munin::client::darwin }
