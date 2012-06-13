@@ -1,19 +1,19 @@
 <%
 	# Downcase all information
 	dom = scope.lookupvar('::domain').downcase
-	host = scope.lookupvar('::hostname').downcase
+	h = scope.lookupvar('::hostname').downcase
 %>
 
 ### Munin client from Puppet template
 # Domain: <%= dom %>
-# Registered on: <%= host %>
+# Registered on: <%= h %>
 # Type: <%= client_type %>
 <% if description != 'absent' -%>
 # Description: <%= description.gsub!(/\n/, ' ') %>
 <% end -%>
 [<%= fhost.downcase %>]
-    address <%= munin_host_real %>
-    port <%= munin_port_real %>
+    address <%= host %>
+    port <%= port %>
 <% if config -%><% config.each do |val| -%> 
     <%= val -%>
 <% end -%><% end -%>

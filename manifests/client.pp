@@ -4,9 +4,11 @@
 # Adapted and improved by admin(at)immerda.ch
 
 class munin::client(
-  $allow = hiera('munin_client_allow',['127.0.0.1']),
-  $host = hiera('munin_host','*'),
-  $port = hiera('munin_port','4949')
+  $allow = [ '127.0.0.1' ],
+  $host = '*',
+  $port = '4949',
+  $manage_shorewall = false,
+  $shorewall_collector_source = 'net'
 ) {
   case $::operatingsystem {
     openbsd: { include munin::client::openbsd }
@@ -16,7 +18,11 @@ class munin::client(
     centos: { include munin::client::package }
     default: { include munin::client::base }
   }
-  if hiera('use_shorewall',false) {
-    include shorewall::rules::munin
+  if $munin::client::manage_shorewall {
+    class{'shorewall::rules::munin':
+      munin_port => $port,
+      munin_collector => delete($allow,'127.0.0.1'),
+      collector_source => $shorewall_collector_source,
+    }
   }
 }

@@ -28,7 +28,7 @@ To use this module, follow these directions:
    a. Your modules directory will need all the files included in this repository placed 
       under a directory called "munin"
 
-   b. Add your hiera storage value for munin_allow which indicates what IP should be allowed to 
+   b. Add your class parameter for munin::client::allow which indicates what IP should be allowed to 
       connect to your individual munin-nodes (this is typically your main munin host's IP):
 
       munin_allow: '192.168.0.1'
@@ -68,9 +68,9 @@ To use this module, follow these directions:
 
    f. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
-      to run on by putting something similar to the following in hiera's node scope:
+      to run on by putting something similar to the following class parameter:
 
-      munin_port: 4948
+      port => 4948
 
    g. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
       For CentOS this is enabled in the default header config
