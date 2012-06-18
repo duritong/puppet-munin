@@ -15,7 +15,10 @@ class munin::client::base {
     mode => 0644, owner => root, group => 0,
   }
   munin::register { $::fqdn:
-    host => $munin::client::host,
+    host => $munin::client::host ? {
+      '*' => $::fqdn,
+      default => $munin::client::host
+    },
     port => $munin::client::port,
     config => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
   }
