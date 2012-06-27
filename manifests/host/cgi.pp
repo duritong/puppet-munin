@@ -18,9 +18,9 @@ class munin::host::cgi inherits munin::host {
   }
   
   file{'/etc/logrotate.d/munin':
-    source => [ "puppet:///modules/site-munin/config/host/${fqdn}/logrotate",
-                "puppet:///modules/site-munin/config/host/logrotate.$operatingsystem",
-                "puppet:///modules/site-munin/config/host/logrotate",
+    source => [ "puppet:///modules/site_munin/config/host/${fqdn}/logrotate",
+                "puppet:///modules/site_munin/config/host/logrotate.$operatingsystem",
+                "puppet:///modules/site_munin/config/host/logrotate",
                 "puppet:///modules/munin/config/host/logrotate.$operatingsystem",
                 "puppet:///modules/munin/config/host/logrotate" ],
     owner => root, group => 0, mode => 0644;
