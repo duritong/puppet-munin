@@ -3,7 +3,7 @@ class munin::host::cgi inherits munin::host {
   case $operatingsystem {
     debian: {
       exec { 'set_modes_for_cgi':
-        command => 'chgrp www-data /var/log/munin /var/log/munin/munin-graph.log && chmod g+w /var/log/munin /var/log/munin/munin-graph.log && find /var/www/munin/* -maxdepth 1 -type d -exec chgrp -R www-data {} \; && find /var/www/munin/* -maxdepth 1 -type d -exec chmod -R g+w {} \;',
+        command => 'chgrp www-data /var/log/munin /var/log/munin/munin-graph.log && chmod g+w /var/log/munin /var/log/munin/munin-graph.log && find /var/cache/munin/www/* -maxdepth 1 -type d -exec chgrp -R www-data {} \; && find /var/www/munin/* -maxdepth 1 -type d -exec chmod -R g+w {} \;',
         refreshonly => true,
         subscribe => File['/etc/munin/munin.conf.header'],
       }
