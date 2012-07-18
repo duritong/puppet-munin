@@ -102,3 +102,6 @@ To use this module, follow these directions:
       For CentOS this is enabled in the default header config
 
    j. Per default (on CentOS) munin will send warnings and critical messages to root
+
+== Notes for existing users ==
+The name of the helper module changed from site-munin to site_munin. See http://projects.puppetlabs.com/issues/4314 for more details on naming.
