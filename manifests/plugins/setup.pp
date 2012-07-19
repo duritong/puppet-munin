@@ -1,4 +1,8 @@
 class munin::plugins::setup {
+
+  # This is required for the munin-node service and package requirements below.
+  include munin::client
+
   file {
     [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
       source => "puppet:///modules/common/empty",
