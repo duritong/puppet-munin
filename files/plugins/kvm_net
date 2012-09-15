@@ -39,7 +39,7 @@ graph_args --base 1024
           print "%s_eth%s_in.type COUNTER" % (vms[pid], i)
           print "%s_eth%s_in.min 0" % (vms[pid],i)
           print "%s_eth%s_in.draw LINE2" % (vms[pid],i)
-          print "%s_eth%s_out.negative %s_in" % (vms[pid], i, vms[pid])
+          print "%s_eth%s_out.negative %s_eth%s_in" % (vms[pid], i, vms[pid], i)
           print "%s_eth%s_out.label %s" % (vms[pid], i, vms[pid])
           print "%s_eth%s_out.type COUNTER" % (vms[pid], i)
           print "%s_eth%s_out.min 0" % (vms[pid], i)
