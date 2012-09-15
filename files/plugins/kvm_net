@@ -20,7 +20,7 @@
 import re, os, sys
 from subprocess import Popen, PIPE
 
-def config(vm_names):
+def config(vms):
     ''' Print the plugin's config
     @param vm_names : a list of "cleaned" vms' name
     '''
@@ -31,16 +31,20 @@ graph_info This graph shows the network I/O of the virtual machines
 graph_args --base 1024
     """
     print base_config
-    for vm in vm_names:
-        print "%s_in.label %s" % (vm, vm)
-        print "%s_in.type COUNTER" % vm
-        print "%s_in.min 0" % vm
-        print "%s_in.draw LINE2" % vm
-        print "%s_out.negative %s_in" % (vm, vm)
-        print "%s_out.label %s" % (vm, vm)
-        print "%s_out.type COUNTER" % vm
-        print "%s_out.min 0" % vm
-        print "%s_out.draw LINE2" % vm
+    for pid in vms:
+        macs = get_vm_macs(pid)
+        i = 0
+        for mac in macs:
+          print "%s_eth%s_in.label %s" % (vms[pid],i, vms[pid])
+          print "%s_eth%s_in.type COUNTER" % (vms[pid], i)
+          print "%s_eth%s_in.min 0" % (vms[pid],i)
+          print "%s_eth%s_in.draw LINE2" % (vms[pid],i)
+          print "%s_eth%s_out.negative %s_in" % (vms[pid], i, vms[pid])
+          print "%s_eth%s_out.label %s" % (vms[pid], i, vms[pid])
+          print "%s_eth%s_out.type COUNTER" % (vms[pid], i)
+          print "%s_eth%s_out.min 0" % (vms[pid], i)
+          print "%s_eth%s_out.draw LINE2" % (vms[pid], i)
+          i += 1
 
 def clean_vm_name(vm_name):
     ''' Replace all special chars
@@ -67,12 +71,14 @@ def fetch(vms):
             interfaces[s[0]] = (s[1],s[2])
     for pid in vms:
         macs = get_vm_macs(pid)
+        i = 0
         for mac in macs:
             inf = macs_to_inf[mac]
             values = interfaces[inf]
             if len(values) == 2:
-                print "%s_%s_in.value %s" % (vms[pid], inf, values[0])
-                print "%s_%s_out.value %s" % (vms[pid], inf, values[1])
+                print "%s_eth%s_in.value %s" % (vms[pid], i, values[0])
+                print "%s_eth%s_out.value %s" % (vms[pid], i, values[1])
+            i += 1
 
 def detect_kvm():
     ''' Check if kvm is installed
@@ -135,7 +141,7 @@ if __name__ == "__main__":
             else:
                 print "no"
         elif sys.argv[1] == "config":
-            config(find_vm_names(list_pids()).values())
+            config(find_vm_names(list_pids()))
         else:
             fetch(find_vm_names(list_pids()))
     else:
