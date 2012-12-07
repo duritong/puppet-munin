@@ -51,7 +51,6 @@ if ( defined($ARGV[0]))
                 );
 
                 @domains = `cat /var/lib/munin/plugin-state/xm_list.state`;
-                shift(@domains); # we don't need the header line
 
                 foreach $domain ( @domains )
                 {

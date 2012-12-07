@@ -69,4 +69,4 @@ fi
 domains=`cat /var/lib/munin/plugin-state/xm_list.state | wc -l`
 
 echo -n "domains.value "
-echo $(($domains-2))
+echo $(($domains-1))
