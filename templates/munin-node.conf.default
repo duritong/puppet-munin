@@ -16,7 +16,7 @@ user root
 group 0
 
 # Regexps for files to ignore
-ignore_file [\#~]$
+ignore_file ~$
 ignore_file DEADJOE$
 ignore_file \.bak$
 ignore_file %$
