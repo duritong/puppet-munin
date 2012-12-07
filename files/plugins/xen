@@ -20,7 +20,7 @@ fi
 # we cache xm list for 5 min for perfomance reasons
 ((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE '^\/var\/lib\/munin\/plugin-state\/xm_list\.state$') && \
     [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || \
-    /usr/sbin/xm list | grep -v "^Name .* Console$" > /var/lib/munin/plugin-state/xm_list.state
+    /usr/sbin/xm list | grep -v "^Name .* ID" > /var/lib/munin/plugin-state/xm_list.state
 
 if [ "$1" = "config" ]; then
 

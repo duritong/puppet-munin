@@ -17,7 +17,7 @@ $XM = '/usr/sbin/xm';
 $XMTOP = '/usr/sbin/xentop';
 
 # we cache xm list for 5 min for perfomance reasons
-system('((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE \'^\/var\/lib\/munin\/plugin-state\/xm_list\.state$\') && [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || /usr/sbin/xm list | grep -v "^Name .* Console$" > /var/lib/munin/plugin-state/xm_list.state');
+system('((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE \'^\/var\/lib\/munin\/plugin-state\/xm_list\.state$\') && [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || /usr/sbin/xm list | grep -v "^Name .* ID" > /var/lib/munin/plugin-state/xm_list.state');
 system('((find /var/lib/munin/plugin-state/xm_top.state -mmin -5 2>&1 | grep -qE \'^\/var\/lib\/munin\/plugin-state\/xm_top\.state$\') && [ `cat /var/lib/munin/plugin-state/xm_top.state | wc -l` -gt 1 ]) || /usr/sbin/xentop -b -i1 | grep -E "^ " > /var/lib/munin/plugin-state/xm_top.state');
 
 # ah, parameters coming in
