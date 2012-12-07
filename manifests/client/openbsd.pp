@@ -3,14 +3,16 @@
 class munin::client::openbsd inherits munin::client::base {
   if $::operatingsystemrelease == '4.3' {
     file{'/usr/src/munin_openbsd.tar.gz':
-      source => "puppet:///modules/munin/openbsd/package/munin_openbsd.tar.gz",
-      owner => root, group => 0, mode => 0600;
+      source  => "puppet:///modules/munin/openbsd/package/munin_openbsd.tar.gz",
+      owner   => root,
+      group   => 0,
+      mode    => '0600';
     }
     exec{'extract_openbsd':
       command => 'cd /;tar xzf /usr/src/munin_openbsd.tar.gz',
-      unless => 'test -d /opt/munin',
+      unless  => 'test -d /opt/munin',
       require => File['/usr/src/munin_openbsd.tar.gz'],
-      before => File['/var/run/munin'],
+      before  => File['/var/run/munin'],
     }
     package{'p5-Compress-Zlib':
       ensure => installed,
@@ -28,32 +30,32 @@ class munin::client::openbsd inherits munin::client::base {
     before => File['/var/run/munin'],
   }
   file{[ '/var/run/munin', '/var/log/munin' ]:
-    ensure => directory,
-    owner => root, group  => 0, mode => 0755;
+    ensure  => directory,
+    owner   => root,
+    group   => 0,
+    mode    => '0755';
+  }
+  $bin_loc = $::operatingsystemrelease ? {
+    '4.3'   => '/opt/munin/sbin/munin-node',
+    default => '/usr/local/sbin/munin-node'
   }
   openbsd::rc_local{'munin-node':
-    binary => $::operatingsystemrelease ? {
-      '4.3' => '/opt/munin/sbin/munin-node',
-      default => '/usr/local/sbin/munin-node'
-    },
+    binary  => $bin_loc,
     require => File['/var/run/munin'],
   }
   Service['munin-node']{
-    restart => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
-    stop => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
-    start => $::operatingsystemrelease ? {
-      '4.3' => '/opt/munin/sbin/munin-node',
-      default => '/usr/local/sbin/munin-node'
-    },
-    status => 'test -e /var/run/munin/munin-node.pid && (ps ax | egrep -q "^$(cat /var/run/munin/munin-node.pid).*munin-node")',
-    hasstatus => true,
-    hasrestart => true,
-    require => [ File['/var/run/munin'], File['/var/log/munin'] ],
+    restart     => '/bin/kill -HUP `/bin/cat /var/run/munin/munin-node.pid`',
+    stop        => '/bin/kill `/bin/cat /var/run/munin/munin-node.pid`',
+    start       => $bin_loc,
+    status      => 'test -e /var/run/munin/munin-node.pid && (ps ax | egrep -q "^ *$(cat /var/run/munin/munin-node.pid).*munin-node")',
+    hasstatus   => true,
+    hasrestart  => true,
+    require     => [ File['/var/run/munin'], File['/var/log/munin'] ],
   }
   cron{'clean_munin_logfile':
     command => 'rm /var/log/munin/munin-node.log; kill -HUP `cat /var/run/munin/munin-node.pid`',
-    minute => 0,
-    hour => 2,
+    minute  => 0,
+    hour    => 2,
     weekday => 0,
   }
 }
