@@ -35,9 +35,7 @@ fi
 # we update network devices only twice an hour
 function net_state {
   dom=$1
-  (find /var/lib/munin/plugin-state/xm_net_$dom.state -mmin -30 > /dev/null 2>&1) && \
-    [ `cat /var/lib/munin/plugin-state/xm_net_$dom.state | wc -l` -gt 0 ]
-  if [ $? -gt 0 ] || [ ! -f /var/lib/munin/plugin-state/xm_net_$dom.state ]; then
+  if [ `find /var/lib/munin/plugin-state/xm_net_$dom.state -mmin +30 2> /dev/null | wc -l` -gt 0 ] || [ ! -f /var/lib/munin/plugin-state/xm_net_$dom.state ]; then
     content=$(/usr/sbin/xm network-list $dom)
     if [ $? -eq 0 ]; then
       echo "${content}" | egrep "^[0-9]+" | sed 's@^.*vif/\([0-9]*\)/\([0-9]*\).*$@vif\1.\2@' > /var/lib/munin/plugin-state/xm_net_$dom.state
