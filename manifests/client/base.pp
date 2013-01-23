@@ -20,6 +20,7 @@ class munin::client::base {
       default => $munin::client::host
     },
     port => $munin::client::port,
+    use_ssh => $munin::client::use_ssh,
     config => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
   }
   include munin::plugins::base
