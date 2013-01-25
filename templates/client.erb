@@ -12,8 +12,12 @@
 # Description: <%= description.gsub!(/\n/, ' ') %>
 <% end -%>
 [<%= fhost.downcase %>]
+<% if use_ssh -%>
+    address ssh://<%= host %>/bin/nc localhost <%= port %>
+<% else -%>
     address <%= host %>
     port <%= port %>
+<% end -%>
 <% if config -%><% config.each do |val| -%> 
     <%= val -%>
 <% end -%><% end -%>
