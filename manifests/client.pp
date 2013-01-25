@@ -7,6 +7,7 @@ class munin::client(
   $allow = [ '127.0.0.1' ],
   $host = '*',
   $port = '4949',
+  $use_ssh = false,
   $manage_shorewall = false,
   $shorewall_collector_source = 'net'
 ) {
