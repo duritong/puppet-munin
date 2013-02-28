@@ -1,18 +1,25 @@
-define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
+# deploy and register a munin plugin
+define munin::plugin::deploy(
+  $ensure = 'present',
+  $source = '',
+  $config = '',
+) {
   $plugin_src = $ensure ? {
     'present' => $name,
-    'absent' => $name,
-    default => $ensure
+    'absent'  => $name,
+    default   => $ensure
   }
   $real_source = $source ? {
-    ''  =>  "munin/plugins/$plugin_src",
+    ''      =>  "munin/plugins/${plugin_src}",
     default => $source
   }
   include munin::plugin::scriptpaths
   file { "munin_plugin_${name}":
-    path => "${munin::plugin::scriptpaths::script_path}/${name}",
-    source => "puppet:///modules/${real_source}",
-    mode => 0755, owner => root, group => 0;
+    path    => "${munin::plugin::scriptpaths::script_path}/${name}",
+    source  => "puppet:///modules/${real_source}",
+    owner   => root,
+    group   => 0,
+    mode    => '0755';
   }
 
   if ($::selinux == 'true') and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
@@ -35,9 +42,13 @@ define munin::plugin::deploy($source = '', $ensure = 'present', $config = '') {
     }
   }
   # register the plugin
+  munin::plugin{$name:
+    ensure => $ensure,
+    config => $config
+  }
   if $require {
-    munin::plugin{$name: ensure => $ensure, config => $config, require => $require }
-  } else {
-    munin::plugin{$name: ensure => $ensure, config => $config }
+    Munin::Plugin[$name]{
+      require => $require
+    }
   }
 }
