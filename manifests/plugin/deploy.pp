@@ -1,8 +1,9 @@
 # deploy and register a munin plugin
 define munin::plugin::deploy(
-  $ensure = 'present',
-  $source = '',
-  $config = ''
+  $ensure   = 'present',
+  $source   = '',
+  $config   = '',
+  $seltype  = 'munin_exec_t'
 ) {
   $plugin_src = $ensure ? {
     'present' => $name,
@@ -24,7 +25,7 @@ define munin::plugin::deploy(
 
   if ($::selinux == 'true') and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
     File["munin_plugin_${name}"]{
-      seltype =>  'munin_exec_t',
+      seltype => $seltype,
     }
   }
 
