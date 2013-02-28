@@ -2,7 +2,7 @@
 define munin::plugin::deploy(
   $ensure = 'present',
   $source = '',
-  $config = '',
+  $config = ''
 ) {
   $plugin_src = $ensure ? {
     'present' => $name,
@@ -32,23 +32,12 @@ define munin::plugin::deploy(
     openbsd: { $basic_require = File['/var/run/munin'] }
     default: { $basic_require = Package['munin-node'] }
   }
-  if $require {
-    File["munin_plugin_${name}"]{
-      require => [ $basic_require, $require ],
-    }
-  } else {
-    File["munin_plugin_${name}"]{
-      require => $basic_require,
-    }
+  File["munin_plugin_${name}"]{
+    require => $basic_require,
   }
   # register the plugin
   munin::plugin{$name:
     ensure => $ensure,
     config => $config
-  }
-  if $require {
-    Munin::Plugin[$name]{
-      require => $require
-    }
   }
 }
