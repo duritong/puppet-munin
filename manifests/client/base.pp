@@ -15,13 +15,14 @@ class munin::client::base {
     mode => 0644, owner => root, group => 0,
   }
   munin::register { $::fqdn:
-    host => $munin::client::host ? {
-      '*' => $::fqdn,
-      default => $munin::client::host
+    host       => $munin::client::host ? {
+      '*'      => $::fqdn,
+      default  => $munin::client::host
     },
-    port => $munin::client::port,
-    use_ssh => $munin::client::use_ssh,
-    config => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
+    port       => $munin::client::port,
+    use_ssh    => $munin::client::use_ssh,
+    config     => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
+    export_tag => $munin::client::export_tag,
   }
   include munin::plugins::base
 }
