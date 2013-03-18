@@ -3,12 +3,13 @@
 # See LICENSE for the full license granted to you.
 
 class munin::host(
-  $cgi_graphing = false
+  $cgi_graphing = false,
+  $export_tag = 'munin'
 ) {
   package {"munin": ensure => installed, }
   include concat::setup
 
-  Concat::Fragment <<| tag == 'munin' |>>
+  Concat::Fragment <<| tag == $export_tag |>>
 
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
