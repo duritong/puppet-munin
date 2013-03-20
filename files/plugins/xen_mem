@@ -46,7 +46,7 @@
 # we cache xm list for 5 min for perfomance reasons
 ((find /var/lib/munin/plugin-state/xm_list.state -mmin -5 2>&1 | grep -qE '^\/var\/lib\/munin\/plugin-state\/xm_list\.state$') && \
     [ `cat /var/lib/munin/plugin-state/xm_list.state | wc -l` -gt 1 ]) || \
-    /usr/sbin/xm list | grep -v "^Name .* Console$" > /var/lib/munin/plugin-state/xm_list.state
+    /usr/sbin/xm list | grep -v "^Name .* ID" > /var/lib/munin/plugin-state/xm_list.state
 
 if [ "$1" = "autoconf" ]; then
 	echo yes
@@ -63,7 +63,7 @@ if [ "$1" = "config" ]; then
 	echo 'graph_info This graph shows affected memory for each domain.'
 	echo 'Domain_0.label Domain-0'
 	echo 'Domain_0.draw AREA'
-cat /var/lib/munin/plugin-state/xm_list.state | grep -v 'Mem' | grep -v 'Domain-0' | while read i; do
+cat /var/lib/munin/plugin-state/xm_list.state | grep -v 'Domain-0' | while read i; do
 	name=`echo $i | awk '{ print $1 }' | sed 's/[\/.-]/_/g'`
 	echo -n "$name.label "
 	echo $i | awk '{ print $1 }'
@@ -73,7 +73,7 @@ done
 	exit 0
 fi
 
-cat /var/lib/munin/plugin-state/xm_list.state | grep -v 'Mem' | while read i; do
+cat /var/lib/munin/plugin-state/xm_list.state | while read i; do
 	name=`echo $i | awk '{ print $1 }' | sed 's/[\/.-]/_/g'`
 	echo -n "$name.value "
 	echo $i | awk '{ print $3 * 1024 * 1024 }'

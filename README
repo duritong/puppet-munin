@@ -5,8 +5,8 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 
 To use this module, follow these directions:
 
-1. Install the "common" module -- the munin module depends on functions that are
-   defined and installed via the common module, see README.common for how to do this
+1. Install the "common", "concat" and "stdlib" modules -- the munin module
+   depends on functions that are defined and installed via these modules.
 
 2. You will need storedconfigs enabled in your puppet setup, to do that you need to
    add a line to your puppet.conf in your [puppetmasterd] section which says:
@@ -27,81 +27,55 @@ To use this module, follow these directions:
    a. Your modules directory will need all the files included in this repository placed 
       under a directory called "munin"
 
-   b. add the following line to your modules.pp:
-   
-      import "munin" 
+   b. For every host you wish to gather munin statistics, add the class munin::client to that
+      node. You will want to set the class parameter 'allow' to be the IP(s) of the munin
+      collector, this defines what IP is permitted to connect to the node, for example:
 
-      (NOTE: if you have followed the directions in README.common then you will have import 
-      "modules.pp" in your site.pp, if you do not have that, then you will need to add the 
-      import line to your site.pp)
+      node foo {
+        class { 'munin::client': allow => '192.168.0.1'}
+      }
 
-   c. you will also need to create the following empty directories:
+      for multiple munin nodes, you can pass an array:
 
-      mkdir -p /etc/puppet/modules/munin/files/nodes/modules_dir
-      mkdir -p /etc/puppet/modules/munin/files/plugins/modules_dir
-
-   d. Add to the top of your site.pp a variable which indicates what IP should be allowed to 
-      connect to your individual munin-nodes (this is typically your main munin host's IP):
-
-      $munin_cidr_allow = '192.168.0.1/32'
-
-		You can also put an array there.
-
-		On pre-lenny systems, you have to use the older Regexp-variant:
-
-      $munin_allow = '^192\.168\.0\.1$'
-
-   e. In the node definition in your site.pp for your main munin host, add the following:
-
-      include munin::host
-
-      If you want to specify a particular package version for the main munin
-      host, you can set the $munin_ensure_version variable _before_ the above
-      include, like this
-
-      $munin_ensure_version = "1.2.6-17"
-   
-   f. On each node that will gather munin statistics, add this line to that node's entry 
-      in site.pp (you may want to also add this to your main munin host):
+        class { 'munin::client': allow => [ '192.168.0.1', '10.0.0.1' ] }
       
-      include munin::client
+   c. In the node definition in your site.pp for your main munin host, add the following:
 
-      If you want to specify a particular package version for the munin
-      client, you can set the $munin_node_ensure_version variable _before_ the
-      above include, like this
+        class { 'munin::host': }
 
-      $munin_node_ensure_version = "1.2.6-17"
+        If you want cgi graphing you can pass cgi_graphing => true.
+        (For CentOS this is enabled in the default header config)
+        for more information, see: http://munin.projects.linpro.no/wiki/CgiHowto
 
-   g. If there are particular munin plugins you want to enable or configure, you define them
+   d. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
 
       # Enable monitoring of disk stats in bytes
-      munin::plugin { df_abs: }
+      munin::plugin { 'df_abs': }
 
       # Use a non-standard plugin path to use custom plugins
-      munin::plugin { "spamassassin":
-         ensure => "spamassassin",
-         script_path_in => "/usr/local/share/munin-plugins",
+      munin::plugin { 'spamassassin':
+         ensure      => present,
+         script_path => '/usr/local/share/munin-plugins',
+      }
+
+      # For wildcard plugins (eg. ip_, snmp_, etc.), use the name variable to
+      # configure the plugin name, and the ensure parameter to indicate the base
+      # plugin name to which you want a symlink, for example:
+      munin::plugin { [ 'ip_192.168.0.1', 'ip_10.0.0.1' ]:
+        ensure => 'ip_'
       }
 
       # Use a special config to pass parameters to the plugin
       munin::plugin {
-         [ "apache_accesses", "apache_processes", "apache_volume" ]:
+         [ 'apache_accesses', 'apache_processes', 'apache_volume' ]:
             ensure => present,
-            config => "env.url http://127.0.0.1:80/server-status?auto"
+            config => 'env.url http://127.0.0.1:80/server-status?auto'
       }
 
-
-   h. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
+   e. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
-      to run on by putting something similar to the following in the node definition:
+      to run on by putting something similar to the following class parameter:
 
-      $munin_port = 4948
+      class { 'munin::client': allow => '192.168.0.1', port => '4948' }
 
-   i. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
-      For CentOS this is enabled in the default header config
-
-   j. Per default (on CentOS) munin will send warnings and critical messages to root
-
-== Notes for existing users ==
-The name of the helper module changed from site-munin to site_munin. See http://projects.puppetlabs.com/issues/4314 for more details on naming.

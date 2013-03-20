@@ -6,7 +6,7 @@
 #
 
 log_level 4
-log_file /var/log/munin/munin-node.log
+log_file /var/log/munin-node/munin-node.log
 pid_file /var/run/munin/munin-node.pid
 
 background 1
@@ -16,9 +16,7 @@ user root
 group 0
 
 # Regexps for files to ignore
-
-ignore_file ~$
-#ignore_file [#~]$  # FIX doesn't work. '#' starts a comment
+ignore_file [\#~]$
 ignore_file DEADJOE$
 ignore_file \.bak$
 ignore_file %$
@@ -37,24 +35,25 @@ host_name <%= fqdn %>
 # network notation unless the perl module Net::CIDR is installed.  You
 # may repeat the allow line as many times as you'd like
 
-<% real_munin_allow.split(':').each do |val| -%>
-allow <%= '^'+val.gsub(/\./, '\.')+'$' %>
+<% scope.lookupvar('munin::client::allow').each do |allow| -%>
+allow <%= "^#{Regexp.escape(allow)}$" %>
 <% end -%>
 
-# If you have installed the Net::CIDR perl module, you can use
-# multiple cidr_allow and cidr_deny address/mask patterns.  A
-# connecting client must match any cidr_allow, and not match any
-# cidr_deny.  Example:
-
+# If you have installed the Net::CIDR perl module, you can use one or more
+# cidr_allow and cidr_deny address/mask patterns.  A connecting client must
+# match any cidr_allow, and not match any cidr_deny.  Note that a netmask
+# *must* be provided, even if it's /32
+#
+# Example:
+#
 # cidr_allow 127.0.0.1/32
 # cidr_allow 192.0.2.0/24
 # cidr_deny  192.0.2.42/32
 
-
 # Which address to bind to;
-host <%= munin_host_real %>
+host <%= scope.lookupvar('munin::client::host') %>
 # host 127.0.0.1
 
 # And which port
-port <%= munin_port_real %>
+port <%= scope.lookupvar('munin::client::port') %>
 
