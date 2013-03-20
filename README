@@ -27,51 +27,55 @@ To use this module, follow these directions:
    a. Your modules directory will need all the files included in this repository placed 
       under a directory called "munin"
 
-   b. Add your class parameter for munin::client::allow which indicates what IP should be allowed to 
-      connect to your individual munin-nodes (this is typically your main munin host's IP):
+   b. For every host you wish to gather munin statistics, add the class munin::client to that
+      node. You will want to set the class parameter 'allow' to be the IP(s) of the munin
+      collector, this defines what IP is permitted to connect to the node, for example:
 
-      munin_allow: '192.168.0.1'
+      node foo {
+        class { 'munin::client': allow => '192.168.0.1'}
+      }
+
+      for multiple munin nodes, you can pass an array:
+
+        class { 'munin::client': allow => [ '192.168.0.1', '10.0.0.1' ] }
       
-      If you want to define more than one host, you can define them as an array:
-
-      munin_allow: ['127.0.0.1','192.168.0.1']
-
    c. In the node definition in your site.pp for your main munin host, add the following:
 
-      include munin::host
-   
-   d. On each node that will gather munin statistics, add this line to that node's entry 
-      in site.pp (you may want to also add this to your main munin host):
-      
-      include munin::client
+        class { 'munin::host': }
 
-   e. If there are particular munin plugins you want to enable or configure, you define them
+        If you want cgi graphing you can pass cgi_graphing => true.
+        (For CentOS this is enabled in the default header config)
+        for more information, see: http://munin.projects.linpro.no/wiki/CgiHowto
+
+   d. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
 
       # Enable monitoring of disk stats in bytes
-      munin::plugin { df_abs: }
+      munin::plugin { 'df_abs': }
 
       # Use a non-standard plugin path to use custom plugins
-      munin::plugin { "spamassassin":
-         ensure => "spamassassin",
-         script_path => "/usr/local/share/munin-plugins",
+      munin::plugin { 'spamassassin':
+         ensure      => present,
+         script_path => '/usr/local/share/munin-plugins',
+      }
+
+      # For wildcard plugins (eg. ip_, snmp_, etc.), use the name variable to
+      # configure the plugin name, and the ensure parameter to indicate the base
+      # plugin name to which you want a symlink, for example:
+      munin::plugin { [ 'ip_192.168.0.1', 'ip_10.0.0.1' ]:
+        ensure => 'ip_'
       }
 
       # Use a special config to pass parameters to the plugin
       munin::plugin {
-         [ "apache_accesses", "apache_processes", "apache_volume" ]:
+         [ 'apache_accesses', 'apache_processes', 'apache_volume' ]:
             ensure => present,
-            config => "env.url http://127.0.0.1:80/server-status?auto"
+            config => 'env.url http://127.0.0.1:80/server-status?auto'
       }
 
-
-   f. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
+   e. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
       to run on by putting something similar to the following class parameter:
 
-      port => 4948
+      class { 'munin::client': allow => '192.168.0.1', port => '4948' }
 
-   g. If you'd like to do cgi graphing, please note the following page: http://munin.projects.linpro.no/wiki/CgiHowto
-      For CentOS this is enabled in the default header config
-
-   h. Per default (on CentOS) munin will send warnings and critical messages to root
