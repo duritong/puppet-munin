@@ -47,7 +47,7 @@ define munin::plugin (
             content => "[${name}]\n${config}\n",
             owner   => root,
             group   => 0,
-            mode    => '0644',
+            mode    => '0640',
           }
         }
       }
