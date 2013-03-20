@@ -52,7 +52,7 @@ define munin::plugin (
                 default: {
                     file { $plugin_conf:
                         content => "[${name}]\n$config\n",
-                        mode => 0644, owner => root, group => 0,
+                        mode => 0640, owner => root, group => 0,
                     }
                     if $require {
                         File[$plugin_conf]{
