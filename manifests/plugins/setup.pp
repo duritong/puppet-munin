@@ -13,7 +13,7 @@ class munin::plugins::setup {
       notify => Service['munin-node'];
     '/etc/munin/plugin-conf.d/munin-node':
       ensure => present,
-      mode => 0644, owner => root, group => 0,
+      mode => 0640, owner => root, group => 0,
       notify => Service['munin-node'],
   }
   case $kernel {
