@@ -5,9 +5,8 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 
 To use this module, follow these directions:
 
-1. Install the "common" and "concat" module -- the munin module depends on functions
-   that are defined and installed via these modulesh, see README.common for how to do
-   this
+1. Install the "common" and "concat" module -- the munin module depends on
+   functions that are defined and installed via these modules.
 
 2. You will need storedconfigs enabled in your puppet setup, to do that you need to
    add a line to your puppet.conf in your [puppetmasterd] section which says:
