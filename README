@@ -5,6 +5,8 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 
 To use this module, follow these directions:
 
+0. This module requires puppet 2.7 or newer.
+
 1. Install the "common", "concat" and "stdlib" modules -- the munin module
    depends on functions that are defined and installed via these modules.
 
