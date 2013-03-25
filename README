@@ -76,3 +76,5 @@ To use this module, follow these directions:
       For CentOS this is enabled in the default header config
 
    h. Per default (on CentOS) munin will send warnings and critical messages to root
+
+   i. If you want to use host with cgi, you need to have specified a default $PATH for all execs: http://www.puppetcookbook.com/posts/set-global-exec-path.html
