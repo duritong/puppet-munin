@@ -28,7 +28,7 @@ ignore_file \.pod$
 # telnetting to localhost, port 4949
 #
 #host_name localhost.localdomain
-host_name <%= fqdn %>
+host_name <%= scope.lookupvar('::fqdn') %>
 
 # A list of addresses that are allowed to connect.  This must be a
 # regular expression, since Net::Server does not understand CIDR-style
