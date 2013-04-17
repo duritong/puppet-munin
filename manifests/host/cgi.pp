@@ -1,8 +1,20 @@
 class munin::host::cgi {
+
+  case $::operatingsystem {
+    debian,ubuntu: {
+      $apache_user   = 'www-data'
+      $document_root = '/var/www/munin'
+    }
+    default: {
+      $apache_user   = 'apache'
+      $document_root = '/var/www/html/munin'
+    }
+  }
+
   exec{'set_modes_for_cgi':
-    command => 'chgrp apache /var/log/munin /var/log/munin/munin-graph.log && chmod g+w /var/log/munin /var/log/munin/munin-graph.log && find /var/www/html/munin/* -maxdepth 1 -type d -exec chgrp -R apache {} \; && find /var/www/html/munin/* -maxdepth 1 -type d -exec chmod -R g+w {} \;',
+    command     => "chgrp ${apache_user} /var/log/munin /var/log/munin/munin-graph.log && chmod g+w /var/log/munin /var/log/munin/munin-graph.log && find ${document_root}/* -maxdepth 1 -type d -exec chgrp -R ${apache_user} {} \; && find ${document_root}/* -maxdepth 1 -type d -exec chmod -R g+w {} \;",
     refreshonly => true,
-    subscribe => Concat::Fragment['munin.conf.header'],
+    subscribe   => Concat::Fragment['munin.conf.header'],
   }
 
   file{'/etc/logrotate.d/munin':
