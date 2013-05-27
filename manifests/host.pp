@@ -4,6 +4,7 @@
 
 class munin::host(
   $cgi_graphing = false,
+  $cgi_owner = 'os_default',
   $export_tag = 'munin'
 ) {
   package {"munin": ensure => installed, }
@@ -30,7 +31,9 @@ class munin::host(
   include munin::plugins::muninhost
 
   if $munin::host::cgi_graphing {
-    include munin::host::cgi
+    class {'munin::host::cgi':
+      owner => $cgi_owner,
+    }
   }
 
   # from time to time we cleanup hanging munin-runs

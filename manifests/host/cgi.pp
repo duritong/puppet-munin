@@ -1,14 +1,25 @@
-class munin::host::cgi {
-
+class munin::host::cgi(
+  $owner = 'os_default'
+) {
   case $::operatingsystem {
     debian,ubuntu: {
-      $apache_user   = 'www-data'
       $document_root = '/var/www/munin'
     }
     default: {
-      $apache_user   = 'apache'
       $document_root = '/var/www/html/munin'
     }
+  }
+  if $owner == 'os_default' {
+    case $::operatingsystem {
+      debian,ubuntu: {
+        $apache_user = 'www-data'
+      }
+      default: {
+        $apache_user = 'apache'
+      }
+    }
+  } else {
+    $apache_user = $owner
   }
 
   exec{'set_modes_for_cgi':
