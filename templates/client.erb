@@ -5,20 +5,20 @@
 %>
 
 ### Munin client from Puppet template
-# Domain: <%= dom %>
-# Registered on: <%= h %>
-# Type: <%= client_type %>
-<% if description != 'absent' -%>
-# Description: <%= description.gsub!(/\n/, ' ') %>
+# Domain: <%= @dom %>
+# Registered on: <%= @h %>
+# Type: <%= @client_type %>
+<% if @description != 'absent' -%>
+# Description: <%= @description.gsub!(/\n/, ' ') %>
 <% end -%>
-[<%= fhost.downcase %>]
-<% if use_ssh -%>
-    address ssh://<%= host %>/bin/nc localhost <%= port %>
+[<%= @fhost.downcase %>]
+<% if @use_ssh -%>
+    address ssh://<%= @host %>/bin/nc localhost <%= @port %>
 <% else -%>
-    address <%= host %>
-    port <%= port %>
+    address <%= @host %>
+    port <%= @port %>
 <% end -%>
-<% if config -%><% config.each do |val| -%> 
-    <%= val -%>
+<% if @config -%><% @config.each do |val| -%>
+    <%= @val -%>
 <% end -%><% end -%>
 
