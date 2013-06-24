@@ -1,7 +1,7 @@
 class munin::plugins::setup {
 
   # This is required for the munin-node service and package requirements below.
-  include munin::client
+  Class['munin::client'] -> Class['munin::plugins::setup']
 
   file {
     [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
