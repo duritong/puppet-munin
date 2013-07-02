@@ -13,7 +13,7 @@
         rotate 7
         compress
         notifempty
-        create 660 munin apache
+        create 660 munin <%= @apache_user %>
 }
 
 /var/log/munin/munin-html.log {
