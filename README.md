@@ -1,9 +1,7 @@
-# Munin
+# Puppet-Munin
 
 Munin is a performance monitoring system which creates nice RRD graphs and has
 a very easy plugin interface. The munin homepage is http://munin.projects.linpro.no/
-
-To use this module, follow these directions:
 
 ## Requirements
 
@@ -24,10 +22,10 @@ To use this module, follow these directions:
     
 ## Usage
 
-   a. Your modules directory will need all the files included in this repository placed 
+   1. Your modules directory will need all the files included in this repository placed 
       under a directory called "munin"
 
-   b. For every host you wish to gather munin statistics, add the class munin::client to that
+   2. For every host you wish to gather munin statistics, add the class munin::client to that
       node. You will want to set the class parameter 'allow' to be the IP(s) of the munin
       collector, this defines what IP is permitted to connect to the node, for example:
 
@@ -40,7 +38,7 @@ for multiple munin nodes, you can pass an array:
 
             class { 'munin::client': allow => [ '192.168.0.1', '10.0.0.1' ] }
       
-   c. In the node definition in your site.pp for your main munin host, add the following:
+   3. In the node definition in your site.pp for your main munin host, add the following:
 
             class { 'munin::host': }
 
@@ -48,7 +46,7 @@ for multiple munin nodes, you can pass an array:
         (For CentOS this is enabled in the default header config)
         for more information, see: http://munin.projects.linpro.no/wiki/CgiHowto
 
-   d. If there are particular munin plugins you want to enable or configure, you define them
+   4. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
 
           # Enable monitoring of disk stats in bytes
@@ -74,7 +72,7 @@ for multiple munin nodes, you can pass an array:
                 config => 'env.url http://127.0.0.1:80/server-status?auto'
           }
 
-   e. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
+   5. If you have Linux-Vservers configured, you will likely have multiple munin-node processes
       competing for the default port 4949, for those nodes, set an alternate port for munin-node
       to run on by putting something similar to the following class parameter:
 
