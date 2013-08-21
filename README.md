@@ -26,15 +26,14 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
       under a directory called "munin"
 
    2. For every host you wish to gather munin statistics, add the class munin::client to that
-      node. You will want to set the class parameter 'allow' to be the IP(s) of the munin
+      node. You will want to set the class parameter `allow` to be the IP(s) of the munin
       collector, this defines what IP is permitted to connect to the node, for example:
 
           node foo {
             class { 'munin::client': allow => '192.168.0.1'}
           }
 
-
-for multiple munin nodes, you can pass an array:
+      for multiple munin nodes, you can pass an array:
 
             class { 'munin::client': allow => [ '192.168.0.1', '10.0.0.1' ] }
       
@@ -42,9 +41,7 @@ for multiple munin nodes, you can pass an array:
 
             class { 'munin::host': }
 
-        If you want cgi graphing you can pass cgi_graphing => true.
-        (For CentOS this is enabled in the default header config)
-        for more information, see: http://munin.projects.linpro.no/wiki/CgiHowto
+      If you want cgi graphing you can pass `cgi_graphing => true`. (For CentOS this is enabled in the default header config) for more information, see: http://munin.projects.linpro.no/wiki/CgiHowto
 
    4. If there are particular munin plugins you want to enable or configure, you define them
       in the node definition, like follows:
