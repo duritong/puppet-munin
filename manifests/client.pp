@@ -22,8 +22,8 @@ class munin::client(
   }
   if $munin::client::manage_shorewall {
     class{'shorewall::rules::munin':
-      munin_port => $port,
-      munin_collector => delete($allow,'127.0.0.1'),
+      munin_port       => $port,
+      munin_collector  => delete($allow,'127.0.0.1'),
       collector_source => $shorewall_collector_source,
     }
   }

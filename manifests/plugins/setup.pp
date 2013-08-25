@@ -1,3 +1,4 @@
+# Set up the munin plugins for a node
 class munin::plugins::setup {
 
   # This is required for the munin-node service and package requirements below.
@@ -5,10 +6,10 @@ class munin::plugins::setup {
 
   file {
     [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
-      ignore    => 'snmp_*',
       ensure    => directory,
+      ignore    => 'snmp_*',
       checksum  => mtime,
-      recurse 	=> true,
+      recurse   => true,
       purge     => true,
       force     => true,
       notify    => Service['munin-node'],

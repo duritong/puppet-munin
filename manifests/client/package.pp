@@ -1,3 +1,4 @@
+# Install a munin client using packages
 class munin::client::package inherits munin::client::base {
   package { 'munin-node': ensure => installed }
   Service['munin-node']{
