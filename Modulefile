@@ -1,4 +1,4 @@
-name    'puppet-munin'
+name    'duritong-munin'
 version '0.0.1'
 source 'git://github.com/duritong/puppet-munin.git'
 author 'duritong'
