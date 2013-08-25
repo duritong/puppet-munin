@@ -6,7 +6,7 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 ## Requirements
 
    * puppet 2.7 or newer
-   * install the `common`, `concat` and `stdlib` modules -- the munin module depends on functions that are defined and installed via these modules
+   * install the `concat` and `stdlib` modules -- the munin module depends on functions that are defined and installed via these modules
    * you will need storedconfigs enabled in your puppet setup, to do that you need to add a line to your `puppet.conf` in your `[puppetmasterd]` section which says:
    
             storeconfigs=true
