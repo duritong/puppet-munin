@@ -26,7 +26,7 @@ define munin::plugin (
         require => $dep,
         notify  => Service['munin-node'];
       }
-      if ($::selinux == 'true') and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
+      if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
         File[$plugin]{
           seltype => 'munin_etc_t',
         }

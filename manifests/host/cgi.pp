@@ -1,3 +1,4 @@
+# Set up a munin host using CGI rendering
 class munin::host::cgi(
   $owner = 'os_default'
 ) {
@@ -31,9 +32,11 @@ class munin::host::cgi(
   file{'/etc/logrotate.d/munin':
     source => [ "puppet:///modules/site_munin/config/host/${::fqdn}/logrotate",
                 "puppet:///modules/site_munin/config/host/logrotate.${::operatingsystem}",
-                "puppet:///modules/site_munin/config/host/logrotate",
+                'puppet:///modules/site_munin/config/host/logrotate',
                 "puppet:///modules/munin/config/host/logrotate.${::operatingsystem}",
-                "puppet:///modules/munin/config/host/logrotate" ],
-    owner => root, group => 0, mode => 0644;
+                'puppet:///modules/munin/config/host/logrotate' ],
+    owner  => root,
+    group  => 0,
+    mode   => '0644',
   }
 }

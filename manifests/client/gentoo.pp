@@ -1,7 +1,8 @@
+# install a munin client on gentoo
 class munin::client::gentoo inherits munin::client::package {
 
   Package['munin-node'] {
-    name => 'munin',
+    name     => 'munin',
     category => 'net-analyzer',
   }
 

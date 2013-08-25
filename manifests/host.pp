@@ -7,7 +7,7 @@ class munin::host(
   $cgi_owner = 'os_default',
   $export_tag = 'munin'
 ) {
-  package {"munin": ensure => installed, }
+  package {'munin': ensure => installed, }
   include concat::setup
 
   Concat::Fragment <<| tag == $export_tag |>>
@@ -17,15 +17,17 @@ class munin::host(
     source => [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::lsbdistcodename}",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
-                "puppet:///modules/site_munin/config/host/munin.conf.header",
+                'puppet:///modules/site_munin/config/host/munin.conf.header',
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::lsbdistcodename}",
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
-                "puppet:///modules/munin/config/host/munin.conf.header" ],
-    order => 05,
+                'puppet:///modules/munin/config/host/munin.conf.header' ],
+    order  => 05,
   }
 
-  concat{ "/etc/munin/munin.conf":
-    owner => root, group => 0, mode => 0644;
+  concat{ '/etc/munin/munin.conf':
+    owner => root,
+    group => 0,
+    mode  => '0644',
   }
 
   include munin::plugins::muninhost
@@ -39,7 +41,9 @@ class munin::host(
   # from time to time we cleanup hanging munin-runs
   file{'/etc/cron.d/munin_kill':
     content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
-    owner => root, group => 0, mode => 0644;
+    owner   => root,
+    group   => 0,
+    mode    => '0644',
   }
   if $munin::host::manage_shorewall {
     include shorewall::rules::out::munin
