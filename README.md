@@ -8,7 +8,7 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
    * puppet 2.7 or newer
    * install the `concat` and `stdlib` modules -- the munin module depends on functions that are defined and installed via these modules
    * you will need storedconfigs enabled in your puppet setup, to do that you need to add a line to your `puppet.conf` in your `[puppetmasterd]` section which says:
-   
+
             storeconfigs=true
 
    * You may wish to immediately setup a `mysql`/ `pgsql` database for your storedconfigs, as
@@ -75,3 +75,14 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 
           class { 'munin::client': allow => '192.168.0.1', port => '4948' }
 
+   6. For deploying plugins which are not available at client, you can fetch them from puppet
+      master using `munin::plugin::deploy`.
+
+          munin::plugin::deploy { 'redis':
+               source => 'munin/plugins/redis/redis_',
+               config => ''   # pass parameters to plugin
+          }
+
+      In this example the file on master would be located in `{modulepath}/munin/files/plugins/redis/redis_`.
+      Module path is specified in `puppet.conf`, you can find out your `{modulepath}` easily by tying 
+      in console `puppet config print modulepath`.
