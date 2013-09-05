@@ -80,6 +80,9 @@ a very easy plugin interface. The munin homepage is http://munin.projects.linpro
 
           munin::plugin::deploy { 'redis':
                source => 'munin/plugins/redis/redis_',
+               config => ''   # pass parameters to plugin
           }
 
-      In this case the file on master would be located in `/etc/puppet/modules/munin/files/plugins/redis/redis_`
+      In this example the file on master would be located in `{modulepath}/munin/files/plugins/redis/redis_`.
+      Module path is specified in `puppet.conf`, you can find out your `{modulepath}` easily by tying 
+      in console `puppet config print modulepath`.
