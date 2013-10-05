@@ -58,8 +58,8 @@ in the node definition, like follows:
 
       # Use a non-standard plugin path to use custom plugins
       munin::plugin { 'spamassassin':
-        ensure      => present,
-        script_path => '/usr/local/share/munin-plugins',
+        ensure         => present,
+        script_path_in => '/usr/local/share/munin-plugins',
       }
     
       # For wildcard plugins (eg. ip_, snmp_, etc.), use the name variable to
