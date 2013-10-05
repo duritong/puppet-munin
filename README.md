@@ -58,8 +58,8 @@ in the node definition, like follows:
 
       # Use a non-standard plugin path to use custom plugins
       munin::plugin { 'spamassassin':
-        ensure      => present,
-        script_path => '/usr/local/share/munin-plugins',
+        ensure         => present,
+        script_path_in => '/usr/local/share/munin-plugins',
       }
     
       # For wildcard plugins (eg. ip_, snmp_, etc.), use the name variable to
@@ -72,7 +72,7 @@ in the node definition, like follows:
       # Use a special config to pass parameters to the plugin
       munin::plugin {
         [ 'apache_accesses', 'apache_processes', 'apache_volume' ]:
-           ensure => present,
+           ensure => presscript_path_inent,
            config => 'env.url http://127.0.0.1:80/server-status?auto'
       }
 
