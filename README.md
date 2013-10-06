@@ -72,7 +72,7 @@ in the node definition, like follows:
       # Use a special config to pass parameters to the plugin
       munin::plugin {
         [ 'apache_accesses', 'apache_processes', 'apache_volume' ]:
-           ensure => present,
+           ensure => presscript_path_inent,
            config => 'env.url http://127.0.0.1:80/server-status?auto'
       }
 
