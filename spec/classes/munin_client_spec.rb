@@ -18,7 +18,6 @@ describe 'munin::client' do
       :operatingsystem => os,
       :osfamily        => 'RedHat',
       :lsbdistcodename => codename,
-      :interfaces      => 'lo,eth0',
     }}
     it { should contain_package('munin-node') }
     it { should contain_file('/etc/munin/munin-node.conf') }
