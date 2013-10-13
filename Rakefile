@@ -18,7 +18,6 @@ task :librarian_spec_prep do
   unless File.directory?("#{pwd}/spec/fixtures/modules/munin")
     sh "ln -s #{pwd} #{pwd}/spec/fixtures/modules/munin"
   end
-  sh 'ls -laF spec/fixtures/modules'
 end
 task :spec_prep => :librarian_spec_prep
 
