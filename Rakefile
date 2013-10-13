@@ -14,8 +14,11 @@ PuppetLint.configuration.send("disable_80chars")
 # offers more possibilities like explicit version management, forge downloads,...
 task :librarian_spec_prep do
   sh "librarian-puppet install --path=spec/fixtures/modules/"
+  pwd = `pwd`.strip
+  unless File.directory?("#{pwd}/spec/fixtures/modules/munin")
+    sh "ln -s #{pwd} #{pwd}/spec/fixtures/modules/munin"
+  end
   sh 'ls -laF spec/fixtures/modules'
-  sh 'ls -laF spec/fixtures/modules/munin/manifests'
 end
 task :spec_prep => :librarian_spec_prep
 
