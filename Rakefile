@@ -13,7 +13,9 @@ PuppetLint.configuration.send("disable_80chars")
 # use librarian-puppet to manage fixtures instead of .fixtures.yml
 # offers more possibilities like explicit version management, forge downloads,...
 task :librarian_spec_prep do
- sh "librarian-puppet install --path=spec/fixtures/modules/"
+  sh "librarian-puppet install --path=spec/fixtures/modules/"
+  sh 'ls -laF spec/fixtures/modules'
+  sh 'ls -laF spec/fixtures/modules/munin/manifests'
 end
 task :spec_prep => :librarian_spec_prep
 
