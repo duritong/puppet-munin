@@ -1,5 +1,7 @@
 # Puppet-Munin
 
+[![Build Status](https://travis-ci.org/duritong/puppet-munin.png?branch=master)](https://travis-ci.org/duritong/puppet-munin)
+
 Munin is a performance monitoring system which creates nice RRD graphs and has
 a very easy plugin interface. The munin homepage is http://munin.projects.linpro.no/
 
