@@ -4,7 +4,7 @@ class munin::plugins::setup {
   file {
     [ '/etc/munin/plugins', '/etc/munin/plugin-conf.d' ]:
       ensure    => directory,
-      require   => Anchor['munin::client::installed'],
+      require   => Package['munin-node'],
       ignore    => 'snmp_*',
       checksum  => mtime,
       recurse   => true,
@@ -16,7 +16,7 @@ class munin::plugins::setup {
       mode      => '0755';
     '/etc/munin/plugin-conf.d/munin-node':
       ensure    => present,
-      require   => Anchor['munin::client::installed'],
+      require   => Package['munin-node'],
       notify    => Service['munin-node'],
       owner     => root,
       group     => 0,

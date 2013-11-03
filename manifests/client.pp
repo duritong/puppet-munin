@@ -12,39 +12,14 @@ class munin::client(
   $shorewall_collector_source = 'net',
   $export_tag = 'munin'
 ) {
-  anchor { 'munin::client::installed': }
 
   case $::operatingsystem {
-    openbsd: {
-      class { 'munin::client::openbsd':
-        before => Anchor['munin::client::installed']
-      }
-    }
-    darwin: {
-      class { 'munin::client::darwin':
-        before => Anchor['munin::client::installed']
-      }
-    }
-    debian,ubuntu: {
-      class { 'munin::client::debian':
-        before => Anchor['munin::client::installed']
-      }
-    }
-    gentoo: {
-      class { 'munin::client::gentoo':
-        before => Anchor['munin::client::installed']
-      }
-    }
-    centos: {
-      class { 'munin::client::base':
-        before => Anchor['munin::client::installed']
-      }
-    }
-    default: {
-      class { 'munin::client::base':
-        before => Anchor['munin::client::installed']
-      }
-    }
+    openbsd: { include munin::client::openbsd }
+    darwin: { include munin::client::darwin }
+    debian,ubuntu: { include munin::client::debian }
+    gentoo: { include munin::client::gentoo }
+    centos: { include munin::client::base }
+    default: { include munin::client::base }
   }
   if $munin::client::manage_shorewall {
     class{'shorewall::rules::munin':
