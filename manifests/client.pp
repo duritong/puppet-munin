@@ -1,8 +1,8 @@
-# client.pp - configure a munin node
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 # Adapted and improved by admin(at)immerda.ch
 
+# configure a munin node
 class munin::client(
   $allow = [ '127.0.0.1' ],
   $host = '*',
