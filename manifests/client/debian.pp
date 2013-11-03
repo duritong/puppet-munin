@@ -1,11 +1,18 @@
 # Install the munin client on debian
-class munin::client::debian inherits munin::client::package {
+class munin::client::debian inherits munin::client::base {
   # the plugin will need that
-  package { 'iproute': ensure => installed }
+  package { 'iproute':
+    ensure => installed
+  }
+
+  $hasstatus = $::lsbdistcodename ? {
+    sarge => false,
+    default => true
+  }
 
   Service['munin-node']{
     # sarge's munin-node init script has no status
-    hasstatus => $::lsbdistcodename ? { sarge => false, default => true }
+    hasstatus => $hasstatus
   }
   File['/etc/munin/munin-node.conf']{
     content => template("munin/munin-node.conf.${::operatingsystem}.${::lsbdistcodename}"),

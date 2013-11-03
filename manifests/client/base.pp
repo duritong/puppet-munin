@@ -1,10 +1,14 @@
 # Install a basic munin client
 class munin::client::base {
+  package { 'munin-node':
+    ensure => installed
+  }
   service { 'munin-node':
-    ensure     => running,
-    enable     => true,
-    hasstatus  => true,
-    hasrestart => true,
+    ensure      => running,
+    enable      => true,
+    hasstatus   => true,
+    hasrestart  => true,
+    require     => Package[munin-node],
   }
   file {'/etc/munin':
     ensure => directory,
@@ -14,6 +18,9 @@ class munin::client::base {
   }
   file {'/etc/munin/munin-node.conf':
     content => template("munin/munin-node.conf.${::operatingsystem}"),
+    # this has to be installed before the package, so the postinst can
+    # boot the munin-node without failure!
+    before  => Package['munin-node'],
     notify  => Service['munin-node'],
     mode    => '0644',
     owner   => root,

@@ -36,7 +36,7 @@ class munin::client(
       }
     }
     centos: {
-      class { 'munin::client::package':
+      class { 'munin::client::base':
         before => Anchor['munin::client::installed']
       }
     }
