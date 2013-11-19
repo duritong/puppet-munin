@@ -1,9 +1,7 @@
 # Install the munin client on debian
 class munin::client::debian inherits munin::client::base {
   # the plugin will need that
-  package { 'iproute':
-    ensure => installed
-  }
+  ensure_packages(['iproute'])
 
   $hasstatus = $::lsbdistcodename ? {
     sarge => false,
