@@ -17,7 +17,7 @@ class munin::client::openbsd inherits munin::client::base {
     status      => 'test -e /var/run/munin/munin-node.pid && (ps ax | egrep -q "^ *$(cat /var/run/munin/munin-node.pid).*munin-node")',
     hasstatus   => true,
     hasrestart  => true,
-    require     => [ File['/var/run/munin'], File['/var/log/munin-munin'] ],
+    require     => [ File['/var/run/munin'], File['/var/log/munin-node'] ],
   }
   cron{'clean_munin_logfile':
     command => 'rm /var/log/munin-node/munin-node.log; kill -HUP `cat /var/run/munin/munin-node.pid`',
