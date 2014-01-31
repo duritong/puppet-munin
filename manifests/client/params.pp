@@ -13,7 +13,7 @@ class munin::client::params {
     }
     default: {
       $group = 'root'
-      $log_file = '/var/log/munin-node/munin-node.log'
+      $log_file = '/var/log/munin/munin-node.log'
     }
   }
 }

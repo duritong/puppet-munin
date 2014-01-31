@@ -34,6 +34,8 @@ class munin::client::base inherits munin::client::params {
     host       => $host,
     port       => $munin::client::port,
     use_ssh    => $munin::client::use_ssh,
+    description => $munin::client::description,
+    group       => $munin::client::munin_group,
     config     => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
     export_tag => $munin::client::export_tag,
   }

@@ -10,7 +10,9 @@ class munin::client(
   $use_ssh = false,
   $manage_shorewall = false,
   $shorewall_collector_source = 'net',
-  $export_tag = 'munin'
+  $export_tag = 'munin',
+  $description = undef,
+  $munin_group = undef,
 ) {
 
   case $::operatingsystem {
