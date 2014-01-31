@@ -2,7 +2,7 @@
 class munin::client::params {
   $user = 'root'
 
-  case $::operatingsystem {
+  case $::osfamily {
     'OpenBSD': {
       $group = '0'
       $log_file = '/var/log/munin-node/munin-node.log'

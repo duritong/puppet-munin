@@ -9,9 +9,9 @@
 # Registered on: <%= @h %>
 # Type: <%= @client_type %>
 <% if @description != 'absent' -%>
-# Description: <%= @description.gsub!(/\n/, ' ') %>
+# Description: <%= @description.gsub(/\n/, ' ') %>
 <% end -%>
-[<%= @fhost.downcase %>]
+[<% if @group != 'absent' -%><%= @group %>;<% end -%><%= @fhost.downcase %>]
 <% if @use_ssh -%>
     address ssh://<%= @host %>/bin/nc localhost <%= @port %>
 <% else -%>
