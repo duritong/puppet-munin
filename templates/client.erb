@@ -1,12 +1,12 @@
 <%
-	# Downcase all information
-	dom = scope.lookupvar('::domain').downcase
-	h = scope.lookupvar('::hostname').downcase
+  # Downcase all information
+  dom = scope.lookupvar('::domain').downcase
+  h = scope.lookupvar('::hostname').downcase
 %>
 
 ### Munin client from Puppet template
-# Domain: <%= @dom %>
-# Registered on: <%= @h %>
+# Domain: <%= dom %>
+# Registered on: <%= h %>
 # Type: <%= @client_type %>
 <% if @description != 'absent' -%>
 # Description: <%= @description.gsub(/\n/, ' ') %>
