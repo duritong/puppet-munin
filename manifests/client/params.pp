@@ -2,9 +2,9 @@
 class munin::client::params {
   $user = 'root'
 
-  case $::operatingsystem {
-    'OpenBSD': {
-      $group = '0'
+  case $::osfamily {
+    'RedHat': {
+      $group = 'root'
       $log_file = '/var/log/munin-node/munin-node.log'
     }
     'Debian': {
