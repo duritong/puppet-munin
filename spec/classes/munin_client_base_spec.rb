@@ -13,7 +13,7 @@ describe 'munin::client::base' do
 
   context 'on Debian' do
     let :facts do
-      { :operatingsystem => 'Debian' }.merge(default_facts)
+      { :osfamily => 'Debian' }.merge(default_facts)
     end
 
     it 'should compile' do
@@ -61,7 +61,7 @@ describe 'munin::client::base' do
 
   context 'on CentOS' do
     let :facts do
-      { :operatingsystem => 'CentOS' }.merge(default_facts)
+      { :osfamily => 'CentOS' }.merge(default_facts)
     end
 
     it 'should contain the CentOS specific values' do
@@ -74,7 +74,7 @@ describe 'munin::client::base' do
   # Disabled because the required openbsd module is not in the requirements
   context 'on OpenBSD', :if => false do
     let :facts do
-      { :operatingsystem => 'OpenBSD' }.merge(default_facts)
+      { :osfamily => 'OpenBSD' }.merge(default_facts)
     end
 
     it 'should contain the config OpenBSD specific values' do
