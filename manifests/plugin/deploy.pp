@@ -3,7 +3,8 @@ define munin::plugin::deploy(
   $ensure   = 'present',
   $source   = '',
   $config   = '',
-  $seltype  = 'munin_exec_t'
+  $seltype  = 'munin_exec_t',
+  $register = true,
 ) {
   $plugin_src = $ensure ? {
     'present' => $name,
@@ -36,9 +37,12 @@ define munin::plugin::deploy(
   File["munin_plugin_${name}"]{
     require => $basic_require,
   }
-  # register the plugin
-  munin::plugin{$name:
-    ensure => $ensure,
-    config => $config
+
+  # register the plugin if required
+  if ($register) {
+    munin::plugin{$name:
+      ensure => $ensure,
+      config => $config
+    }
   }
 }
