@@ -1,5 +1,5 @@
 name    'duritong-munin'
-version '0.0.2'
+version '0.0.3'
 source 'git://github.com/duritong/puppet-munin.git'
 author 'duritong'
 license 'Apache License, Version 2.0'
