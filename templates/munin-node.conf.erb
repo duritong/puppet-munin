@@ -34,7 +34,7 @@ ignore_file \.pod$
 # Set this if the client doesn't report the correct hostname when
 # telnetting to localhost, port 4949
 #
-host_name <%= scope.lookupvar('::fqdn') %>
+host_name <%= scope.lookupvar('munin::client::host_name') %>
 
 # A list of addresses that are allowed to connect.  This must be a
 # regular expression, since Net::Server does not understand CIDR-style
