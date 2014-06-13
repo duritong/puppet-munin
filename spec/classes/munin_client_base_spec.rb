@@ -17,7 +17,7 @@ describe 'munin::client::base' do
     end
 
     it 'should compile' do
-      should include_class('munin::client::base')
+      should contain_class('munin::client::base')
     end
 
     it 'should set up munin-node' do

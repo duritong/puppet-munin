@@ -10,7 +10,7 @@ describe 'munin::host' do
     }}
     it { should contain_package('munin') }
     it { should contain_file('/etc/munin/munin.conf') }
-    it { should include_class('munin::host') }
+    it { should contain_class('munin::host') }
   end
 
   shared_examples 'redhat-host' do |os, codename|
@@ -22,7 +22,7 @@ describe 'munin::host' do
     }}
     it { should contain_package('munin') }
     it { should contain_file('/etc/munin/munin.conf') }
-    it { should include_class('munin::host') }
+    it { should contain_class('munin::host') }
   end
 
   context 'on debian-like system' do

@@ -10,7 +10,7 @@ describe 'munin::plugins::interfaces' do
     end
 
     it 'should compile' do
-      should include_class('munin::plugins::interfaces')
+      should contain_class('munin::plugins::interfaces')
     end
 
     it 'should create plugins for each interface' do

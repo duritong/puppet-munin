@@ -10,7 +10,7 @@ describe 'munin::client' do
     it { should contain_package('munin-node') }
     it { should contain_package('iproute') }
     it { should contain_file('/etc/munin/munin-node.conf') }
-    it { should include_class('munin::client::debian') }
+    it { should contain_class('munin::client::debian') }
   end
 
   shared_examples 'redhat-client' do |os, codename|
@@ -44,7 +44,7 @@ describe 'munin::client' do
     }}
     it { should contain_package('munin-node') }
     it { should contain_file('/etc/munin/munin-node.conf') }
-    it { should include_class('munin::client::gentoo') }
+    it { should contain_class('munin::client::gentoo') }
   end
 
 end

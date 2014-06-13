@@ -11,7 +11,7 @@ describe 'munin::host::cgi' do
     end
 
     it 'should compile' do
-      should include_class('munin::host::cgi')
+      should contain_class('munin::host::cgi')
     end
 
     it 'should exec set_modes_for_cgi' do
