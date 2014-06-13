@@ -30,6 +30,23 @@ describe 'munin::plugin' do
     ) }
   end
 
+  context 'present and config as an array' do
+    let(:params) do
+      { :config => [ 'env.user root', 'env.group root' ] }
+    end
+    it { should contain_file('/etc/munin/plugins/users').with(
+      :ensure  => 'link',
+      :target  => '/usr/share/munin/plugins/users',
+      :notify  => 'Service[munin-node]'
+    ) }
+    it { should contain_file('/etc/munin/plugin-conf.d/users.conf').with(
+      :content => "[users]\nenv.user root\nenv.group root\n",
+      :owner   => 'root',
+      :group   => 0,
+      :mode    => '0640'
+    ) }
+  end
+
   context 'absent' do
     let(:params) do
       { :ensure => 'absent' }

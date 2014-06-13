@@ -32,9 +32,9 @@ define munin::plugin (
         seltype => 'munin_etc_t',
       }
     }
-    if $config != '' {
+    if !empty($config) {
       file { "/etc/munin/plugin-conf.d/${name}.conf":
-        content => "[${name}]\n${config}\n",
+        content => inline_template("[<%= @name %>]\n<%= Array(@config).join(\"\n\") %>\n"),
         owner   => root,
         group   => 0,
         mode    => '0640',
