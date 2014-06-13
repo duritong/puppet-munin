@@ -6,12 +6,16 @@ else
   puppetversion = ['>= 2.6']
 end
 
-gem 'activesupport', '~> 3.2' if RUBY_VERSION == '1.8.7'
+if RUBY_VERSION == '1.8.7'
+  gem 'activesupport', '~> 3.2'
+  gem 'librarian-puppet', '~> 1.0.0'
+else
+  gem 'librarian-puppet', '>=0.9.10'
+end
 gem 'puppet',  puppetversion
 gem 'puppet-lint', '>=0.3.2'
 gem 'puppetlabs_spec_helper', '>=0.2.0'
 gem 'rake',         '>=0.9.2.2'
-gem 'librarian-puppet', '>=0.9.10'
 gem 'rspec-system-puppet',     :require => false
 gem 'serverspec',              :require => false
 gem 'rspec-system-serverspec', :require => false
