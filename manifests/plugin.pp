@@ -27,7 +27,7 @@ define munin::plugin (
       target  =>"${real_script_path}/${plugin_src}",
       notify  => Service['munin-node'];
     }
-    if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease != '5')){
+    if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::operatingsystemmajrelease != '5')){
       File["/etc/munin/plugins/${name}"]{
         seltype => 'munin_etc_t',
       }

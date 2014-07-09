@@ -24,7 +24,7 @@ define munin::plugin::deploy(
     mode    => '0755';
   }
 
-  if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::lsbmajdistrelease > '5')){
+  if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::operatingsystemmajrelease > '5')){
     File["munin_plugin_${name}"]{
       seltype => $seltype,
     }
