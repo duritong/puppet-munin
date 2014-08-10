@@ -8,7 +8,6 @@ class munin::host(
   $export_tag = 'munin'
 ) {
   package {'munin': ensure => installed, }
-  include concat::setup
 
   Concat::Fragment <<| tag == $export_tag |>>
 
