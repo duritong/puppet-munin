@@ -7,8 +7,16 @@ class munin::host(
   $cgi_owner = 'os_default',
   $export_tag = 'munin'
 ) {
-  package {'munin': ensure => installed, }
-  include concat::setup
+
+  $package = $::operatingsystem ? {
+    'OpenBSD' => 'munin-server',
+    default   => 'munin'
+  }
+
+  package {'munin':
+    name   => $package,
+    ensure => installed,
+  }
 
   Concat::Fragment <<| tag == $export_tag |>>
 
@@ -39,12 +47,12 @@ class munin::host(
   }
 
   # from time to time we cleanup hanging munin-runs
-  file{'/etc/cron.d/munin_kill':
-    content => "4,34 * * * * root if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi\n",
-    owner   => root,
-    group   => 0,
-    mode    => '0644',
+  cron { 'munin_kill':
+    command => 'if $(ps ax | grep -v grep | grep -q munin-run); then killall munin-run; fi',
+    minute  => ['4', '34'],
+    user    => 'root',
   }
+
   if $munin::host::manage_shorewall {
     include shorewall::rules::out::munin
   }

@@ -4,6 +4,7 @@ class munin::client::base inherits munin::client::params {
     ensure => installed
   }
   service { 'munin-node':
+    name        => $service,
     ensure      => running,
     enable      => true,
     hasstatus   => true,
