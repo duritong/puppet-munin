@@ -9,12 +9,12 @@ class munin::client::params {
       $log_file = '/var/log/munin-node/munin-node.log'
     }
     'Debian': {
-      $service  = 'munin_node'
+      $service  = 'munin-node'
       $group    = 'root'
       $log_file = '/var/log/munin/munin-node.log'
     }
     default: {
-      $service  = 'munin_node'
+      $service  = 'munin-node'
       $group    = 'root'
       $log_file = '/var/log/munin-node/munin-node.log'
     }
