@@ -5,13 +5,14 @@ define munin::register::snmp (
   $port        = '4949',
   $host        = $::fqdn,
   $group       = 'absent',
+  $version     = '2',
 ) {
   $fhost = $name
   $client_type = 'snmp'
   $config = [ 'use_node_name no' ]
 
   exec { "munin_register_snmp_${fhost}":
-    command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} --shell | sh",
+    command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} --snmpversion ${version} --shell | sh",
     unless  => "ls /etc/munin/plugins/snmp_${fhost}_* &> /dev/null",
     path    => ['/bin','/sbin','/usr/bin','/usr/sbin','/usr/local/bin','/usr/local/sbin'],
   }
