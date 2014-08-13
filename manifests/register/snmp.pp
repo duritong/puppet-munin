@@ -1,10 +1,10 @@
 # Register a munin node with snmp enabled
 define munin::register::snmp (
-  $community = 'public',
+  $community   = 'public',
   $description = 'absent',
-  $port = '4949',
-  $host = $::fqdn,
-  $group = 'absent',
+  $port        = '4949',
+  $host        = $::fqdn,
+  $group       = 'absent',
 ) {
   $fhost = $name
   $client_type = 'snmp'
