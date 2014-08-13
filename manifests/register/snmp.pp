@@ -3,7 +3,8 @@ define munin::register::snmp (
   $community = 'public',
   $description = 'absent',
   $port = '4949',
-  $host = $::fqdn
+  $host = $::fqdn,
+  $group = 'absent',
 ) {
   $fhost = $name
   $client_type = 'snmp'
