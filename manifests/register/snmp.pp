@@ -14,7 +14,6 @@ define munin::register::snmp (
   exec { "munin_register_snmp_${fhost}":
     command => "munin-node-configure --snmp ${fhost} --snmpcommunity ${community} --snmpversion ${version} --shell | sh",
     unless  => "ls /etc/munin/plugins/snmp_${fhost}_* &> /dev/null",
-    path    => ['/bin','/sbin','/usr/bin','/usr/sbin','/usr/local/bin','/usr/local/sbin'],
   }
 
   @@concat::fragment{ "munin_snmp_${fhost}":
