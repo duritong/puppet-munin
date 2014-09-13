@@ -6,11 +6,4 @@ class munin::client::openbsd inherits munin::client::base {
     group   => 0,
     mode    => '0755';
   }
-
-  cron{'clean_munin_logfile':
-    command => 'rm /var/log/munin-node/munin-node.log; kill -HUP `cat /var/run/munin/munin-node.pid`',
-    minute  => 0,
-    hour    => 2,
-    weekday => 0,
-  }
 }
