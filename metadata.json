@@ -1,0 +1,16 @@
+{
+  "name": "duritong-munin",
+  "version": "0.0.4",
+  "author": "duritong",
+  "summary": "Puppet module for Munin monitoring",
+  "license": "Apache License, Version 2.0",
+  "source": "git://github.com/duritong/puppet-munin.git",
+  "project_page": "https://github.com/duritong/puppet-munin",
+  "issues_url": "https://github.com/duritong/puppet-munin/issues",
+  "description": "Munin is a performance monitoring system which creates nice RRD graphs and has a very easy plugin interface",
+  "dependencies": [
+    {"name":"puppetlabs/concat","version_requirement":">= 1.1.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 3.2.0"},
+    {"name":"duritong/openbsd","version_requirement":">= 0.0.1"}
+  ]
+}
