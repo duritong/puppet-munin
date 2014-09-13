@@ -2,8 +2,8 @@
 class munin::client::openbsd inherits munin::client::base {
   file{[ '/var/run/munin', '/var/log/munin-node' ]:
     ensure  => directory,
-    owner   => root,
-    group   => 0,
+    owner   => '_munin',
+    group   => '_munin',
     mode    => '0755';
   }
 }
