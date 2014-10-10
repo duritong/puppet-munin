@@ -4,11 +4,11 @@ class munin::client::base inherits munin::client::params {
     ensure => installed
   }
   service { 'munin-node':
-    ensure      => running,
-    enable      => true,
-    hasstatus   => true,
-    hasrestart  => true,
-    require     => Package[munin-node],
+    ensure     => running,
+    enable     => true,
+    hasstatus  => true,
+    hasrestart => true,
+    require    => Package[munin-node],
   }
   file {'/etc/munin':
     ensure => directory,
@@ -36,7 +36,8 @@ class munin::client::base inherits munin::client::params {
     use_ssh     => $munin::client::use_ssh,
     description => $munin::client::description,
     group       => $munin::client::munin_group,
-    config      => [ 'use_node_name yes', 'load.load.warning 5', 'load.load.critical 10'],
+    config      => [ 'use_node_name yes', 'load.load.warning 5',
+      'load.load.critical 10'],
     export_tag  => $munin::client::export_tag,
   }
   include munin::plugins::base

@@ -1,5 +1,9 @@
 # Configure a munin remote plugin
-define munin::remoteplugin($ensure = 'present', $source, $config = '') {
+define munin::remoteplugin(
+  $source,
+  $ensure = 'present',
+  $config = ''
+) {
   case $ensure {
     'absent': { munin::plugin{ $name: ensure => absent } }
     default: {
