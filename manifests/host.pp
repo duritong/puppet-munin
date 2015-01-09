@@ -2,10 +2,11 @@
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
 class munin::host(
-  $cgi_graphing  = false,
-  $cgi_owner     = 'os_default',
-  $export_tag    = 'munin',
-  $header_source = [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
+  $cgi_graphing     = false,
+  $cgi_owner        = 'os_default',
+  $export_tag       = 'munin',
+  $manage_shorewall = false,
+  $header_source    = [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
                 'puppet:///modules/site_munin/config/host/munin.conf.header',
@@ -39,7 +40,7 @@ class munin::host(
 
   include munin::plugins::muninhost
 
-  if $munin::host::cgi_graphing {
+  if $cgi_graphing {
     class {'munin::host::cgi':
       owner => $cgi_owner,
     }
@@ -52,7 +53,7 @@ class munin::host(
     user    => 'root',
   }
 
-  if $munin::host::manage_shorewall {
+  if $manage_shorewall {
     include shorewall::rules::out::munin
   }
 }
