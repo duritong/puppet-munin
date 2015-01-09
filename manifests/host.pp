@@ -1,11 +1,17 @@
 # host.pp - the master host of the munin installation
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
-
 class munin::host(
-  $cgi_graphing = false,
-  $cgi_owner = 'os_default',
-  $export_tag = 'munin'
+  $cgi_graphing  = false,
+  $cgi_owner     = 'os_default',
+  $export_tag    = 'munin',
+  $header_source = [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
+                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
+                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
+                'puppet:///modules/site_munin/config/host/munin.conf.header',
+                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
+                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
+                'puppet:///modules/munin/config/host/munin.conf.header' ],
 ) {
   $package = $::operatingsystem ? {
     'OpenBSD' => 'munin-server',
@@ -13,21 +19,15 @@ class munin::host(
   }
 
   package {'munin':
-    name   => $package,
     ensure => installed,
+    name   => $package,
   }
 
   Concat::Fragment <<| tag == $export_tag |>>
 
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
-    source => [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
-                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
-                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
-                'puppet:///modules/site_munin/config/host/munin.conf.header',
-                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
-                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
-                'puppet:///modules/munin/config/host/munin.conf.header' ],
+    source => $header_source,
     order  => 05,
   }
 
