@@ -1,10 +1,12 @@
 # Install a basic munin client
-class munin::client::base inherits munin::client::params {
+class munin::client::base {
+  include munin::client::params
   package { 'munin-node':
     ensure => installed
   }
   service { 'munin-node':
     ensure     => running,
+    name       => $munin::client::params::service,
     enable     => true,
     hasstatus  => true,
     hasrestart => true,

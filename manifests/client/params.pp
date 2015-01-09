@@ -4,16 +4,19 @@ class munin::client::params {
 
   case $::osfamily {
     'OpenBSD': {
-      $group = '0'
+      $group    = 'wheel'
       $log_file = '/var/log/munin-node/munin-node.log'
+      $service  = 'munin_node'
     }
     'Debian': {
-      $group = 'root'
+      $group    = 'root'
       $log_file = '/var/log/munin/munin-node.log'
+      $service  = 'munin-node'
     }
     default: {
-      $group = 'root'
+      $group    = 'root'
       $log_file = '/var/log/munin-node/munin-node.log'
+      $service  = 'munin-node'
     }
   }
 }

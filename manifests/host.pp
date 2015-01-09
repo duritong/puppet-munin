@@ -7,7 +7,15 @@ class munin::host(
   $cgi_owner = 'os_default',
   $export_tag = 'munin'
 ) {
-  package {'munin': ensure => installed, }
+  $package = $::operatingsystem ? {
+    'OpenBSD' => 'munin-server',
+    default   => 'munin'
+  }
+
+  package {'munin':
+    name   => $package,
+    ensure => installed,
+  }
 
   Concat::Fragment <<| tag == $export_tag |>>
 
