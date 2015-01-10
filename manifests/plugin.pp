@@ -38,6 +38,7 @@ define munin::plugin (
         owner   => root,
         group   => 0,
         mode    => '0640',
+        notify  => Service['munin-node'],
       }
     }
   }

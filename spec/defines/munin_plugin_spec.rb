@@ -26,7 +26,8 @@ describe 'munin::plugin' do
       :content => "[users]\nenv.user root\n",
       :owner   => 'root',
       :group   => 0,
-      :mode    => '0640'
+      :mode    => '0640',
+      :notify  => 'Service[munin-node]'
     ) }
   end
 
@@ -43,7 +44,8 @@ describe 'munin::plugin' do
       :content => "[users]\nenv.user root\nenv.group root\n",
       :owner   => 'root',
       :group   => 0,
-      :mode    => '0640'
+      :mode    => '0640',
+      :notify  => 'Service[munin-node]'
     ) }
   end
 
