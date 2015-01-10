@@ -4,8 +4,7 @@ rvm:
   - 2.0.0
 script: 'bundle exec rake spec'
 env:
-  - PUPPET_VERSION=2.7.25
-  - PUPPET_VERSION=3.4.2
+  - PUPPET_VERSION=3.7.3
 matrix:
   exclude:
     # No support for Ruby 2.0 before Puppet 3.2
