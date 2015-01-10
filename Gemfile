@@ -7,6 +7,7 @@ else
 end
 
 if RUBY_VERSION == '1.8.7'
+  gem 'i18n', '~> 0.6.11'
   gem 'activesupport', '~> 3.2'
   gem 'librarian-puppet', '~> 1.0.0'
 else
