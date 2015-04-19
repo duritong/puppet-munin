@@ -24,18 +24,18 @@ class munin::host(
     name   => $package,
   }
 
+  concat{ '/etc/munin/munin.conf':
+    owner => root,
+    group => 0,
+    mode  => '0644',
+  }
+
   Concat::Fragment <<| tag == $export_tag |>>
 
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
     source => $header_source,
     order  => 05,
-  }
-
-  concat{ '/etc/munin/munin.conf':
-    owner => root,
-    group => 0,
-    mode  => '0644',
   }
 
   include munin::plugins::muninhost
