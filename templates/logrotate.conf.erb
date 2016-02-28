@@ -16,6 +16,15 @@
         create 660 munin <%= @apache_user %>
 }
 
+/var/log/munin/munin-cgi-*.log {
+        daily
+        missingok
+        rotate 7
+        compress
+        notifempty
+        create 640 <%= @apache_user %> <%= @apache_user %>
+}
+
 /var/log/munin/munin-html.log {
         daily
         missingok
