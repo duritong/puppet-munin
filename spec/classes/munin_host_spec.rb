@@ -9,7 +9,7 @@ describe 'munin::host' do
       :concat_basedir => '/var/lib/puppet/concat',
     }}
     it { should contain_package('munin') }
-    it { should contain_file('/etc/munin/munin.conf') }
+    it { should contain_concat('/etc/munin/munin.conf') }
     it { should contain_class('munin::host') }
   end
 
@@ -21,7 +21,7 @@ describe 'munin::host' do
       :concat_basedir => '/var/lib/puppet/concat',
     }}
     it { should contain_package('munin') }
-    it { should contain_file('/etc/munin/munin.conf') }
+    it { should contain_concat('/etc/munin/munin.conf') }
     it { should contain_class('munin::host') }
   end
 
@@ -41,7 +41,7 @@ describe 'munin::host' do
       :concat_basedir => '/var/lib/puppet/concat',
     }}
     it { should contain_package('munin') }
-    it { should contain_file('/etc/munin/munin.conf') }
+    it { should contain_concat('/etc/munin/munin.conf') }
     it { should contain_class('munin::host') }
   end
 end

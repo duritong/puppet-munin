@@ -3,12 +3,12 @@ source 'https://rubygems.org'
 if ENV.key?('PUPPET_VERSION')
   puppetversion = "~> #{ENV['PUPPET_VERSION']}"
 else
-  puppetversion = ['>= 3.7.5']
+  puppetversion = ['>= 3.8.6']
 end
 
 if RUBY_VERSION == '1.8.7'
   # 4.0.0 requires 1.9.3
-  puppetversion = ['~> 3.7.5']
+  puppetversion = ['~> 3.8.6']
   gem 'i18n', '~> 0.6.11'
   gem 'activesupport', '~> 3.2'
   gem 'librarian-puppet', '~> 1.0.0'
