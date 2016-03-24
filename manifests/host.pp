@@ -9,9 +9,11 @@ class munin::host(
   $header_source    = [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
                 "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
+                "puppet:///modules/site_munin/config/host/munin.conf.header.${::osfamily}",
                 'puppet:///modules/site_munin/config/host/munin.conf.header',
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
                 "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
+                "puppet:///modules/munin/config/host/munin.conf.header.${::osfamily}",
                 'puppet:///modules/munin/config/host/munin.conf.header' ],
 ) {
   $package = $::operatingsystem ? {
