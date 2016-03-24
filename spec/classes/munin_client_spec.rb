@@ -1,12 +1,18 @@
 require 'spec_helper'
 
 describe 'munin::client' do
+  let(:default_facts){
+    {
+      :interfaces => 'eth0,eth1',
+      :kernel     => 'Linux',
+    }
+  }
   shared_examples 'debian-client' do |os, codename|
     let(:facts) {{
       :operatingsystem => os,
       :osfamily => 'Debian',
       :lsbdistcodename => codename,
-    }}
+    }.merge(default_facts)}
     it { should contain_package('munin-node') }
     it { should contain_package('iproute') }
     it { should contain_file('/etc/munin/munin-node.conf') }
@@ -18,7 +24,7 @@ describe 'munin::client' do
       :operatingsystem => os,
       :osfamily        => 'RedHat',
       :lsbdistcodename => codename,
-    }}
+    }.merge(default_facts)}
     it { should contain_package('munin-node') }
     it { should contain_file('/etc/munin/munin-node.conf') }
   end
@@ -41,7 +47,7 @@ describe 'munin::client' do
       :osfamily        => 'Gentoo',
       :lsbdistcodename => '',
       :interfaces      => 'lo,eth0',
-    }}
+    }.merge(default_facts)}
     it { should contain_package('munin-node') }
     it { should contain_file('/etc/munin/munin-node.conf') }
     it { should contain_class('munin::client::gentoo') }
