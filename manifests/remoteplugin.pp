@@ -2,7 +2,7 @@
 define munin::remoteplugin(
   $source,
   $ensure = 'present',
-  $config = ''
+  $config = undef,
 ) {
   case $ensure {
     'absent': { munin::plugin{ $name: ensure => absent } }

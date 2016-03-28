@@ -1,22 +1,27 @@
 # deploy and register a munin plugin
 define munin::plugin::deploy(
   $ensure   = 'present',
-  $source   = '',
-  $config   = '',
-  $seltype  = $::operatingsystemmajrelease ? {
-    /(5|6)/ => 'munin_unconfined_plugin_exec_t',
-    default => 'unconfined_munin_plugin_exec_t',
-  },
+  $source   = undef,
+  $config   = undef,
+  $seltype  = undef,
   $register = true,
 ) {
+  if $seltype {
+    $real_seltype = $seltype
+  } elsif versioncmp($::operatingsystemmajrelease,'6') > 0 {
+    $real_seltype = 'unconfined_munin_plugin_exec_t'
+  } else {
+    $real_seltype = 'munin_unconfined_plugin_exec_t'
+  }
   $plugin_src = $ensure ? {
     'present' => $name,
     'absent'  => $name,
     default   => $ensure
   }
-  $real_source = $source ? {
-    ''      =>  "munin/plugins/${plugin_src}",
-    default => $source
+  if $source {
+    $real_source = $source
+  } else {
+    $real_source = "munin/plugins/${plugin_src}"
   }
   include munin::plugin::scriptpaths
   file { "munin_plugin_${name}":
@@ -27,14 +32,14 @@ define munin::plugin::deploy(
     mode    => '0755';
   }
 
-  if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::operatingsystemmajrelease > '5')){
+  if str2bool($::selinux) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and versioncmp($::operatingsystemmajrelease,'5') > 0)){
     File["munin_plugin_${name}"]{
-      seltype => $seltype,
+      seltype => $real_seltype,
     }
   }
 
   case $::kernel {
-    openbsd: { $basic_require = File['/var/run/munin'] }
+    'OpenBSD': { $basic_require = File['/var/run/munin'] }
     default: { $basic_require = Package['munin-node'] }
   }
   File["munin_plugin_${name}"]{

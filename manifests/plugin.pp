@@ -7,15 +7,16 @@
 # managed.
 define munin::plugin (
   $ensure         = 'present',
-  $script_path_in = '',
-  $config         = '',
+  $script_path_in = undef,
+  $config         = undef,
 ) {
   if $ensure != 'absent' {
     include munin::plugin::scriptpaths
     include munin::plugins::setup
-    $real_script_path = $script_path_in ? {
-      ''      => $munin::plugin::scriptpaths::script_path,
-      default => $script_path_in
+    if $script_path_in {
+      $real_script_path = $script_path_in
+    } else {
+      $real_script_path = $munin::plugin::scriptpaths::script_path
     }
     $plugin_src = $ensure ? {
       'present' => $name,
@@ -27,12 +28,12 @@ define munin::plugin (
       target  =>"${real_script_path}/${plugin_src}",
       notify  => Service['munin-node'];
     }
-    if (str2bool($::selinux) == true) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and $::operatingsystemmajrelease != '5')){
+    if str2bool($::selinux) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and versioncmp($::operatingsystemmajrelease,'5') > 0)){
       File["/etc/munin/plugins/${name}"]{
         seltype => 'munin_etc_t',
       }
     }
-    if !empty($config) {
+    if $config {
       file { "/etc/munin/plugin-conf.d/${name}.conf":
         content => inline_template("[<%= @name %>]\n<%= Array(@config).join(\"\n\") %>\n"),
         owner   => root,
