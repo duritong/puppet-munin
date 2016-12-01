@@ -57,9 +57,12 @@ def clean_vm_name(vm_name):
 def detect_kvm():
     ''' Check if kvm is installed
     '''
-    kvm = Popen("which kvm", shell=True, stdout=PIPE)
-    kvm.communicate()
-    return not bool(kvm.returncode)
+    if os.path.isfile("/usr/libexec/qemu-kvm"):
+        return True
+    else:
+        kvm = Popen("which kvm", shell=True, stdout=PIPE)
+        kvm.communicate()
+        return not bool(kvm.returncode)
 
 def find_vm_names(pids):
     '''Find and clean vm names from pids
