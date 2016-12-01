@@ -64,19 +64,15 @@ def fetch(vms):
     res = {}
     macs_to_inf = find_macs_to_inf()
     interfaces = {}
-    for e in Popen('cat /proc/net/dev | awk \'{ print $1  ":" $9 }\'', shell=True, stdout=PIPE).communicate()[0].split('\n'):
-        s = e.split(':')
-        if len(s) == 3:
-            interfaces[s[0]] = (s[1],s[2])
     for pid in vms:
         macs = get_vm_macs(pid)
         i = 0
         for mac in macs:
             inf = macs_to_inf[mac]
-            values = interfaces[inf]
-            if len(values) == 2:
-                print "%s_eth%s_in.value %s" % (vms[pid], i, values[0])
-                print "%s_eth%s_out.value %s" % (vms[pid], i, values[1])
+            with open("/sys/class/net/%s/statistics/rx_packets" % inf, 'r') as f:
+                print "%s_eth%s_in.value %s" % (vms[pid], i, f.readline()),
+            with open("/sys/class/net/%s/statistics/tx_packets" % inf, 'r') as f:
+                print "%s_eth%s_out.value %s" % (vms[pid], i, f.readline()),
             i += 1
 
 def detect_kvm():
