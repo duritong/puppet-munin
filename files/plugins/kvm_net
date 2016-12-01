@@ -56,7 +56,7 @@ def clean_vm_name(vm_name):
         vm_name = re.sub(suffix,'',vm_name)
 
     return re.sub(r"[^a-zA-Z0-9_]", "_", vm_name)
-    
+
 def fetch(vms):
     ''' Fetch values for a list of pids
     @param dictionnary {kvm_pid: cleaned vm name}
@@ -93,9 +93,9 @@ def find_vm_names(pids):
     result = {}
     for pid in pids:
         cmdline = open("/proc/%s/cmdline" % pid, "r")
-        result[pid] = clean_vm_name(re.sub(r"^.*-name\x00([a-zA-Z0-9.-]*)\x00\-.*$",r"\1", cmdline.readline()))        
+        result[pid] = clean_vm_name(re.sub(r"^.*-name\x00([a-zA-Z0-9.-_-]*)\x00\-.*$",r"\1", cmdline.readline()))
     return result
-    
+
 def get_vm_macs(pid):
     '''Find macs for a pid
     @return the mac addresses for a specified pid
@@ -131,7 +131,7 @@ def find_macs_to_inf():
                 result[line] = inf
 
     return result
-    
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] in ['autoconf', 'detect']:
