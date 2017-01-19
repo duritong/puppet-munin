@@ -43,10 +43,11 @@ describe 'munin::client' do
 
   context 'gentoo' do
     let(:facts) {{
-      :operatingsystem => 'Gentoo',
-      :osfamily        => 'Gentoo',
-      :lsbdistcodename => '',
-      :interfaces      => 'lo,eth0',
+      :operatingsystem           => 'Gentoo',
+      :operatingsystemmajrelease => '12',
+      :osfamily                  => 'Gentoo',
+      :lsbdistcodename           => '',
+      :interfaces                => 'lo,eth0',
     }.merge(default_facts)}
     it { should contain_package('munin-node') }
     it { should contain_file('/etc/munin/munin-node.conf') }

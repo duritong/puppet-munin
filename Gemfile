@@ -14,6 +14,7 @@ if RUBY_VERSION == '1.8.7'
   gem 'librarian-puppet', '~> 1.0.0'
   gem 'highline', '~> 1.6.21'
   gem 'rake', '< 11'
+  gem 'json', '< 2.0.3'
 else
   gem 'rake'
   gem 'librarian-puppet', '>=0.9.10'
