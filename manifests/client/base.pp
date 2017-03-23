@@ -43,4 +43,12 @@ class munin::client::base {
     export_tag  => $munin::client::export_tag,
   }
   include munin::plugins::base
+
+  if $munin::client::port != '4949' and str2bool($selinux) {
+    selinux::seport{
+      $munin::client::port:
+        setype => 'munin_port_t',
+        before => Service['munin-node'];
+    }
+  }
 }
