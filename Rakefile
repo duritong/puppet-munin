@@ -3,12 +3,11 @@ Bundler.require(:rake)
 
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
-require 'rspec-system/rake_task'
 
 Rake::Task[:lint].clear
 PuppetLint::RakeTask.new :lint do |config|
   config.ignore_paths = ["spec/**/*.pp", "vendor/**/*.pp"]
-  config.log_format = '%{path}:%{linenumber}:%{KIND}: %{message}'
+  config.log_format = '%{path}:%{line}:%{KIND}: %{message}'
   config.disable_checks = [ "class_inherits_from_params_class", "80chars" ]
 end
 
