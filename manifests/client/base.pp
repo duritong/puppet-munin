@@ -46,7 +46,7 @@ class munin::client::base {
 
   if $munin::client::port != '4949' and str2bool($selinux) {
     selinux::seport{
-      $munin::client::port:
+      "${munin::client::port}":
         setype => 'munin_port_t',
         before => Service['munin-node'];
     }
