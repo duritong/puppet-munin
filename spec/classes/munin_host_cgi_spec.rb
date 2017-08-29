@@ -1,13 +1,22 @@
 require 'spec_helper'
 
 describe 'munin::host::cgi' do
-  #let :pre_condition do
-  #  'include munin::client'
-  #end
+  let :pre_condition do
+    'include munin::host
+     include munin::client'
+  end
 
   context 'on Debian' do
     let :facts do
-      { :operatingsystem => 'Debian' }
+      { :operatingsystem => 'Debian',
+        :operatingsystemmajrelease => '9',
+        :interfaces => 'eth0',
+        :kernel     => 'Linux',
+        :osfamily => 'Debian',
+        :vserver => false,
+        :virtual => false,
+        :acpi_available => false,
+        :selinux => false}
     end
 
     it 'should compile' do
@@ -34,7 +43,16 @@ describe 'munin::host::cgi' do
 
   context 'on CentOS' do
     let :facts do
-      { :operatingsystem => 'CentOS' }
+      { :operatingsystem => 'CentOS',
+        :operatingsystemmajrelease => '7',
+        :osfamily => 'RedHat',
+        :kernel => 'Linux',
+        :vserver => false,
+        :interfaces => 'eth0',
+        :acpi_available => false,
+        :virtual => false,
+        :selinux => true,
+      }
     end
 
     it 'should exec set_modes_for_cgi' do
