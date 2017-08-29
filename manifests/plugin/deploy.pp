@@ -25,11 +25,11 @@ define munin::plugin::deploy(
   }
   include munin::plugin::scriptpaths
   file { "munin_plugin_${name}":
-    path    => "${munin::plugin::scriptpaths::script_path}/${name}",
-    source  => "puppet:///modules/${real_source}",
-    owner   => root,
-    group   => 0,
-    mode    => '0755';
+    path   => "${munin::plugin::scriptpaths::script_path}/${name}",
+    source => "puppet:///modules/${real_source}",
+    owner  => root,
+    group  => 0,
+    mode   => '0755';
   }
 
   if str2bool($::selinux) and (($::operatingsystem != 'CentOS') or ($::operatingsystem == 'CentOS' and versioncmp($::operatingsystemmajrelease,'5') > 0)){
