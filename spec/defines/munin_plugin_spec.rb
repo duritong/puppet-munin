@@ -3,8 +3,13 @@ require 'spec_helper'
 describe 'munin::plugin' do
   let(:title) { 'users' }
   let(:facts) do
-    { :operatingsystem => 'CentOS' }
+    { :operatingsystem => 'CentOS',
+      :operatingsystemmajrelease => '7',
+      :selinux => true,
+    }
   end
+  let(:pre_condition){ 'package{"munin-node": }
+                       service{"munin-node": }' }
   context 'present' do
     it { should contain_file('/etc/munin/plugins/users').with(
       :ensure => 'link',

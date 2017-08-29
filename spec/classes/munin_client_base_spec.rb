@@ -7,6 +7,9 @@ describe 'munin::client::base' do
       :interfaces => 'eth0,eth1',
       :kernel     => 'Linux',
       :virtual    => false,
+      :vserver    => false,
+      :selinux    => true,
+      :acpi_available    => false,
     }
   end
 
@@ -66,6 +69,7 @@ describe 'munin::client::base' do
   context 'on CentOS' do
     let :facts do
       { :osfamily        => 'RedHat',
+        :operatingsystemmajrelease => '7',
         :operatingsystem => 'CentOS' }.merge(default_facts)
     end
 

@@ -4,6 +4,10 @@ describe 'munin::client' do
   let(:default_facts){
     {
       :interfaces => 'eth0,eth1',
+      :vserver    => false,
+      :selinux    => false,
+      :acpi_available => false,
+      :virtual    => false,
       :kernel     => 'Linux',
     }
   }
@@ -23,6 +27,7 @@ describe 'munin::client' do
     let(:facts) {{
       :operatingsystem => os,
       :osfamily        => 'RedHat',
+      :serlinux        => true,
       :lsbdistcodename => codename,
     }.merge(default_facts)}
     it { should contain_package('munin-node') }

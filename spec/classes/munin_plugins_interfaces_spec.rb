@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe 'munin::plugins::interfaces' do
+  let(:pre_condition){ 'package{"munin-node": }
+                       service{"munin-node": }' }
   context 'on CentOS' do
     let :facts do
       {
         :operatingsystem => 'CentOS',
+        :operatingsystemmajrelease => '7',
         :interfaces      => 'lo,eth0,sit0',
+        :selinux         => true,
       }
     end
 
@@ -33,7 +37,9 @@ describe 'munin::plugins::interfaces' do
     let :facts do
       {
         :operatingsystem => 'OpenBSD',
+        :operatingsystemmajrelease => '7',
         :interfaces      => 'eth0',
+        :selinux         => false,
       }
     end
 
