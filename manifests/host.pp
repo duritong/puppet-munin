@@ -37,7 +37,7 @@ class munin::host(
   concat::fragment{'munin.conf.header':
     target => '/etc/munin/munin.conf',
     source => $header_source,
-    order  => 05,
+    order  => '05',
   }
 
   include munin::plugins::muninhost
