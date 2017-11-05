@@ -28,12 +28,8 @@ class munin::client::base {
     owner   => root,
     group   => 0,
   }
-  $host = $munin::client::host ? {
-    '*'      => $::fqdn,
-    default  => $munin::client::host
-  }
   munin::register { $::fqdn:
-    host        => $host,
+    host        => $munin::client::host_to_export,
     port        => $munin::client::port,
     use_ssh     => $munin::client::use_ssh,
     description => $munin::client::description,
