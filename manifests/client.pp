@@ -18,11 +18,11 @@ class munin::client(
 ) {
 
   case $::operatingsystem {
-    openbsd: { include munin::client::openbsd }
-    darwin: { include munin::client::darwin }
-    debian,ubuntu: { include munin::client::debian }
-    gentoo: { include munin::client::gentoo }
-    centos: { include munin::client::base }
+    'OpenBSD': { include munin::client::openbsd }
+    'Darwin': { include munin::client::darwin }
+    'Debian','Ubuntu': { include munin::client::debian }
+    'Gentoo': { include munin::client::gentoo }
+    'CentOS': { include munin::client::base }
     default: { include munin::client::base }
   }
   if $munin::client::manage_shorewall {

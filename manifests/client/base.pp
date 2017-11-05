@@ -2,7 +2,7 @@
 class munin::client::base {
   include munin::client::params
   package { 'munin-node':
-    ensure => installed
+    ensure => installed,
   }
   service { 'munin-node':
     ensure     => running,
@@ -19,7 +19,7 @@ class munin::client::base {
     group  => 0,
   }
   file {'/etc/munin/munin-node.conf':
-    content => template("${module_name}/munin-node.conf.erb"),
+    content => template('munin/munin-node.conf.erb'),
     # this has to be installed before the package, so the postinst can
     # boot the munin-node without failure!
     before  => Package['munin-node'],
@@ -28,14 +28,14 @@ class munin::client::base {
     owner   => root,
     group   => 0,
   }
-  munin::register { $::fqdn:
+  munin::register { $facts['fqdn']:
     host        => $munin::client::host_to_export,
     port        => $munin::client::port,
     use_ssh     => $munin::client::use_ssh,
     description => $munin::client::description,
     group       => $munin::client::munin_group,
     config      => [ 'use_node_name yes', 'load.load.warning 5',
-      'load.load.critical 10'],
+                      'load.load.critical 10'],
     export_tag  => $munin::client::export_tag,
   }
   include munin::plugins::base
