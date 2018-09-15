@@ -1,6 +1,10 @@
 ##########
 ########## Managed by puppet
 ##########
+#
+# Example config file for munin-node. You don't have to edit anything in
+# this file if you are using munin-asyncd.
+#
 
 log_level 4
 log_file <%= scope['munin::client::params::log_file'] %>
@@ -28,7 +32,7 @@ ignore_file DEADJOE$
 ignore_file \.bak$
 ignore_file %$
 ignore_file \.dpkg-(tmp|new|old|dist)$
-ignore_file \.rpm(save|new)$
+ignore_file \.rpm(save|new|orig)$
 ignore_file \.pod$
 
 # Set this if the client doesn't report the correct hostname when
@@ -40,6 +44,7 @@ host_name <%= scope['munin::client::host_name'] %>
 # regular expression, since Net::Server does not understand CIDR-style
 # network notation unless the perl module Net::CIDR is installed.  You
 # may repeat the allow line as many times as you'd like
+
 <% scope['munin::client::allow'].each do |allow| -%>
 allow <%= "^#{Regexp.escape(allow)}$" %>
 <% end -%>
@@ -51,12 +56,14 @@ allow <%= "^#{Regexp.escape(allow)}$" %>
 #
 # Example:
 #
-# cidr_allow 127.0.0.1/32
-# cidr_allow 192.0.2.0/24
-# cidr_deny  192.0.2.42/32
+#cidr_allow 127.0.0.1/32
+#cidr_allow 192.0.2.0/24
+#cidr_deny  192.0.2.42/32
 
 # Which address to bind to;
 host <%= scope['munin::client::host'] %>
+#host 127.0.0.1
 
 # And which port
 port <%= scope['munin::client::port'] %>
+
