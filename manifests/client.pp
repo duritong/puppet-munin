@@ -5,6 +5,7 @@
 # configure a munin node
 class munin::client(
   $allow                      = [ '127.0.0.1' ],
+  $allow6                     = [ '::1' ],
   $host                       = '*',
   $host_to_export             = $facts['fqdn'],
   $host_name                  = $facts['fqdn'],
@@ -12,7 +13,6 @@ class munin::client(
   $use_ssh                    = false,
   $manage_shorewall           = false,
   $shorewall_collector_source = 'net',
-  $export_tag                 = 'munin',
   $description                = 'absent',
   $munin_group                = 'absent',
 ) {
@@ -26,9 +26,20 @@ class munin::client(
     default: { include munin::client::base }
   }
   if $munin::client::manage_shorewall {
+    if size($allow) < 2 {
+      $munin_collector = $allow
+    } else {
+      $munin_collector  = delete($allow,'127.0.0.1')
+    }
+    if size($allow6) < 2 {
+      $munin_collector6 = $allow6
+    } else {
+      $munin_collector6  = delete($allow6,'127.0.0.1')
+    }
     class{'shorewall::rules::munin':
       munin_port       => $port,
-      munin_collector  => delete($allow,'127.0.0.1'),
+      munin_collector  => $munin_collector,
+      munin_collector6 => $munin_collector6,
       collector_source => $shorewall_collector_source,
     }
   }

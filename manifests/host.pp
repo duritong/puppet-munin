@@ -3,49 +3,42 @@
 # See LICENSE for the full license granted to you.
 class munin::host(
   $cgi_graphing     = false,
-  $cgi_owner        = 'os_default',
-  $export_tag       = 'munin',
   $manage_shorewall = false,
-  $header_source    = [ "puppet:///modules/site_munin/config/host/${::fqdn}/munin.conf.header",
-                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
-                "puppet:///modules/site_munin/config/host/munin.conf.header.${::operatingsystem}",
-                "puppet:///modules/site_munin/config/host/munin.conf.header.${::osfamily}",
-                'puppet:///modules/site_munin/config/host/munin.conf.header',
-                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}.${::operatingsystemmajrelease}",
-                "puppet:///modules/munin/config/host/munin.conf.header.${::operatingsystem}",
-                "puppet:///modules/munin/config/host/munin.conf.header.${::osfamily}",
-                'puppet:///modules/munin/config/host/munin.conf.header' ],
 ) {
-  $package = $::operatingsystem ? {
-    'OpenBSD' => 'munin-server',
-    default   => 'munin'
-  }
-
   package {'munin':
     ensure => installed,
-    name   => $package,
+  } -> file{
+    '/etc/munin/conf.d':
+      ensure  => directory,
+      owner   => root,
+      group   => 0,
+      mode    => '0644',
+      purge   => true,
+      force   => true,
+      recurse => true;
   }
-
-  concat{ '/etc/munin/munin.conf':
-    owner => root,
-    group => 0,
-    mode  => '0644',
-  }
-
-  Concat::Fragment <<| tag == $export_tag |>>
-
-  concat::fragment{'munin.conf.header':
-    target => '/etc/munin/munin.conf',
-    source => $header_source,
-    order  => '05',
-  }
+  File<<| tag == 'munin_client_register' |>>
 
   include munin::plugins::muninhost
 
-  if $cgi_graphing {
-    class {'munin::host::cgi':
-      owner => $cgi_owner,
+  if $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'],'7') >= 0  {
+    systemd::unit_file{
+      'munin-rddcached.service':
+        source => 'puppet:///modules/munin/config/host/rrdcached.service',
+        enable => true,
+        active => true,
+        before => Package['munin'],
+    } -> file{
+      '/etc/munin/conf.d/01_rrdached.conf':
+        content => "rrdcached_socket /run/munin/rrdcached.sock\n",
+        owner   => root,
+        group   => 0,
+        mode    => '0644';
     }
+  }
+
+  if $cgi_graphing {
+    include munin::host::cgi
   }
 
   # from time to time we cleanup hanging munin-runs
