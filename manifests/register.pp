@@ -14,7 +14,7 @@ define munin::register(
       content => template('munin/client.erb'),
       owner   => root,
       group   => 0,
-      mode    => 0644,
+      mode    => '0644',
       tag     => 'munin_client_register'
   }
 }
