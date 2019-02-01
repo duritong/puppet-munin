@@ -22,7 +22,9 @@ class munin::host(
   include munin::plugins::muninhost
 
   if $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'],'7') >= 0  {
-    systemd::unit_file{
+    package{'rrdtool':
+      ensure => installed,
+    } -> systemd::unit_file{
       'munin-rddcached.service':
         source => 'puppet:///modules/munin/config/host/rrdcached.service',
         enable => true,
