@@ -25,7 +25,7 @@ class munin::host(
     package{'rrdtool':
       ensure => installed,
     } -> systemd::unit_file{
-      'munin-rddcached.service':
+      'munin-rrdcached.service':
         source => 'puppet:///modules/munin/config/host/rrdcached.service',
         enable => true,
         active => true,
