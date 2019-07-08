@@ -4,17 +4,28 @@
 
 # configure a munin node
 class munin::client(
-  $allow                      = [ '127.0.0.1' ],
-  $allow6                     = [ '::1' ],
-  $host                       = '*',
-  $host_to_export             = $facts['fqdn'],
-  $host_name                  = $facts['fqdn'],
-  $port                       = '4949',
-  $use_ssh                    = false,
-  $manage_shorewall           = false,
-  $shorewall_collector_source = 'net',
-  $description                = 'absent',
-  $munin_group                = 'absent',
+  Array[Stdlib::IP::Address::V4]
+    $allow                      = [ '127.0.0.1' ],
+  Array[Stdlib::IP::Address::V6]
+    $allow6                     = [ '::1' ],
+  String[1]
+    $host                       = '*',
+  String[1]
+    $host_to_export             = $facts['fqdn'],
+  String[1]
+    $host_name                  = $facts['fqdn'],
+  Variant[Integer,Pattern[/\A\d+\Z/]]
+    $port                       = '4949',
+  Boolean
+    $use_ssh                    = false,
+  Boolean
+    $manage_shorewall           = false,
+  String[1]
+    $shorewall_collector_source = 'net',
+  String[1]
+    $description                = 'absent',
+  String[1]
+    $munin_group                = 'absent',
 ) {
 
   case $::operatingsystem {
