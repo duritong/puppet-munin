@@ -7,7 +7,7 @@ Facter.add("legacy_interfaces") do
       if !matches.nil?
         value = matches[1]
       end
-      value
+      value.split('@',2).first
     end.compact.sort.join(',')
   end
 end
