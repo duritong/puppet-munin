@@ -14,8 +14,8 @@ class munin::client(
     $host_to_export             = $facts['fqdn'],
   String[1]
     $host_name                  = $facts['fqdn'],
-  Variant[Integer,Pattern[/\A\d+\Z/]]
-    $port                       = '4949',
+  Stdlib::Port
+    $port                       = 4949,
   Boolean
     $use_ssh                    = false,
   Boolean
