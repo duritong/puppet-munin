@@ -48,9 +48,9 @@ class munin::client(
       $munin_collector6  = delete($allow6,'127.0.0.1')
     }
     class{'firewall::rules::munin':
-      munin_port       => $port,
-      munin_collector  => $munin_collector,
-      munin_collector6 => $munin_collector6,
+      port       => $port,
+      collector  => $munin_collector,
+      collector6 => $munin_collector6,
       collector_source => $firewall_collector_source,
     }
   }
