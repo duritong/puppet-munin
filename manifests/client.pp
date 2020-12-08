@@ -21,7 +21,7 @@ class munin::client(
   Boolean
     $manage_shorewall           = false,
   String[1]
-    $shorewall_collector_source = 'net',
+    $firewall_collector_source  = 'net',
   String[1]
     $description                = 'absent',
   String[1]
@@ -47,11 +47,11 @@ class munin::client(
     } else {
       $munin_collector6  = delete($allow6,'127.0.0.1')
     }
-    class{'shorewall::rules::munin':
+    class{'firewall::rules::munin':
       munin_port       => $port,
       munin_collector  => $munin_collector,
       munin_collector6 => $munin_collector6,
-      collector_source => $shorewall_collector_source,
+      collector_source => $firewall_collector_source,
     }
   }
 }
