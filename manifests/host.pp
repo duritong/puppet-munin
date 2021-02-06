@@ -1,13 +1,13 @@
 # host.pp - the master host of the munin installation
 # Copyright (C) 2007 David Schmitt <david@schmitt.edv-bus.at>
 # See LICENSE for the full license granted to you.
-class munin::host(
-  $cgi_graphing     = false,
-  $manage_shorewall = false,
+class munin::host (
+  $cgi_graphing = false,
+  $use_firewall = false,
 ) {
-  package {'munin':
+  package { 'munin':
     ensure => installed,
-  } -> file{
+  } -> file {
     '/etc/munin/conf.d':
       ensure  => directory,
       owner   => root,
@@ -21,16 +21,16 @@ class munin::host(
 
   include munin::plugins::muninhost
 
-  if $facts['osfamily'] == 'RedHat' and versioncmp($facts['operatingsystemmajrelease'],'7') >= 0  {
-    package{'rrdtool':
+  if $facts['os']['family'] == 'RedHat' and versioncmp($facts['os']['release']['major'],'7') >= 0 {
+    package { 'rrdtool':
       ensure => installed,
-    } -> systemd::unit_file{
+    } -> systemd::unit_file {
       'munin-rrdcached.service':
         source => 'puppet:///modules/munin/config/host/rrdcached.service',
         enable => true,
         active => true,
         before => Package['munin'],
-    } -> file{
+    } -> file {
       '/etc/munin/conf.d/01_rrdached.conf':
         content => "rrdcached_socket /run/munin/rrdcached.sock\n",
         owner   => root,
@@ -50,7 +50,7 @@ class munin::host(
     user    => 'root',
   }
 
-  if $manage_shorewall {
-    include shorewall::rules::out::munin
+  if $use_firewall {
+    include firewall::rules::out::munin
   }
 }
