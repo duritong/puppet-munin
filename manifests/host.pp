@@ -21,21 +21,27 @@ class munin::host (
 
   include munin::plugins::muninhost
 
-  if $facts['os']['family'] == 'RedHat' and versioncmp($facts['os']['release']['major'],'7') >= 0 {
-    package { 'rrdtool':
-      ensure => installed,
-    } -> systemd::unit_file {
-      'munin-rrdcached.service':
-        source => 'puppet:///modules/munin/config/host/rrdcached.service',
-        enable => true,
-        active => true,
-        before => Package['munin'],
-    } -> file {
-      '/etc/munin/conf.d/01_rrdached.conf':
-        content => "rrdcached_socket /run/munin/rrdcached.sock\n",
-        owner   => root,
-        group   => 0,
-        mode    => '0644';
+  package { 'rrdtool':
+    ensure => installed,
+  } -> systemd::unit_file {
+    'munin-rrdcached.service':
+      source => 'puppet:///modules/munin/config/host/rrdcached.service',
+      enable => true,
+      active => true,
+      before => Package['munin'],
+  } -> file {
+    '/etc/munin/conf.d/01_rrdached.conf':
+      content => "rrdcached_socket /run/munin/rrdcached.sock\n",
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
+  }
+
+  if versioncmp($facts['os']['release']['major'],'7') > 0 {
+    service { 'munin.timer':
+      ensure  => running,
+      enable  => true,
+      require => File['/etc/munin/conf.d/01_rrdached.conf'],
     }
   }
 

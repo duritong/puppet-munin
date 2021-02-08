@@ -4,28 +4,17 @@
 
 # configure a munin node
 class munin::client(
-  Array[Stdlib::IP::Address::V4]
-    $allow                      = [ '127.0.0.1' ],
-  Array[Stdlib::IP::Address::V6]
-    $allow6                     = [ '::1' ],
-  String[1]
-    $host                       = '*',
-  String[1]
-    $host_to_export             = $facts['fqdn'],
-  String[1]
-    $host_name                  = $facts['fqdn'],
-  Stdlib::Port
-    $port                       = 4949,
-  Boolean
-    $use_ssh                    = false,
-  Boolean
-    $manage_shorewall           = false,
-  String[1]
-    $firewall_collector_source  = 'net',
-  String[1]
-    $description                = 'absent',
-  String[1]
-    $munin_group                = 'absent',
+  Array[Stdlib::IP::Address::V4] $allow = [ '127.0.0.1' ],
+  Array[Stdlib::IP::Address::V6] $allow6 = [ '::1' ],
+  String[1] $host = '*',
+  String[1] $host_to_export = $facts['fqdn'],
+  String[1] $host_name = $facts['fqdn'],
+  Stdlib::Port $port = 4949,
+  Boolean $use_ssh = false,
+  Boolean $use_firewall = false,
+  String[1] $firewall_collector_source = 'net',
+  String[1] $description = 'absent',
+  String[1] $munin_group = 'absent',
 ) {
 
   case $::operatingsystem {
@@ -36,7 +25,7 @@ class munin::client(
     'CentOS': { include munin::client::base }
     default: { include munin::client::base }
   }
-  if $munin::client::manage_shorewall {
+  if $munin::client::use_firewall {
     if size($allow) < 2 {
       $munin_collector = $allow
     } else {

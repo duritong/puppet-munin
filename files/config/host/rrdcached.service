@@ -15,7 +15,5 @@ ExecStart=/usr/bin/rrdcached \
   -w 1800 -z 1800 -f 3600
 ExecStartPost=/bin/sleep 1 ; /bin/setfacl -m u:apache:rw /run/munin/rrdcached.sock
 
-Requires=munin-node.service
-
 [Install]
 WantedBy=multi-user.target
