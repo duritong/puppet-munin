@@ -3,12 +3,12 @@
 # Adapted and improved by admin(at)immerda.ch
 
 # configure a munin node
-class munin::client(
-  Array[Stdlib::IP::Address::V4] $allow = [ '127.0.0.1' ],
-  Array[Stdlib::IP::Address::V6] $allow6 = [ '::1' ],
+class munin::client (
+  Array[Stdlib::IP::Address::V4] $allow = ['127.0.0.1'],
+  Array[Stdlib::IP::Address::V6] $allow6 = ['::1'],
   String[1] $host = '*',
-  String[1] $host_to_export = $facts['fqdn'],
-  String[1] $host_name = $facts['fqdn'],
+  String[1] $host_to_export = $facts['networking']['fqdn'],
+  String[1] $host_name = $facts['networking']['fqdn'],
   Stdlib::Port $port = 4949,
   Boolean $use_ssh = false,
   Boolean $use_firewall = false,
@@ -16,8 +16,7 @@ class munin::client(
   String[1] $description = 'absent',
   String[1] $munin_group = 'absent',
 ) {
-
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'OpenBSD': { include munin::client::openbsd }
     'Darwin': { include munin::client::darwin }
     'Debian','Ubuntu': { include munin::client::debian }
@@ -36,7 +35,7 @@ class munin::client(
     } else {
       $munin_collector6  = delete($allow6,'127.0.0.1')
     }
-    class{'firewall::rules::munin':
+    class { 'firewall::rules::munin':
       port             => $port,
       collector        => $munin_collector,
       collector6       => $munin_collector6,

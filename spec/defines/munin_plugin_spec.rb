@@ -3,9 +3,12 @@ require 'spec_helper'
 describe 'munin::plugin' do
   let(:title) { 'users' }
   let(:facts) do
-    { :operatingsystem => 'CentOS',
-      :operatingsystemmajrelease => '7',
-      :selinux => true,
+    {
+      :os => {
+        :name => 'CentOS',
+        :release => { :major => '7', },
+        :selinux => { :enabled => true },
+      },
     }
   end
   let(:pre_condition){ 'package{"munin-node": }

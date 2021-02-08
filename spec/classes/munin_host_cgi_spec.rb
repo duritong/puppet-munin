@@ -7,17 +7,15 @@ describe 'munin::host::cgi' do
   end
 
   context 'on Debian' do
-    let :facts do
-      { :operatingsystem => 'Debian',
-        :operatingsystemmajrelease => '9',
-        :interfaces => 'eth0',
-        :kernel     => 'Linux',
-        :osfamily => 'Debian',
-        :vserver => false,
-        :virtual => false,
-        :acpi_available => false,
-        :selinux => false}
-    end
+    let(:facts) {
+      {
+        :os => {
+          :name => os,
+          :release => { :major => release, },
+          :selinux => { :enabled => true },
+        },
+      }
+    }
 
     it 'should compile' do
       should contain_class('munin::host::cgi')
