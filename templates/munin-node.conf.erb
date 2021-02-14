@@ -48,6 +48,9 @@ host_name <%= scope['munin::client::host_name'] %>
 <% scope['munin::client::allow'].each do |allow| -%>
 allow <%= "^#{Regexp.escape(allow)}$" %>
 <% end -%>
+<% scope['munin::client::allow6'].each do |allow| -%>
+allow <%= allow %>
+<% end -%>
 
 # If you have installed the Net::CIDR perl module, you can use one or more
 # cidr_allow and cidr_deny address/mask patterns.  A connecting client must
