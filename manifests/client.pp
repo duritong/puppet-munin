@@ -33,7 +33,7 @@ class munin::client (
     if size($allow6) < 2 {
       $munin_collector6 = $allow6
     } else {
-      $munin_collector6  = delete($allow6,'127.0.0.1')
+      $munin_collector6  = delete($allow6,'::1')
     }
     class { 'firewall::rules::munin':
       port             => $port,
