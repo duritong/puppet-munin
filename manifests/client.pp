@@ -12,7 +12,7 @@ class munin::client (
   Stdlib::Port $port = 4949,
   Boolean $use_ssh = false,
   Boolean $use_firewall = false,
-  String[1] $firewall_collector_source = 'net',
+  Array[String[1]] $firewall_collector_source = ['net'],
   String[1] $description = 'absent',
   String[1] $munin_group = 'absent',
 ) {
