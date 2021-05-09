@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8
 #
@@ -29,20 +29,20 @@ graph_vlabel Bytes rx(-)/tx(+) per second
 graph_category KVM
 graph_info This graph shows the network I/O of the virtual machines
 graph_args --base 1024"""
-    print(base_config)
+    print base_config
     for pid in vms:
         macs = get_vm_macs(pid)
         i = 0
         for mac in macs:
-          print("%s_eth%s_in.label %s_eth%s" % (vms[pid],i, vms[pid], i))
-          print("%s_eth%s_in.type COUNTER" % (vms[pid], i))
-          print("%s_eth%s_in.min 0" % (vms[pid],i))
-          print("%s_eth%s_in.draw LINE2" % (vms[pid],i))
-          print("%s_eth%s_out.negative %s_eth%s_in" % (vms[pid], i, vms[pid], i))
-          print("%s_eth%s_out.label %s_eth%s" % (vms[pid], i, vms[pid], i))
-          print("%s_eth%s_out.type COUNTER" % (vms[pid], i))
-          print("%s_eth%s_out.min 0" % (vms[pid], i))
-          print("%s_eth%s_out.draw LINE2" % (vms[pid], i))
+          print "%s_eth%s_in.label %s_eth%s" % (vms[pid],i, vms[pid], i)
+          print "%s_eth%s_in.type COUNTER" % (vms[pid], i)
+          print "%s_eth%s_in.min 0" % (vms[pid],i)
+          print "%s_eth%s_in.draw LINE2" % (vms[pid],i)
+          print "%s_eth%s_out.negative %s_eth%s_in" % (vms[pid], i, vms[pid], i)
+          print "%s_eth%s_out.label %s_eth%s" % (vms[pid], i, vms[pid], i)
+          print "%s_eth%s_out.type COUNTER" % (vms[pid], i)
+          print "%s_eth%s_out.min 0" % (vms[pid], i)
+          print "%s_eth%s_out.draw LINE2" % (vms[pid], i)
           i += 1
 
 def clean_vm_name(vm_name):
@@ -55,7 +55,7 @@ def clean_vm_name(vm_name):
     if suffix:
         vm_name = re.sub(suffix,'',vm_name)
 
-    return re.sub(r"[^a-zA-Z0-9_\-]", "_", vm_name)
+    return re.sub(r"[^a-zA-Z0-9_]", "_", vm_name)
 
 def fetch(vms):
     ''' Fetch values for a list of pids
@@ -70,9 +70,9 @@ def fetch(vms):
         for mac in macs:
             inf = macs_to_inf[mac]
             with open("/sys/class/net/%s/statistics/rx_packets" % inf, 'r') as f:
-                print("%s_eth%s_in.value %s" % (vms[pid], i, f.readline().split("\n")[0])),
+                print "%s_eth%s_in.value %s" % (vms[pid], i, f.readline()),
             with open("/sys/class/net/%s/statistics/tx_packets" % inf, 'r') as f:
-                print("%s_eth%s_out.value %s" % (vms[pid], i, f.readline().split("\n")[0])),
+                print "%s_eth%s_out.value %s" % (vms[pid], i, f.readline()),
             i += 1
 
 def detect_kvm():
@@ -92,7 +92,7 @@ def find_vm_names(pids):
     result = {}
     for pid in pids:
         cmdline = open("/proc/%s/cmdline" % pid, "r")
-        result[pid] = clean_vm_name(re.sub(r"^.*guest=([a-zA-Z0-9.-_-]*).*$",r"\1", cmdline.readline()))
+        result[pid] = clean_vm_name(re.sub(r"^.*-name\x00([a-zA-Z0-9.-_-]*)\x00\-.*$",r"\1", cmdline.readline()))
     return result
 
 def get_vm_macs(pid):
@@ -110,7 +110,7 @@ def list_pids():
     @return a list of pids from running kvm
     '''
     pid = Popen("pidof qemu-kvm kvm", shell=True, stdout=PIPE)
-    return pid.communicate()[0].decode().split()
+    return pid.communicate()[0].split()
 
 def find_macs_to_inf():
     ''' Find interfaces for vms
@@ -119,7 +119,7 @@ def find_macs_to_inf():
     result = {}
     inf = ""
     kvm = Popen("ip a | grep -E -A 1 '(tap|vnet)' | awk '{print $2}' | grep -v '^$'", shell=True, stdout=PIPE)
-    res = kvm.communicate()[0].decode().split('\n')
+    res = kvm.communicate()[0].split('\n')
     for line in res:
         if len(line) > 0:
             if re.match(r"^tap.*", line):
@@ -135,9 +135,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] in ['autoconf', 'detect']:
             if detect_kvm():
-                print("yes")
+                print "yes"
             else:
-                print("no")
+                print "no"
         elif sys.argv[1] == "config":
             config(find_vm_names(list_pids()))
         else:
