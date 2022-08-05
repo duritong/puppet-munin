@@ -8,7 +8,7 @@ class munin::host (
   package { 'munin':
     ensure => installed,
   } -> file {
-    '/etc/munin/conf.d':
+    '/etc/munin/munin-conf.d':
       ensure  => directory,
       owner   => root,
       group   => 0,
@@ -30,7 +30,7 @@ class munin::host (
       active => true,
       before => Package['munin'],
   } -> file {
-    '/etc/munin/conf.d/01_rrdached.conf':
+    '/etc/munin/munin-conf.d/01_rrdached.conf':
       content => "rrdcached_socket /run/munin/rrdcached.sock\n",
       owner   => root,
       group   => 0,
@@ -41,7 +41,7 @@ class munin::host (
     service { 'munin.timer':
       ensure  => running,
       enable  => true,
-      require => File['/etc/munin/conf.d/01_rrdached.conf'],
+      require => File['/etc/munin/munin-conf.d/01_rrdached.conf'],
     }
   }
 
