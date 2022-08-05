@@ -4,7 +4,7 @@ class munin::host::cgi {
     value      => on,
     persistent => true,
   } -> file {
-    '/etc/munin/conf.d/01_cgi.conf':
+    '/etc/munin/munin-conf.d/01_cgi.conf':
       content => "graph_strategy cgi
 html_strategy cgi
 cgiurl_graph /munin/graph\n",

@@ -15,7 +15,7 @@ define munin::register (
     $host_str = $host
   }
   @@file {
-    "/etc/munin/conf.d/10_${fhost}_${port}.conf":
+    "/etc/munin/munin-conf.d/10_${fhost}_${port}.conf":
       content => template('munin/client.erb'),
       owner   => root,
       group   => 0,
