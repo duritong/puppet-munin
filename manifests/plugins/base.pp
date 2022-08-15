@@ -2,12 +2,14 @@
 class munin::plugins::base(
   $df_as_root = false
 ) {
+  ensure_packages(['net-tools'])
   # setup basic plugins
   munin::plugin {
     [ 'df', 'cpu', 'interrupts', 'load', 'memory', 'netstat', 'open_files',
       'processes', 'swap', 'uptime', 'users', 'vmstat' ]:
             ensure => present,
   }
+  Package['net-tools'] -> Munin::Plugin['netstat']
   if $df_as_root {
     $df_opt = "user root\n"
   } else {
