@@ -25,25 +25,25 @@ class munin::client::base {
     group  => 0,
   }
   if $munin::client::host_to_export == '' {
-    $_host_to_export = $facts['fqdn']
+    $_host_to_export = $facts['networking']['fqdn']
   } else {
     $_host_to_export = $munin::client::host_to_export
   }
 
-  munin::register { $facts['fqdn']:
+  munin::register { $facts['networking']['fqdn']:
     host        => $_host_to_export,
     port        => $munin::client::port,
     use_ssh     => $munin::client::use_ssh,
     description => $munin::client::description,
     group       => $munin::client::munin_group,
     config      => [ 'use_node_name yes', 'load.load.warning 5',
-                      'load.load.critical 10'],
+    'load.load.critical 10'],
   }
   include munin::plugins::base
 
   if $munin::client::port != '4949' and str2bool($selinux) {
     selinux::seport{
-      "${munin::client::port}":
+      $munin::client::port:
         setype => 'munin_port_t',
         before => Service['munin-node'];
     }
