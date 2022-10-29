@@ -64,7 +64,7 @@ allow <%= allow %>
 #cidr_deny  192.0.2.42/32
 
 # Which address to bind to;
-host <%= scope['munin::client::host'] %>
+host <%= scope['munin::client::host'].empty? ? '*' : scope['munin::client::host'] %>
 #host 127.0.0.1
 
 # And which port

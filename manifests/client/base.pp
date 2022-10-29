@@ -24,8 +24,14 @@ class munin::client::base {
     owner  => root,
     group  => 0,
   }
+  if $munin::client::host_to_export == '' {
+    $_host_to_export = $facts['fqdn']
+  } else {
+    $_host_to_export = $munin::client::host_to_export
+  }
+
   munin::register { $facts['fqdn']:
-    host        => $munin::client::host_to_export,
+    host        => $_host_to_export,
     port        => $munin::client::port,
     use_ssh     => $munin::client::use_ssh,
     description => $munin::client::description,

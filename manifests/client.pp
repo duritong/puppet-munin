@@ -6,8 +6,8 @@
 class munin::client (
   Array[Stdlib::IP::Address::V4] $allow = ['127.0.0.1'],
   Array[Stdlib::IP::Address::V6] $allow6 = ['::1'],
-  String[1] $host = '*',
-  String[1] $host_to_export = $facts['networking']['fqdn'],
+  String $host = '*',
+  String $host_to_export = $facts['networking']['fqdn'],
   String[1] $host_name = $facts['networking']['fqdn'],
   Stdlib::Port $port = 4949,
   Boolean $use_ssh = false,
