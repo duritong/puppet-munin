@@ -28,9 +28,6 @@ class munin::host (
     owner   => munin,
     group   => munin,
     mode    => '0640',
-    purge   => true,
-    force   => true,
-    recurse => true,
     require => Package['munin'];
   } -> systemd::unit_file {
     'munin-rrdcached.service':
