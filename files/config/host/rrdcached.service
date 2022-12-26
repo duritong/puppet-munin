@@ -5,8 +5,6 @@ Description=Munin rrdcached
 Restart=always
 User=munin
 PermissionsStartOnly=yes
-ExecStartPre=/usr/bin/install -d -o munin -g munin -m 0755 \
-  /var/lib/munin/rrdcached-journal /run/munin
 ExecStart=/usr/bin/rrdcached \
   -g -B -b /var/lib/munin/ \
   -p /run/munin/munin-rrdcached.pid \
